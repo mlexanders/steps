@@ -22,9 +22,6 @@ public class UserManager : IUserManager<User>
     public async Task<Guid> CreateAsync(User model, string password)
     {
         model.PasswordHash = _passwordHasher.HashPassword(password);
-
-        await _unitOfWork.BeginTransactionAsync();
-
         var repository = _unitOfWork.GetRepository<User>();
 
         var entry = await repository.InsertAsync(model);

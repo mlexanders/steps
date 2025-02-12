@@ -1,0 +1,13 @@
+bin/
+obj/
+
+.idea
+**/.idea
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+Steps.sln.DotSettings.user
+
+*.suo
+*.user
+*.sln.docstates

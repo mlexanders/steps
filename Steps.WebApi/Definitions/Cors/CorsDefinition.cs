@@ -1,0 +1,28 @@
+﻿using Steps.Infrastructure.Data;
+using Steps.Services.WebApi.Utils.AppDefinition;
+
+namespace Steps.Services.WebApi.Definitions.Cors;
+
+/// <summary>
+///     Cors configurations
+/// </summary>
+public class CorsDefinition : AppDefinition
+{
+    /// <summary>
+    ///     Configure services for current application
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="builder"></param>
+    public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(AppData.PolicyName, policyBuilder =>
+            {
+                policyBuilder.AllowAnyHeader();
+                policyBuilder.AllowAnyMethod();
+                policyBuilder.AllowCredentials();
+            });
+        });
+    }
+}

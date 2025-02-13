@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
-using MediatR.Pipeline;
-using Steps.Application;
+﻿using Steps.Application;
 using Steps.Application.Behaviors;
 using Steps.Application.Behaviors.Base;
 using Steps.Services.WebApi.Utils.AppDefinition;
@@ -13,10 +10,12 @@ public class MediatrDefinition : AppDefinition
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
         builder.Services.AddApplication();
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
-        services.AddValidatorsFromAssemblyContaining<Program>();
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(UnitOfWorkPostProcessor<,>));
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblyContaining<Program>();
+            cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+            cfg.AddOpenRequestPostProcessor(typeof(UnitOfWorkPostProcessor<,>));
+        });
     }
 }

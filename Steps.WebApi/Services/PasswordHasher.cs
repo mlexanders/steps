@@ -9,7 +9,6 @@ namespace Steps.Services.WebApi.Services;
 /// <summary>
 /// Implements the standard Identity password hashing.
 /// </summary>
-/// <typeparam name="TUser">The type used to represent a user.</typeparam>
 public class PasswordHasher : IPasswordHasher
 {
     /* =======================

@@ -20,7 +20,7 @@ public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand, R
     {
         var model = request.Model;
 
-        await _signInManager.SignInAsync(model.Username, model.Password);
-        return Result<bool>.Ok(true).SetMessage(model.Username);
+        await _signInManager.SignInAsync(model.Login, model.Password);
+        return Result<bool>.Ok(true).SetMessage(model.Login);
     }
 }

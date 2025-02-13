@@ -15,6 +15,9 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.Property(t => t.Name)
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
+        
+        builder.Property(t => t.Address)
+            .HasMaxLength(EntityConfiguration.MaxAdressLength);
 
         builder.HasOne(t => t.Owner)
             .WithMany()

@@ -1,33 +1,38 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Calabonga.UnitOfWork;
+using MediatR;
+using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Teams.ViewModels;
-using Steps.Infrastructure.Data;
+using Steps.Shared;
 
 namespace Steps.Application.Requests.Teams.Queries;
 
-public record GetTeamByIdQuery(Guid TeamId) : IRequest<TeamViewModel?>;
+public record GetTeamByIdQuery(Guid TeamId) : IRequest<Result<TeamViewModel?>>;
 
-public class GetTeamByIdQueryHandler : IRequestHandler<GetTeamByIdQuery, TeamViewModel?>
+public class GetTeamByIdQueryHandler : IRequestHandler<GetTeamByIdQuery, Result<TeamViewModel?>>
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public GetTeamByIdQueryHandler(ApplicationDbContext dbContext)
+    public GetTeamByIdQueryHandler(IUnitOfWork unitOfWork)
     {
-        _dbContext = dbContext;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<TeamViewModel?> Handle(GetTeamByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TeamViewModel?>> Handle(GetTeamByIdQuery request, CancellationToken cancellationToken)
     {
-        var team = await _dbContext.Teams
-            .FirstOrDefaultAsync(t => t.Id.Equals(request.TeamId), cancellationToken);
+        var team = await _unitOfWork.GetRepository<Team>()
+            .GetFirstOrDefaultAsync(
+                predicate: t => t.Id.Equals(request.TeamId),
+                trackingType: TrackingType.NoTracking);
 
-        return team == null
-            ? null
-            : new TeamViewModel
-            {
-                Id = team.Id,
-                Name = team.Name,
-                Owner = team.Owner
-            };
+        if (team == null) return Result<TeamViewModel?>.Fail("Команда не найдена");
+
+        var viewModel = new TeamViewModel // TODO: MAPPING
+        {
+            Id = team.Id,
+            Name = team.Name,
+            Owner = team.Owner
+        };
+
+        return Result<TeamViewModel?>.Ok(viewModel);
     }
 }

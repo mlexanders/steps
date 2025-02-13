@@ -1,62 +1,70 @@
-﻿namespace Steps.Shared;
+﻿using System.Diagnostics.CodeAnalysis;
+using Steps.Shared.Contracts;
 
-public class Result
+namespace Steps.Shared;
+
+public class Result : IResult
 {
-    public bool IsSuccess { get; protected set; }
+    public bool Success { get; }
     public string? Message { get; protected set; }
-    public string? TraceId { get; protected set; }
+    public List<Error> Errors { get; }
 
-    protected Result(bool isSuccess, string? message, string? traceId)
+    protected Result(bool success, List<Error>? errors = null)
     {
-        IsSuccess = isSuccess;
-        Message = message;
-        TraceId = traceId;
+        Success = success;
+        Errors = errors ?? [];
     }
-    public static Result Failure(string message, string traceId)
-        => new(false, message, traceId);
-    
-    public static Result Success(string message, string? traceId = null)
-        => new(true, message, traceId);
+
+    public static Result Ok() => new(true);
+
+    public static Result Fail(List<Error> errors) => new(false, errors);
+
+    public static Result Fail(Error error) => new(false, new List<Error> { error });
+
+    public static Result Fail(string errorMessage) =>
+        new(false, new List<Error> { new Error("GENERAL_ERROR", errorMessage) });
+
+    public static Result Fail(string errorCode, string errorMessage) =>
+        new(false, new List<Error> { new Error(errorCode, errorMessage) });
+
+    public Result SetMessage(string message)
+    {
+        Message = message;
+        return this;
+    }
 }
 
-public class Result<T> : Result
+public interface IResult
+{
+}
+
+public class Result<T> : Result // where T : IDTO
 {
     public T? Value { get; }
 
-    public Result(): base (true, default, default)
+    private Result(T value) : base(true)
     {
-    }
-
-    private Result(bool isSuccess, T? value, string? message, string? traceId)
-    : base(isSuccess, message, traceId){
         Value = value;
     }
 
-    public static Result<T> Success(T value, string? message = "Success.", string? traceId = null)
-        => new(true, value, message, traceId);
-
-    public static Result<T> Failure(string? message = "Failure.", string? traceId = null)
-        => new(false, default, message, traceId);
-
-    public static Result<T> NotFound(string message = "Not found.", string? traceId = null)
-        => Failure(message, traceId: traceId);
-
-    public static Result<T> ValidationError(string message = "Validation error.", string? traceId = null)
-        => Failure(message, traceId: traceId);
-
-    public static Result<T> Unauthorized(string? traceId = null)
-        => Failure("Unauthorized access.", traceId: traceId);
-
-    public static Result<T> Forbidden(string? traceId = null)
-        => Failure("Forbidden access.", traceId: traceId);
-
-    public Result<T> SetTraceId(string traceId)
+    private Result(List<Error> errors) : base(false, errors)
     {
-        TraceId = traceId;
-        return this;
+        Value = default;
     }
-    
-    public Result<T> SetMessage(string message)
+
+    public static Result<T> Ok(T value) => new(value);
+
+    public static new Result<T> Fail(List<Error> errors) => new(errors);
+
+    public static new Result<T> Fail(Error error) => new(new List<Error> { error });
+
+    public static new Result<T> Fail(string errorMessage) =>
+        new(new List<Error> { new Error("GENERAL_ERROR", errorMessage) });
+
+    public static new Result<T> Fail(string errorCode, string errorMessage) =>
+        new(new List<Error> { new Error(errorCode, errorMessage) });
+
+    public new Result<T> SetMessage(string message)
     {
         Message = message;
         return this;

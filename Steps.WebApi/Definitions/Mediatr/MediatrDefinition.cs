@@ -1,8 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
+using MediatR.Pipeline;
 using Steps.Application;
+using Steps.Application.Behaviors;
 using Steps.Application.Behaviors.Base;
 using Steps.Services.WebApi.Utils.AppDefinition;
+
 namespace Steps.Services.WebApi.Definitions.Mediatr;
 
 public class MediatrDefinition : AppDefinition
@@ -14,5 +17,6 @@ public class MediatrDefinition : AppDefinition
 
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
+        services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(UnitOfWorkPostProcessor<,>));
     }
 }

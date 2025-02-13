@@ -7,7 +7,6 @@ using Steps.Shared.Contracts.Accounts.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
-
 [ApiController]
 [Route("api/[Controller]")]
 public class AccountController : Controller, IAccountService
@@ -22,17 +21,14 @@ public class AccountController : Controller, IAccountService
     [HttpPost("[Action]")]
     public async Task<Result> Registration([FromBody] RegistrationRequestViewModel model)
     {
-       var id = await _mediator.Send(new CreateUserCommand(model));
-       return Result<Guid>.Success(id).SetMessage($"User with ID {id} was created");
+        return await _mediator.Send(new CreateUserCommand(model));
     }
 
     [HttpPost("[Action]")]
     public async Task<Result> Login(LoginRequestViewModel model)
     {
-        
         var loginResult = await _mediator.Send(new LoginRequestCommand(model));
-        
-        return loginResult ? Result.Success("Вход выполнен") : Result<bool>.Failure();
+        return loginResult;
     }
 
 

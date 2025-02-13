@@ -7,7 +7,6 @@ public class AuthorizationDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
-        
         builder.Services.AddAuthentication(AppData.Identity.AuthenticationType)
             .AddCookie(options =>
             {

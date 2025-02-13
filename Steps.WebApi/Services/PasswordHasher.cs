@@ -54,6 +54,7 @@ public class PasswordHasher : IPasswordHasher
                 {
                     throw new InvalidOperationException("InvalidPasswordHasherIterationCount");
                 }
+
                 break;
 
             default:
@@ -112,7 +113,8 @@ public class PasswordHasher : IPasswordHasher
             numBytesRequested: 256 / 8);
     }
 
-    private static byte[] HashPasswordV3(string password, RandomNumberGenerator rng, KeyDerivationPrf prf, int iterCount, int saltSize, int numBytesRequested)
+    private static byte[] HashPasswordV3(string password, RandomNumberGenerator rng, KeyDerivationPrf prf,
+        int iterCount, int saltSize, int numBytesRequested)
     {
         // Produce a version 3 (see comment above) text hash.
         byte[] salt = new byte[saltSize];
@@ -149,6 +151,7 @@ public class PasswordHasher : IPasswordHasher
         {
             return PasswordVerificationResult.Failed;
         }
+
         switch (decodedHashedPassword[0])
         {
             case 0x00:
@@ -165,7 +168,8 @@ public class PasswordHasher : IPasswordHasher
                 }
 
             case 0x01:
-                if (VerifyHashedPasswordV3(decodedHashedPassword, providedPassword, out int embeddedIterCount, out KeyDerivationPrf prf))
+                if (VerifyHashedPasswordV3(decodedHashedPassword, providedPassword, out int embeddedIterCount,
+                        out KeyDerivationPrf prf))
                 {
                     // If this hasher was configured with a higher iteration count, change the entry now.
                     if (embeddedIterCount < _iterCount)
@@ -215,7 +219,8 @@ public class PasswordHasher : IPasswordHasher
         return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
     }
 
-    private static bool VerifyHashedPasswordV3(byte[] hashedPassword, string password, out int iterCount, out KeyDerivationPrf prf)
+    private static bool VerifyHashedPasswordV3(byte[] hashedPassword, string password, out int iterCount,
+        out KeyDerivationPrf prf)
     {
         iterCount = default(int);
         prf = default(KeyDerivationPrf);
@@ -232,6 +237,7 @@ public class PasswordHasher : IPasswordHasher
             {
                 return false;
             }
+
             byte[] salt = new byte[saltLength];
             Buffer.BlockCopy(hashedPassword, 13, salt, 0, salt.Length);
 
@@ -241,6 +247,7 @@ public class PasswordHasher : IPasswordHasher
             {
                 return false;
             }
+
             byte[] expectedSubkey = new byte[subkeyLength];
             Buffer.BlockCopy(hashedPassword, 13 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 
@@ -260,9 +267,9 @@ public class PasswordHasher : IPasswordHasher
     private static uint ReadNetworkByteOrder(byte[] buffer, int offset)
     {
         return ((uint)(buffer[offset + 0]) << 24)
-            | ((uint)(buffer[offset + 1]) << 16)
-            | ((uint)(buffer[offset + 2]) << 8)
-            | ((uint)(buffer[offset + 3]));
+               | ((uint)(buffer[offset + 1]) << 16)
+               | ((uint)(buffer[offset + 2]) << 8)
+               | ((uint)(buffer[offset + 3]));
     }
 
     private static void WriteNetworkByteOrder(byte[] buffer, int offset, uint value)

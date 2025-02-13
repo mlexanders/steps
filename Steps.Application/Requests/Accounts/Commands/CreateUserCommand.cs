@@ -3,13 +3,13 @@ using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Domain.Entities;
+using Steps.Shared;
 
 namespace Steps.Application.Requests.Accounts.Commands;
 
-public record CreateUserCommand (RegistrationRequestViewModel Model) : IRequest<Guid>;
+public record CreateUserCommand(RegistrationRequestViewModel Model) : IRequest<Result<Guid>>;
 
-
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<Guid>>
 {
     private readonly IUserManager<User> _userManager;
     private readonly IMapper _mapper;
@@ -19,12 +19,14 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
         _userManager = userManager;
         _mapper = mapper;
     }
-    
-    public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+
+    public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
         var user = _mapper.Map<User>(model);
 
-        return await _userManager.CreateAsync(user, model.Password);
+        var createdId = await _userManager.CreateAsync(user, model.Password);
+
+        return Result<Guid>.Ok(createdId).SetMessage("User created successfully");
     }
 }

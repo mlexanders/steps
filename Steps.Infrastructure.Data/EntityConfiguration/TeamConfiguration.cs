@@ -13,6 +13,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.HasIndex(t => t.Name)
             .IsUnique();
         builder.Property(t => t.Name)
+            .UseCollation("case_insensitive")
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
         

@@ -13,6 +13,7 @@ public class ClubConfiguration : IEntityTypeConfiguration<Club>
         builder.HasIndex(c => c.Name)
             .IsUnique();
         builder.Property(c => c.Name)
+            .UseCollation("case_insensitive")
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
 

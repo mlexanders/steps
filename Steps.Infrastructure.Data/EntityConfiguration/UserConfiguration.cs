@@ -13,6 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Login)
             .IsUnique();
         builder.Property(u => u.Login)
+            .UseCollation("case_insensitive")
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxLoginLength);
 

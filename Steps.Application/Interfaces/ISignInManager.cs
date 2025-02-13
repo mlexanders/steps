@@ -1,8 +1,10 @@
+using Steps.Domain.Entities;
+
 namespace Steps.Application.Interfaces;
 
-public interface ISignInManager
+public interface ISignInManager : ISecurityService
 {
     Task<bool> IsSignedIn();
     Task SignOut();
-    Task SignInAsync(string email, string password);
+    Task<User> SignInAsync(string email, string password);
 }

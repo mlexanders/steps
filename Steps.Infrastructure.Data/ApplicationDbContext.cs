@@ -19,6 +19,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasCollation("case_insensitive", locale: "und-u-ks-primary", provider: "icu", deterministic: false);
+        
         modelBuilder.ApplyConfiguration(new AthleteConfiguration());
         modelBuilder.ApplyConfiguration(new ClubConfiguration());
         modelBuilder.ApplyConfiguration(new TeamConfiguration());

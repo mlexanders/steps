@@ -22,9 +22,9 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel command)
+    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel model)
     {
-        return await _mediator.Send(new CreateTeamCommand(command));
+        return await _mediator.Send(new CreateTeamCommand(model));
     }
 
     // [HttpPut("{teamId:guid}")]

@@ -13,6 +13,7 @@ public class ContainerDefinition : AppDefinition
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddTransient<IPasswordHasher, PasswordHasher>();
+        services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IUserManager<User>, UserManager>();
         services.AddTransient<ISignInManager, SignInManager>();
     }

@@ -14,6 +14,13 @@ public class AppAccessDeniedException : StepsBusinessException
     }
 }
 
+public class AppNotFoundException : StepsBusinessException
+{
+    public AppNotFoundException(string message) : base(message)
+    {
+    }
+}
+
 public class InvalidCredentialsException : StepsBusinessException
 {
     public InvalidCredentialsException() : base($"Неверный логин или пароль")

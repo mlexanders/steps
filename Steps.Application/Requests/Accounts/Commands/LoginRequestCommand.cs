@@ -26,6 +26,6 @@ public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand,Re
         var user = await _signInManager.SignInAsync(model.Login, model.Password);
         var viewModel = _mapper.Map<UserViewModel>(user);
         
-        return Result<UserViewModel>.Ok(viewModel).SetMessage("Успешно");
+        return Result<UserViewModel>.Ok(viewModel).SetMessage("Вход выполнен успешно");
     }
 }

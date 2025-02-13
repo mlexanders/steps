@@ -4,5 +4,6 @@ public class CreateTeamViewModel
 {
     public string Name { get; set; } = null!;
     public string? Address { get; set; }
+    public Guid ClubId { get; set; }
     public Guid OwnerId { get; set; }
 }

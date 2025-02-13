@@ -21,11 +21,18 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
         builder.HasOne(t => t.Owner)
             .WithMany()
+            .IsRequired()
             .HasForeignKey(t => t.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(t => t.Athletes)
             .WithOne()
             .HasForeignKey(t => t.TeamId);
+
+        builder.HasOne<Club>(t => t.Club)
+            .WithMany(c => c.Teams)
+            .IsRequired()
+            .HasForeignKey(t => t.ClubId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -1,39 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Steps.Application.ExceptionsHandling.Descriptors;
+using Steps.Application.Interfaces;
 using Steps.Shared;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application.ExceptionsHandling;
 
-public class CommonExceptionHandler
+public class CommonExceptionDescriptor : IExceptionDescriptor
 {
-    private readonly SqlExceptionDescriptor _sqlExceptionDescriptor;
-    private readonly BusinesExceptionDescriptor _businessExceptionDescriptor;
-    private readonly ValidationExceptionDescriptor _validationExceptionDescriptor;
+    private readonly SqlExceptionDescriptor _sqlDescriptor;
+    private readonly BusinessExceptionDescriptor _businessDescriptor;
+    private readonly ValidationExceptionDescriptor _validationDescriptor;
 
-    public CommonExceptionHandler()
+    public CommonExceptionDescriptor()
     {
-        _validationExceptionDescriptor = new ValidationExceptionDescriptor();
-        _sqlExceptionDescriptor = new SqlExceptionDescriptor();
-        _businessExceptionDescriptor = new BusinesExceptionDescriptor();
+        _validationDescriptor = new ValidationExceptionDescriptor();
+        _sqlDescriptor = new SqlExceptionDescriptor();
+        _businessDescriptor = new BusinessExceptionDescriptor();
     }
 
-    public async Task<(Result content, int statusCode)> Handle(Exception exception)
+    public async Task<(Result content, int statusCode)> GetResult(Exception exception)
     {
-        var result = exception switch
+        (Error Error, int StatusCode) result = exception switch
         {
-            PostgresException pgEx when string.IsNullOrEmpty(pgEx.SqlState) => _sqlExceptionDescriptor
+            PostgresException pgEx when string.IsNullOrEmpty(pgEx.SqlState) => _sqlDescriptor
                 .GetDescriptionWithStatusCode(pgEx),
-            DbUpdateException { InnerException: PostgresException pgEx } => _sqlExceptionDescriptor
+            DbUpdateException { InnerException: PostgresException pgEx } => _sqlDescriptor
                 .GetDescriptionWithStatusCode(pgEx),
-            StepsBusinessException businessException => _businessExceptionDescriptor.GetDescriptionWithStatusCode(
+            StepsBusinessException businessException => _businessDescriptor.GetDescriptionWithStatusCode(
                 businessException),
-            FluentValidation.ValidationException validationException => _validationExceptionDescriptor
+            FluentValidation.ValidationException validationException => _validationDescriptor
                 .GetDescriptionWithStatusCode(validationException),
             _ => throw new ArgumentOutOfRangeException(nameof(exception), exception, null)
         };
 
-        return (Result.Fail(result.Item1), result.Item2);
+        return (Result.Fail(result.Error), result.StatusCode);
     }
 }

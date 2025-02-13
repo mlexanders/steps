@@ -27,6 +27,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
 
         var createdId = await _userManager.CreateAsync(user, model.Password);
 
-        return Result<Guid>.Ok(createdId).SetMessage("User created successfully");
+        return Result<Guid>.Ok(createdId).SetMessage("Вы успешно зарегистрированы");
     }
 }

@@ -3,9 +3,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.ExceptionsHandling.Descriptors;
 
-public class BusinesExceptionDescriptor : ExceptionDescriptor<StepsBusinessException>
+public class BusinessExceptionDescriptor : ExceptionDescriptor<StepsBusinessException>
 {
-    public override (Error, int) GetDescriptionWithStatusCode(StepsBusinessException exception)
+    public override (Error Error, int StatusCode) GetDescriptionWithStatusCode(StepsBusinessException exception)
     {
         if (string.IsNullOrEmpty(exception.Message))
             return GetDescriptionWithStatusCode($"{exception.GetType()}", "Неизвестная ошибка",

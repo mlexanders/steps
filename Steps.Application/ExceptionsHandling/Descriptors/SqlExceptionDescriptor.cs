@@ -5,7 +5,7 @@ namespace Steps.Application.ExceptionsHandling.Descriptors;
 
 public class SqlExceptionDescriptor : ExceptionDescriptor<PostgresException>
 {
-    public override (Error, int) GetDescriptionWithStatusCode(PostgresException exception)
+    public override (Error Error, int StatusCode) GetDescriptionWithStatusCode(PostgresException exception)
     {
         var sqlState = exception.SqlState;
 

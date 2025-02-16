@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Domain.Entities;

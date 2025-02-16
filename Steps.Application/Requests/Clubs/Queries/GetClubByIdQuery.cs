@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
-using Steps.Application.Requests.Clubs.Commands;
-using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Clubs.ViewModels;

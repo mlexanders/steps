@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Calabonga.PagedListCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Clubs.Commands;
 using Steps.Application.Requests.Clubs.Queries;
 using Steps.Shared;
+using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Clubs.ViewModels;
 
@@ -32,7 +34,13 @@ public class ClubsController : ControllerBase, IClubsService
     {
         return _mediator.Send(new GetClubByIdQuery(clubId));
     }
-    
+
+    [HttpGet("get-paged")]
+    public Task<Result<IPagedList<ClubViewModel>>> GetPagedClubs([FromQuery] Page page)
+    {
+        return _mediator.Send(new GetPagedClubsQuery(page));
+    }
+
     [HttpPatch]
     public Task<Result> Update([FromBody] UpdateClubViewModel model)
     {

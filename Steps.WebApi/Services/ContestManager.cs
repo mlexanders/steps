@@ -2,8 +2,8 @@
 using Calabonga.UnitOfWork;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
-using Steps.Infrastructure.Data;
 using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Services.WebApi.Services;
 
@@ -24,7 +24,7 @@ public class ContestManager : IContestManager
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<IPagedList<Contest>> Read(Page page)
+    public async Task<IPagedList<ContestViewModel>> Read(Page page)
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
@@ -34,7 +34,9 @@ public class ContestManager : IContestManager
             pageSize: page.PageSize,
             // cancellationToken: cancellationToken,
             trackingType: TrackingType.NoTracking);
-        return contests;
+
+        throw new NotImplementedException();
+        // return contests;
     }
 
     public async Task Update(Contest model)

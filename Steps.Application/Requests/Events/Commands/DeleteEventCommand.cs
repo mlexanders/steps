@@ -2,13 +2,14 @@
 using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
+using Steps.Shared;
 using Steps.Shared.Contracts.Events.ViewModels;
 
 namespace Steps.Application.Requests.Events.Commands;
 
-public record DeleteEventCommand (Guid ModelId) : IRequest;
+public record DeleteEventCommand (Guid ModelId) : IRequest<Result>;
 
-public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand>
+public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand, Result>
 {
     private readonly IEventManager _eventManager;
     private readonly IMapper _mapper;
@@ -19,10 +20,12 @@ public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand>
         _mapper = mapper;
     }
 
-    public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
         var modelId = request.ModelId;
 
         await _eventManager.Delete(modelId);
+        
+        return Result.Success("Мероприятие удалено!");
     }
 }

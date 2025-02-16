@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Calabonga.PagedListCore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Events.Commands;
 using Steps.Application.Requests.Events.Queries;
@@ -23,28 +24,24 @@ public class EventController : ControllerBase, IEventService
     [HttpPost("[Action]")]
     public async Task<Result<Guid>> Create([FromBody] CreateEventViewModel createEventViewModel)
     {
-        var eventId = await _mediator.Send(new CreateEventCommand(createEventViewModel));
-        return Result<Guid>.Success(eventId).SetTraceId(HttpContext.TraceIdentifier);
+        return await _mediator.Send(new CreateEventCommand(createEventViewModel));
     }
     
     [HttpGet("[Action]")]
-    public async Task<Result<List<Event>>> Read(int take, int skip)
+    public async Task<Result<IPagedList<Event>>?> Read(int take, int skip)
     {
-        var events = await _mediator.Send(new GetEventsQuery(take, skip));
-        return Result<List<Event>>.Success(events).SetTraceId(HttpContext.TraceIdentifier);
+        return await _mediator.Send(new GetEventsQuery(take, skip));
     }
     
     [HttpPut("[Action]")]
     public async Task<Result<Guid>> Update(UpdateEventViewModel updateEventViewModel)
     {
-        var eventId = await _mediator.Send(new UpdateEventCommand(updateEventViewModel));
-        return Result<Guid>.Success(eventId).SetTraceId(HttpContext.TraceIdentifier);
+        return await _mediator.Send(new UpdateEventCommand(updateEventViewModel));
     }
 
     [HttpDelete("[Action]")]
     public async Task<Result> Delete(Guid id)
     {
-        await _mediator.Send(new DeleteEventCommand(id));
-        return Result.Success("Entity deleted");
+        return await _mediator.Send(new DeleteEventCommand(id));
     }
 }

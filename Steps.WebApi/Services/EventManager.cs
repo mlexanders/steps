@@ -1,4 +1,5 @@
-﻿using Calabonga.UnitOfWork;
+﻿using Calabonga.PagedListCore;
+using Calabonga.UnitOfWork;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
@@ -17,11 +18,11 @@ public class EventManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IEven
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<Event>> Read(int take, int skip)
+    public async Task<IPagedList<Event>> Read(int take, int skip)
     {
         var repository = _unitOfWork.GetRepository<Event>();
 
-        var events = await repository.GetAllAsync(
+        var events = await repository.GetPagedListAsync(
             predicate: null,
             orderBy: q => q.OrderBy(e => e.Id),
             include: null,
@@ -30,9 +31,7 @@ public class EventManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IEven
             ignoreAutoIncludes: false
         );
 
-        var pagedEvents = events.Skip(skip).Take(take).ToList();
-
-        return pagedEvents;
+        return events;
     }
 
     public async Task Update(Event model)

@@ -30,6 +30,7 @@
     <ItemGroup>
       <Folder Include="Requests\Accounts\Queries\" />
       <Folder Include="Requests\Accounts\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
     </ItemGroup>
 
 </Project>

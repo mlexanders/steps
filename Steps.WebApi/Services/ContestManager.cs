@@ -3,6 +3,7 @@ using Calabonga.UnitOfWork;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
+using Steps.Shared.Contracts;
 
 namespace Steps.Services.WebApi.Services;
 
@@ -23,19 +24,16 @@ public class ContestManager : IContestManager
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<IPagedList<Contest>> Read(int take, int skip)
+    public async Task<IPagedList<Contest>> Read(Page page)
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
         var contests = await repository.GetPagedListAsync(
-            predicate: null,
-            orderBy: q => q.OrderBy(e => e.Id),
-            include: null,
-            trackingType: TrackingType.NoTracking,
-            ignoreQueryFilters: false,
-            ignoreAutoIncludes: false
-        );
-
+            // selector: (club) => _mapper.Map<ViewModel???>(club),
+            pageIndex: page.PageIndex,
+            pageSize: page.PageSize,
+            // cancellationToken: cancellationToken,
+            trackingType: TrackingType.NoTracking);
         return contests;
     }
 
@@ -63,8 +61,6 @@ public class ContestManager : IContestManager
 
         var contest = await repository.GetFirstOrDefaultAsync(
             predicate: x => x.Id == id,
-            orderBy: null,
-            include: null,
             trackingType: TrackingType.Tracking
         );
 

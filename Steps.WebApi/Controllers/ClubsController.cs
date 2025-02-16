@@ -35,7 +35,7 @@ public class ClubsController : ControllerBase, IClubsService
         return _mediator.Send(new GetClubByIdQuery(clubId));
     }
 
-    [HttpGet("get-paged")]
+    [HttpGet]
     public Task<Result<IPagedList<ClubViewModel>>> GetPaged([FromQuery] Page page)
     {
         return _mediator.Send(new GetPagedClubsQuery(page));

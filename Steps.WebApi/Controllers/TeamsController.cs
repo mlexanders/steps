@@ -41,7 +41,7 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }
 
-    [HttpGet("get-paged")]
+    [HttpGet]
     public async Task<Result<IPagedList<TeamViewModel>>> GetPaged([FromQuery] Page page)
     {
         return await _mediator.Send(new GetPagedTeamsQuery(page));

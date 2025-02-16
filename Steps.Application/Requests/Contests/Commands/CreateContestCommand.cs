@@ -23,10 +23,10 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
     public async Task<Result<Guid>> Handle(CreateContestCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
-        var _event = _mapper.Map<Contest>(model);
+        var contest = _mapper.Map<Contest>(model);
 
-        await _contestManager.Create(_event);
+        await _contestManager.Create(contest);
 
-        return Result<Guid>.Success(_event.Id).SetMessage("Мероприятие успешно создано!");
+        return Result<Guid>.Success(contest.Id).SetMessage("Мероприятие успешно создано!");
     }
 }

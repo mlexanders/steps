@@ -23,7 +23,7 @@ public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IP
 
     public async Task<Result<IPagedList<Contest>>?> Handle(GetContestsQuery request, CancellationToken cancellationToken)
     {
-        var events = await _contestManager.Read(request.take, request.skip);
-        return Result<IPagedList<Contest>?>.Success(events);
+        var contests = await _contestManager.Read(request.take, request.skip);
+        return Result<IPagedList<Contest>?>.Success(contests);
     }
 }

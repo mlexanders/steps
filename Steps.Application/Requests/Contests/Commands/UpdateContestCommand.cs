@@ -23,10 +23,10 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateContestCommand, R
     public async Task<Result<Guid>> Handle(UpdateContestCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
-        var _event = _mapper.Map<Contest>(model);
+        var contest = _mapper.Map<Contest>(model);
 
-        await _contestManager.Update(_event);
+        await _contestManager.Update(contest);
 
-        return Result<Guid>.Success(_event.Id).SetMessage("Мероприятие успешно обновлено!");
+        return Result<Guid>.Success(contest.Id).SetMessage("Мероприятие успешно обновлено!");
     }
 }

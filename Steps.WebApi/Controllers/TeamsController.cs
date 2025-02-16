@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Calabonga.PagedListCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Teams.Commands;
 using Steps.Application.Requests.Teams.Queries;
 using Steps.Shared;
+using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Teams.ViewModels;
 
@@ -27,21 +29,11 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new CreateTeamCommand(model));
     }
 
-    // [HttpPut("{teamId:guid}")]
-    // public async Task<IActionResult> UpdateTeam(Guid teamId, [FromBody] UpdateTeamCommand command)
-    // {
-    //     if (teamId != command.TeamId) return BadRequest("Invalid team ID");
-    //
-    //     var result = await _mediator.Send(command);
-    //     return result ? NoContent() : NotFound();
-    // }
-
-    // [HttpDelete("{teamId:guid}")]
-    // public async Task<IActionResult> DeleteTeam(Guid teamId)
-    // {
-    //     var result = await _mediator.Send(new DeleteTeamCommand(teamId));
-    //     return result ? NoContent() : NotFound();
-    // }
+    [HttpPatch]
+    public async Task<Result> Update([FromBody] UpdateTeamViewModel model)
+    {
+        return await _mediator.Send(new UpdateTeamCommand(model));
+    }
 
     [HttpGet("{teamId:guid}")]
     public async Task<Result<TeamViewModel>> GetTeamById(Guid teamId)
@@ -49,10 +41,15 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }
 
-    // [HttpGet]
-    // public async Task<IActionResult> GetAllTeams()
-    // {
-    //     var teams = await _mediator.Send(new GetAllTeamsQuery());
-    //     return Ok(teams);
-    // }
+    [HttpGet("get-paged")]
+    public async Task<Result<IPagedList<TeamViewModel>>> GetPaged([FromQuery] Page page)
+    {
+        return await _mediator.Send(new GetPagedTeamsQuery(page));
+    }
+
+    [HttpDelete("{teamId:guid}")]
+    public async Task<Result> Delete(Guid teamId)
+    {
+        return await _mediator.Send(new DeleteTeamCommand(teamId));
+    }
 }

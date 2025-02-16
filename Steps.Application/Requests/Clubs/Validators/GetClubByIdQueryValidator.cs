@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using Steps.Application.Requests.Clubs.Queries;
+using Steps.Application.Requests.Teams.Commands;
 
 namespace Steps.Application.Requests.Clubs.Validators;
 
-public class GetClubByIdQueryCommandValidator : AbstractValidator<GetClubByIdQuery>
+public class GetClubByIdQueryValidator : AbstractValidator<GetClubByIdQuery>
 {
-    public GetClubByIdQueryCommandValidator()
+    public GetClubByIdQueryValidator()
     {
         RuleFor(x => x.Id).NotEmpty().WithMessage("Выберите клуб");
     }

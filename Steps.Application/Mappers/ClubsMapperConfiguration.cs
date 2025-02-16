@@ -8,6 +8,7 @@ public class ClubsMapperConfiguration : Profile
 {
     public ClubsMapperConfiguration()
     {
+        //CreateClubViewModel
         CreateMap<CreateClubViewModel, Club>()
             .ForMember(x => x.Id, o => o.Ignore())
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))

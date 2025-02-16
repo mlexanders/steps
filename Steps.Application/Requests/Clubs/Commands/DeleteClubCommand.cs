@@ -9,24 +9,22 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Clubs.Commands;
 
-public record DeleteClubCommand(Guid Id) : IRequest<Result>;
+public record DeleteClubCommand(Guid ClubId) : IRequest<Result>;
 
 public class DeleteClubCommandHandler : IRequestHandler<DeleteClubCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISecurityService _securityService;
-    private readonly IMapper _mapper;
 
-    public DeleteClubCommandHandler(IUnitOfWork unitOfWork, ISecurityService securityService, IMapper mapper)
+    public DeleteClubCommandHandler(IUnitOfWork unitOfWork, ISecurityService securityService)
     {
         _unitOfWork = unitOfWork;
         _securityService = securityService;
-        _mapper = mapper;
     }
 
     public async Task<Result> Handle(DeleteClubCommand request, CancellationToken cancellationToken)
     {
-        var id = request.Id;
+        var id = request.ClubId;
 
         var currentUser = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
 

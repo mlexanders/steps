@@ -3,9 +3,9 @@ using Steps.Application.Requests.Teams.Commands;
 
 namespace Steps.Application.Requests.Teams.Validators;
 
-public class CreateTeamCommandValidator : AbstractValidator<CreateTeamCommand>
+public class UpdateTeamCommandValidator : AbstractValidator<UpdateTeamCommand>
 {
-    public CreateTeamCommandValidator()
+    public UpdateTeamCommandValidator()
     {
         RuleFor(x => x.Model).NotNull().DependentRules(() =>
         {

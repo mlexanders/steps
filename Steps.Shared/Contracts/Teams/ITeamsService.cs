@@ -8,7 +8,7 @@ public interface ITeamsService
     Task<Result<Guid>> Create(CreateTeamViewModel model);
     Task<Result> Update(UpdateTeamViewModel model);
 
-    Task<Result<TeamViewModel>> GetTeamById(Guid teamId);
+    Task<Result<TeamViewModel>> GetById(Guid teamId);
     Task<Result<IPagedList<TeamViewModel>>> GetPaged(Page page);
     Task<Result> Delete(Guid teamId);
 

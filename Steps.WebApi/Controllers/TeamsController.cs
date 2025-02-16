@@ -36,7 +36,7 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpGet("{teamId:guid}")]
-    public async Task<Result<TeamViewModel>> GetTeamById(Guid teamId)
+    public async Task<Result<TeamViewModel>> GetById(Guid teamId)
     {
         return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }

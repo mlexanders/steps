@@ -30,7 +30,7 @@ public class ClubsController : ControllerBase, IClubsService
     }
     
     [HttpGet("{clubId:guid}")]
-    public Task<Result<ClubViewModel>> GetClubById(Guid clubId)
+    public Task<Result<ClubViewModel>> GetById(Guid clubId)
     {
         return _mediator.Send(new GetClubByIdQuery(clubId));
     }

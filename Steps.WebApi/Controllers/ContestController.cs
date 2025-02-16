@@ -27,11 +27,19 @@ public class ContestController : ControllerBase, IContestService
     {
         return await _mediator.Send(new CreateContestCommand(createContestViewModel));
     }
-    
-    [HttpGet]
-    public async Task<Result<IPagedList<Contest>>> Read([FromQuery] Page page)
+
+    [HttpGet("{contestId:guid}")]
+    public Task<Result<ContestViewModel>> GetById(Guid contestId)
     {
-        return await _mediator.Send(new GetContestsQuery(page));
+        throw new NotImplementedException(); //TODO:
+    }
+
+    [HttpGet]
+    public async Task<Result<IPagedList<ContestViewModel>>> GetPaged([FromQuery] Page page)
+    {
+        throw new NotImplementedException(); //TODO:
+
+        // return await _mediator.Send(new GetContestsQuery(page));
     }
     
     [HttpPatch]

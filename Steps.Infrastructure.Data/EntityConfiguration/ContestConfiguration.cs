@@ -10,8 +10,10 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
     {
         builder.HasKey(t => t.Id);
         
+        builder.HasIndex(t => t.Name)
+            .IsUnique()
+            .UseCollation("case_insensitive");
         builder.Property(t => t.Name)
-            .IsUnicode()
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
     }

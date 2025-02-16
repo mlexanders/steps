@@ -1,8 +1,8 @@
 ﻿using Calabonga.PagedListCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Steps.Application.Requests.Contests.Queries;
 using Steps.Application.Requests.Events.Commands;
-using Steps.Application.Requests.Events.Queries;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Events;

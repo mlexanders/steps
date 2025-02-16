@@ -26,6 +26,6 @@ public class DeleteEventCommandHandler : IRequestHandler<DeleteContestCommand, R
 
         await _contestManager.Delete(modelId);
         
-        return Result.Success("Мероприятие удалено!");
+        return Result.Ok().SetMessage("Мероприятие удалено!");
     }
 }

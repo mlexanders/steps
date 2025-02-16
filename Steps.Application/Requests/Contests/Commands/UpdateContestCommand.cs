@@ -27,6 +27,6 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateContestCommand, R
 
         await _contestManager.Update(contest);
 
-        return Result<Guid>.Success(contest.Id).SetMessage("Мероприятие успешно обновлено!");
+        return Result<Guid>.Ok(contest.Id).SetMessage("Мероприятие успешно обновлено!");
     }
 }

@@ -3,7 +3,6 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Shared.Contracts.Teams.ViewModels;
 using Steps.Domain.Entities;
-using Steps.Infrastructure.Data;
 using Steps.Shared;
 
 namespace Steps.Application.Requests.Teams.Commands;
@@ -15,7 +14,7 @@ public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Resul
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateTeamCommandHandler(ApplicationDbContext dbContext, IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateTeamCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;

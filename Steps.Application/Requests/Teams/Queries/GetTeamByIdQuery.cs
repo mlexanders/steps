@@ -1,4 +1,4 @@
-﻿using Calabonga.UnitOfWork;
+using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Teams.ViewModels;

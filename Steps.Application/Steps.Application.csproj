@@ -25,10 +25,12 @@
     <ItemGroup>
       <ProjectReference Include="..\ Steps.Domain\Steps.Domain.csproj" />
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
-      <ProjectReference Include="..\Steps.Infrastructure.Data\Steps.Infrastructure.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Requests\Accounts\Queries\" />
+      <Folder Include="Requests\Accounts\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
     </ItemGroup>
 

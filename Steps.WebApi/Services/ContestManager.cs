@@ -6,21 +6,21 @@ using Steps.Infrastructure.Data;
 
 namespace Steps.Services.WebApi.Services;
 
-public class EventManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IEventManager
+public class ContestManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IContestManager
 {
     private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
     
-    public async Task Create(Event model)
+    public async Task Create(Contest model)
     {
-        var repository = _unitOfWork.GetRepository<Event>();
+        var repository = _unitOfWork.GetRepository<Contest>();
 
         await repository.InsertAsync(model);
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<IPagedList<Event>> Read(int take, int skip)
+    public async Task<IPagedList<Contest>> Read(int take, int skip)
     {
-        var repository = _unitOfWork.GetRepository<Event>();
+        var repository = _unitOfWork.GetRepository<Contest>();
 
         var events = await repository.GetPagedListAsync(
             predicate: null,
@@ -34,9 +34,9 @@ public class EventManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IEven
         return events;
     }
 
-    public async Task Update(Event model)
+    public async Task Update(Contest model)
     {
-        var repository = _unitOfWork.GetRepository<Event>();
+        var repository = _unitOfWork.GetRepository<Contest>();
 
         var existingEvent = await repository.GetFirstOrDefaultAsync(
             predicate: e => e.Id == model.Id,
@@ -54,7 +54,7 @@ public class EventManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IEven
 
     public async Task Delete(Guid id)
     {
-        var repository = _unitOfWork.GetRepository<Event>();
+        var repository = _unitOfWork.GetRepository<Contest>();
 
         var model = await repository.GetFirstOrDefaultAsync(
             predicate: x => x.Id == id,

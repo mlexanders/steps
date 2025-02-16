@@ -68,7 +68,7 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.ToTable("Clubs");
                 });
 
-            modelBuilder.Entity("Steps.Domain.Entities.Event", b =>
+            modelBuilder.Entity("Steps.Domain.Entities.Contest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace Steps.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Contests");
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.Team", b =>

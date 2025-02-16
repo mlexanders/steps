@@ -82,7 +82,7 @@ namespace Steps.Infrastructure.Data.Migrations
                 defaultValue: "");
 
             migrationBuilder.CreateTable(
-                name: "Events",
+                name: "Contests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -137,7 +137,7 @@ namespace Steps.Infrastructure.Data.Migrations
                 table: "Teams");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "Contests");
 
             migrationBuilder.DropColumn(
                 name: "FullName",

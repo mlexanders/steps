@@ -1,8 +1,6 @@
-﻿using Steps.Domain.Base;
+﻿namespace Steps.Shared.Contracts.Events.ViewModels;
 
-namespace Steps.Domain.Entities;
-
-public class Event : Entity
+public class CreateContestViewModel
 {
     public string Name { get; set; }
     public string? Description { get; set; }

@@ -4,9 +4,9 @@ using Steps.Domain.Entities;
 
 namespace Steps.Infrastructure.Data.EntityConfiguration;
 
-public class EventConfiguration : IEntityTypeConfiguration<Event>
+public class ContestConfiguration : IEntityTypeConfiguration<Contest>
 {
-    public void Configure(EntityTypeBuilder<Event> builder)
+    public void Configure(EntityTypeBuilder<Contest> builder)
     {
         builder.HasKey(t => t.Id);
         

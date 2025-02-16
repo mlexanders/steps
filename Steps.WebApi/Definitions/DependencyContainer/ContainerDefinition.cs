@@ -15,6 +15,6 @@ public class ContainerDefinition : AppDefinition
         services.AddTransient<IPasswordHasher, PasswordHasher>();
         services.AddTransient<IUserManager<User>, UserManager>();
         services.AddTransient<ISignInManager, SignInManager>();
-        services.AddTransient<IEventManager, EventManager>();
+        services.AddTransient<IContestManager, ContestManager>();
     }
 }

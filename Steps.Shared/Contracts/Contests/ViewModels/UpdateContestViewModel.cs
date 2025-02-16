@@ -1,6 +1,6 @@
 ﻿namespace Steps.Shared.Contracts.Events.ViewModels;
 
-public class UpdateEventViewModel
+public class UpdateContestViewModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Accounts.ViewModels;
-using Steps.Shared.Contracts.Events.ViewModels;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Application.Mappers;
 

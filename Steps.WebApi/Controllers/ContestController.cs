@@ -1,12 +1,12 @@
 ﻿using Calabonga.PagedListCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
-using Steps.Application.Requests.Events.Commands;
 using Steps.Domain.Entities;
 using Steps.Shared;
-using Steps.Shared.Contracts.Events;
-using Steps.Shared.Contracts.Events.ViewModels;
+using Steps.Shared.Contracts.Contests;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 

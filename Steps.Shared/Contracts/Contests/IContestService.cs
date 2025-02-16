@@ -1,8 +1,8 @@
 ﻿using Calabonga.PagedListCore;
 using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Events.ViewModels;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Shared.Contracts.Events;
+namespace Steps.Shared.Contracts.Contests;
 
 public interface IContestService
 {

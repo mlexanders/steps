@@ -1,4 +1,4 @@
-﻿namespace Steps.Shared.Contracts.Events.ViewModels;
+﻿namespace Steps.Shared.Contracts.Contests.ViewModels;
 
 public class CreateContestViewModel
 {

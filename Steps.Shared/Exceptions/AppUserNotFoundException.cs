@@ -1,19 +1,29 @@
-﻿using System.Security.Authentication;
+﻿namespace Steps.Shared.Exceptions;
 
-namespace Steps.Shared.Exceptions;
-
-public class UserNotFoundException : Exception
+public class UserNotFoundException : StepsBusinessException
 {
-    public UserNotFoundException(string email) : base($"Пользователь c email: {email} не найден") { }
+    public UserNotFoundException(string email) : base($"Пользователь c email: {email} не найден")
+    {
+    }
 }
 
-public class AppAccessDeniedException : AuthenticationException
+public class AppAccessDeniedException : StepsBusinessException
 {
-    public AppAccessDeniedException() : base("Доступ запрещен") { }
+    public AppAccessDeniedException() : base("Доступ запрещен")
+    {
+    }
 }
 
-public class InvalidCredentialsException : AuthenticationException
+public class InvalidCredentialsException : StepsBusinessException
 {
-    public InvalidCredentialsException() : base($"Неверный логин или пароль") { }
+    public InvalidCredentialsException() : base($"Неверный логин или пароль")
+    {
+    }
 }
 
+public class StepsBusinessException : Exception
+{
+    public StepsBusinessException(string message) : base(message)
+    {
+    }
+}

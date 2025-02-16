@@ -6,15 +6,20 @@ using Steps.Infrastructure.Data;
 
 namespace Steps.Services.WebApi.Services;
 
-public class ContestManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : IContestManager
+public class ContestManager : IContestManager
 {
-    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
-    
-    public async Task Create(Contest model)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public ContestManager(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task Create(Contest contest)
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
-        await repository.InsertAsync(model);
+        await repository.InsertAsync(contest);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -22,7 +27,7 @@ public class ContestManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : ICo
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
-        var events = await repository.GetPagedListAsync(
+        var contests = await repository.GetPagedListAsync(
             predicate: null,
             orderBy: q => q.OrderBy(e => e.Id),
             include: null,
@@ -31,19 +36,19 @@ public class ContestManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : ICo
             ignoreAutoIncludes: false
         );
 
-        return events;
+        return contests;
     }
 
     public async Task Update(Contest model)
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
-        var existingEvent = await repository.GetFirstOrDefaultAsync(
+        var existingContest = await repository.GetFirstOrDefaultAsync(
             predicate: e => e.Id == model.Id,
             trackingType: TrackingType.NoTracking
         );
 
-        if (existingEvent is null)
+        if (existingContest is null)
         {
             throw new KeyNotFoundException($"Событие с ID {model.Id} не найдено.");
         }
@@ -56,20 +61,19 @@ public class ContestManager (IUnitOfWork<ApplicationDbContext> unitOfWork) : ICo
     {
         var repository = _unitOfWork.GetRepository<Contest>();
 
-        var model = await repository.GetFirstOrDefaultAsync(
+        var contest = await repository.GetFirstOrDefaultAsync(
             predicate: x => x.Id == id,
             orderBy: null,
             include: null,
             trackingType: TrackingType.Tracking
         );
 
-        if (model is null)
+        if (contest is null)
         {
             throw new KeyNotFoundException($"Событие с ID {id} не найдено.");
         }
 
-        repository.Delete(model);
+        repository.Delete(contest);
         await _unitOfWork.SaveChangesAsync();
     }
-
 }

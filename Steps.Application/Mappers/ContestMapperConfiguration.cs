@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Accounts.ViewModels;
-using Steps.Shared.Contracts.Events.ViewModels;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Application.Mappers;
 
-public class EventMapperConfiguration : Profile
+public class ContestMapperConfiguration : Profile
 {
-    public EventMapperConfiguration()
+    public ContestMapperConfiguration()
     {
+        //CreateContestViewModel
         CreateMap<CreateContestViewModel, Contest>()
             .ForMember(x => x.Id, o => o.Ignore())
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
@@ -22,6 +22,7 @@ public class EventMapperConfiguration : Profile
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
             .ForMember(x => x.Description, o => o.MapFrom(m => m.Description));
         
+        //UpdateContestViewModel
         CreateMap<UpdateContestViewModel, Contest>()
             .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))

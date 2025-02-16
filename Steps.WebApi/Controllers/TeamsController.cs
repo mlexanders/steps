@@ -22,10 +22,9 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel command)
+    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel model)
     {
-        var teamId = await _mediator.Send(new CreateTeamCommand(command));
-        return Result<Guid>.Success(teamId).SetTraceId(HttpContext.TraceIdentifier);
+        return await _mediator.Send(new CreateTeamCommand(model));
     }
 
     // [HttpPut("{teamId:guid}")]
@@ -47,11 +46,7 @@ public class TeamsController : ControllerBase, ITeamsService
     [HttpGet("{teamId:guid}")]
     public async Task<Result<TeamViewModel>> GetTeamById(Guid teamId)
     {
-        var team = await _mediator.Send(new GetTeamByIdQuery(teamId));
-        
-        return team is null
-            ? Result<TeamViewModel>.NotFound().SetTraceId(HttpContext.TraceIdentifier)
-            : Result<TeamViewModel>.Success(team).SetTraceId(HttpContext.TraceIdentifier);
+        return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }
 
     // [HttpGet]

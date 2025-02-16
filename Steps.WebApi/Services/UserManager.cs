@@ -24,9 +24,13 @@ public class UserManager : IUserManager<User>
         model.PasswordHash = _passwordHasher.HashPassword(password);
         var repository = _unitOfWork.GetRepository<User>();
 
+        var userIsExist = await repository.ExistsAsync(u => u.Login.Equals(model.Login));
+
+        if (userIsExist)
+            throw new StepsBusinessException("Пользователь с таким email уже зарегистрирован");
+
         var entry = await repository.InsertAsync(model);
         await _unitOfWork.SaveChangesAsync();
-
         return entry.Entity.Id;
     }
 

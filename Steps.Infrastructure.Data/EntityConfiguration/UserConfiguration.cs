@@ -9,8 +9,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Login).IsRequired().HasMaxLength(EntityConfiguration.MaxLoginLength);
-        builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(256);
+
+        builder.HasIndex(u => u.Login)
+            .IsUnique();
+        builder.Property(u => u.Login)
+            .UseCollation("case_insensitive")
+            .IsRequired()
+            .HasMaxLength(EntityConfiguration.MaxLoginLength);
+
+        builder.Property(u => u.PasswordHash).IsRequired();
         builder.Property(u => u.Role).IsRequired();
     }
 }

@@ -39,10 +39,6 @@ public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
         if (!failures.Any()) return next();
 
-        throw new ValidationException(failures); // TODO:
-        
-        // var result = Activator.CreateInstance(type);
-        // ((OperationResult)result!).AddError(new ValidationException(failures));
-        // return Task.FromResult((TResponse)result!);
+        throw new ValidationException(failures);
     }
 }

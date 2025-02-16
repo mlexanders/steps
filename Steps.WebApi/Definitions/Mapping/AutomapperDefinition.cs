@@ -2,7 +2,6 @@
 
 namespace Steps.Services.WebApi.Definitions.Mapping;
 
-
 /// <summary>
 /// Register Automapper as application definition
 /// </summary>

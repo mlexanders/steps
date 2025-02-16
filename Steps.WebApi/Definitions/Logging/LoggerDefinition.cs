@@ -14,7 +14,7 @@ public class LoggerDefinition : AppDefinition
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .CreateLogger();
-        
-            builder.Host.UseSerilog();
+
+        builder.Host.UseSerilog();
     }
 }

@@ -7,8 +7,10 @@ public class CreateTeamCommandValidator : AbstractValidator<CreateTeamCommand>
 {
     public CreateTeamCommandValidator()
     {
-        RuleFor(x => x.Team).NotEmpty();
-        RuleFor(x => x.Team.Name).Length(1, 1024);
-        RuleFor(x => x.Team.OwnerId).NotEqual(Guid.Empty);
+        RuleFor(x => x.Model).NotNull().DependentRules(() =>
+        {
+            RuleFor(x => x.Model.Name).Length(1, 1024).WithMessage("Введите название команды");
+            RuleFor(x => x.Model.OwnerId).NotEqual(Guid.Empty).WithMessage("Тренер команды не выбран");
+        }).WithMessage("Свойства команды должны быть заполнены");
     }
 }

@@ -3,9 +3,9 @@ using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
 using Steps.Shared;
-using Steps.Shared.Contracts.Events.ViewModels;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Application.Requests.Events.Commands;
+namespace Steps.Application.Requests.Contests.Commands;
 
 public record CreateContestCommand (CreateContestViewModel Model) : IRequest<Result<Guid>>;
 
@@ -27,6 +27,6 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
 
         await _contestManager.Create(contest);
 
-        return Result<Guid>.Success(contest.Id).SetMessage("Мероприятие успешно создано!");
+        return Result<Guid>.Ok(contest.Id).SetMessage("Мероприятие успешно создано!");
     }
 }

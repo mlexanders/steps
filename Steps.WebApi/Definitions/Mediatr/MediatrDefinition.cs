@@ -15,6 +15,7 @@ public class MediatrDefinition : AppDefinition
         {
             cfg.RegisterServicesFromAssemblyContaining<Program>();
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+            cfg.AddOpenBehavior(typeof(ErrorHandlerBehavior<,>));
             cfg.AddOpenRequestPostProcessor(typeof(UnitOfWorkPostProcessor<,>));
         });
     }

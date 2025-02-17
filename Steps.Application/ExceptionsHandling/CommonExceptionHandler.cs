@@ -7,22 +7,22 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.ExceptionsHandling;
 
-public class CommonExceptionDescriptor : IExceptionDescriptor
+public class CommonExceptionHandler : IExceptionHandler
 {
     private readonly SqlExceptionDescriptor _sqlDescriptor;
     private readonly BusinessExceptionDescriptor _businessDescriptor;
     private readonly ValidationExceptionDescriptor _validationDescriptor;
 
-    public CommonExceptionDescriptor()
+    public CommonExceptionHandler()
     {
         _validationDescriptor = new ValidationExceptionDescriptor();
         _sqlDescriptor = new SqlExceptionDescriptor();
         _businessDescriptor = new BusinessExceptionDescriptor();
     }
 
-    public async Task<(Result content, int statusCode)> GetResult(Exception exception)
+    public async Task<(Result content, int statusCode)> GetDescription(Exception exception)
     {
-        (Error Error, int StatusCode) result = exception switch
+        return exception switch
         {
             PostgresException pgEx when string.IsNullOrEmpty(pgEx.SqlState) => _sqlDescriptor
                 .GetDescriptionWithStatusCode(pgEx),
@@ -34,7 +34,5 @@ public class CommonExceptionDescriptor : IExceptionDescriptor
                 .GetDescriptionWithStatusCode(validationException),
             _ => throw new ArgumentOutOfRangeException(nameof(exception), exception, null)
         };
-
-        return (Result.Fail(result.Error), result.StatusCode);
     }
 }

@@ -37,6 +37,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Steps.Application\Steps.Application.csproj" />
       <ProjectReference Include="..\Steps.Infrastructure.Data\Steps.Infrastructure.Data.csproj" />
+      <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
+      <ProjectReference Include="..\Steps.Utils\Steps.Utils.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Steps.Application.Interfaces;
 using Steps.Services.WebApi.Middleware;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.ErrorHandling;
 

@@ -1,4 +1,7 @@
-﻿namespace Steps.Services.WebApi.Utils.AppDefinition;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Steps.Utils.AppDefinition;
 
 public abstract class AppDefinition
 {

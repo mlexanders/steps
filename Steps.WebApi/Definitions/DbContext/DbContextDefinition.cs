@@ -1,8 +1,7 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using Steps.Application.Interfaces;
 using Steps.Infrastructure.Data;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.DbContext;
 

@@ -1,4 +1,4 @@
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 var builder = WebApplication.CreateBuilder(args);
 

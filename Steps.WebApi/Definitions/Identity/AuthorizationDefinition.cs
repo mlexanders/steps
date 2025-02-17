@@ -1,5 +1,5 @@
 ﻿using Steps.Infrastructure.Data;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.Identity;
 

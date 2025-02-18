@@ -1,6 +1,7 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
 using Steps.Shared.Exceptions;
@@ -24,9 +25,13 @@ public class UserManager : IUserManager<User>
         model.PasswordHash = _passwordHasher.HashPassword(password);
         var repository = _unitOfWork.GetRepository<User>();
 
+        var userIsExist = await repository.ExistsAsync(u => u.Login.Equals(model.Login));
+
+        if (userIsExist)
+            throw new StepsBusinessException("Пользователь с таким email уже зарегистрирован");
+
         var entry = await repository.InsertAsync(model);
         await _unitOfWork.SaveChangesAsync();
-
         return entry.Entity.Id;
     }
 
@@ -37,10 +42,10 @@ public class UserManager : IUserManager<User>
                 predicate: u => u.Login.Equals(email),
                 trackingType: TrackingType.NoTracking);
 
-        if (user == null) throw new UserNotFoundException(email);
+        if (user == null) throw new AppUserNotFoundException(email);
 
         var result = _passwordHasher.VerifyHashedPassword(user.PasswordHash, password);
-        return result is PasswordVerificationResult.Success ? user : throw new InvalidCredentialsException();
+        return result is PasswordVerificationResult.Success ? user : throw new AppInvalidCredentialsException();
     }
 
     public async Task<User?> FindByEmailAsync(string email)

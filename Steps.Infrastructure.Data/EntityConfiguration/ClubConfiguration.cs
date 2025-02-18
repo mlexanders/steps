@@ -9,9 +9,11 @@ public class ClubConfiguration : IEntityTypeConfiguration<Club>
     public void Configure(EntityTypeBuilder<Club> builder)
     {
         builder.HasKey(c => c.Id);
-        
+
+        builder.HasIndex(c => c.Name)
+            .IsUnique();
         builder.Property(c => c.Name)
-            .IsUnicode()
+            .UseCollation("case_insensitive")
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
 

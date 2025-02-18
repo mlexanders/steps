@@ -1,5 +1,5 @@
 ﻿using Steps.Infrastructure.Data;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.Identity;
 
@@ -7,7 +7,6 @@ public class AuthorizationDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
-        
         builder.Services.AddAuthentication(AppData.Identity.AuthenticationType)
             .AddCookie(options =>
             {

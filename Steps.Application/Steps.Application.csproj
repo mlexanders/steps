@@ -12,8 +12,9 @@
         <PackageReference Include="Calabonga.PagedListCore" Version="1.0.4" />
         <PackageReference Include="Calabonga.UnitOfWork" Version="5.0.0" />
         <PackageReference Include="FluentValidation" Version="11.11.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
         <PackageReference Include="MediatR" Version="12.4.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+        <PackageReference Include="Npgsql" Version="9.0.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
@@ -24,12 +25,15 @@
     <ItemGroup>
       <ProjectReference Include="..\ Steps.Domain\Steps.Domain.csproj" />
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
-      <ProjectReference Include="..\Steps.Infrastructure.Data\Steps.Infrastructure.Data.csproj" />
+      <ProjectReference Include="..\Steps.Utils\Steps.Utils.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
+      <Folder Include="Definitions\" />
       <Folder Include="Requests\Accounts\Queries\" />
       <Folder Include="Requests\Accounts\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
+      <Folder Include="Requests\Clubs\Queries\" />
     </ItemGroup>
 
 </Project>

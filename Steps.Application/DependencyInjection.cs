@@ -1,13 +1,25 @@
-﻿using Steps.Application.Mappers;
+﻿using FluentValidation;
+using Steps.Application.Behaviors;
+using Steps.Application.Behaviors.Base;
+using Steps.Application.ExceptionsHandling;
+using Steps.Application.Interfaces;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static WebApplicationBuilder AddApplication(this WebApplicationBuilder builder)
     {
-        services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
-        services.AddAutoMapper(typeof(UserMapperConfiguration));
-        return services;
+        builder.Services.AddTransient<CommonExceptionHandler>();
+        builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
+        builder.Services.AddTransient<IContestManager, ContestManager>();
+
+        return builder;
+    }
+    
+    public static void UseApplication(this WebApplication app)
+    {
+        app.UseDefinitions(typeof(DependencyInjection));
     }
 }

@@ -28,12 +28,17 @@
         <PackageReference Include="Serilog" Version="4.2.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Application\Steps.Application.csproj" />
       <ProjectReference Include="..\Steps.Infrastructure.Data\Steps.Infrastructure.Data.csproj" />
+      <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
+      <ProjectReference Include="..\Steps.Utils\Steps.Utils.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using Serilog;
 using Serilog.Events;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.Logging;
 
@@ -14,7 +14,7 @@ public class LoggerDefinition : AppDefinition
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .CreateLogger();
-        
-            builder.Host.UseSerilog();
+
+        builder.Host.UseSerilog();
     }
 }

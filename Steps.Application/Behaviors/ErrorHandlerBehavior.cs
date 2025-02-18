@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Steps.Application.Exceptions;
 using Steps.Application.ExceptionsHandling;
-using Steps.Application.Interfaces;
 using Steps.Shared;
 
 namespace Steps.Application.Behaviors;

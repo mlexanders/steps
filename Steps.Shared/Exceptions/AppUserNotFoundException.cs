@@ -1,8 +1,8 @@
 ﻿namespace Steps.Shared.Exceptions;
 
-public class UserNotFoundException : StepsBusinessException
+public class AppUserNotFoundException : StepsBusinessException
 {
-    public UserNotFoundException(string email) : base($"Пользователь c email: {email} не найден")
+    public AppUserNotFoundException(string email) : base($"Пользователь c email: {email} не найден")
     {
     }
 }
@@ -21,9 +21,9 @@ public class AppNotFoundException : StepsBusinessException
     }
 }
 
-public class InvalidCredentialsException : StepsBusinessException
+public class AppInvalidCredentialsException : StepsBusinessException
 {
-    public InvalidCredentialsException() : base($"Неверный логин или пароль")
+    public AppInvalidCredentialsException() : base($"Неверный логин или пароль")
     {
     }
 }
@@ -31,6 +31,13 @@ public class InvalidCredentialsException : StepsBusinessException
 public class StepsBusinessException : Exception
 {
     public StepsBusinessException(string message) : base(message)
+    {
+    }
+}
+
+public class AppUnauthorizedAccessException : StepsBusinessException
+{
+    public AppUnauthorizedAccessException() : base("Неавторизован")
     {
     }
 }

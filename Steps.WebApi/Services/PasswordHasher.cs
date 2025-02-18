@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 
 namespace Steps.Services.WebApi.Services;
 

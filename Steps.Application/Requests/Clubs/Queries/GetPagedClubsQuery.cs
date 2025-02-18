@@ -3,6 +3,7 @@ using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;

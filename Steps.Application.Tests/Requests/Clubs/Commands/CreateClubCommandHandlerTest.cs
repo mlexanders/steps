@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Steps.Application.Exceptions;
+using Steps.Application.Interfaces.Base;
 
 namespace Steps.Application.Tests.Requests.Clubs.Commands;
 

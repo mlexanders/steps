@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 
 namespace Steps.Application.Tests;

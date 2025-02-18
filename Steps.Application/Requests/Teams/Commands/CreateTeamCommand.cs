@@ -2,6 +2,7 @@
 using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Definitions;
 using Steps.Shared.Contracts.Teams.ViewModels;
 using Steps.Domain.Entities;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Domain.Entities;
 using Steps.Shared;

@@ -5,7 +5,7 @@ using Steps.Domain.Entities;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Services.WebApi.Services;
+namespace Steps.Application;
 
 public class ContestManager : IContestManager
 {

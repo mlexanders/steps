@@ -15,6 +15,7 @@ public class MediatrDefinition : AppDefinition
             // Важен порядок регистрации 
             cfg.RegisterServicesFromAssemblyContaining<MediatrDefinition>();
             cfg.AddOpenBehavior(typeof(ErrorHandlerBehavior<,>));
+            cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
             cfg.AddOpenRequestPostProcessor(typeof(UnitOfWorkPostProcessor<,>));
         });

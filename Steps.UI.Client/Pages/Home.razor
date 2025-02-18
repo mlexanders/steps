@@ -1,7 +1,25 @@
 ﻿@page "/"
+@using Steps.UI.Client.Services
+
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 <RadzenButton Text="Hi"></RadzenButton>
 Welcome to your new app.
+
+
+@code
+{
+    [Inject] public AccountService AccountService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await AccountService.Login(new()
+        {
+            Login = "string",
+            Password = "string"
+        });
+        var user = result.Value;
+    }
+}

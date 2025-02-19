@@ -7,34 +7,33 @@ namespace Steps.UI.Client.Services;
 public class HttpClientService 
 {
     private readonly HttpClient _httpClient;
-    private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     public HttpClientService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    public async Task<TResult> GetAsync<TResult, TResponse>(string resource) where TResponse : class, new()
+    public async Task<TResponse> GetAsync<TResponse, TRequest>(string resource) where TRequest : class, new()
     {
-        return await SendRequest<TResult, TResponse>(HttpMethod.Get, resource);
+        return await SendRequest<TResponse, TRequest>(HttpMethod.Get, resource);
     }
 
-    public async Task<TResult> PostAsync<TResult, TResponse>(string resource, TResponse data) where TResponse : class, new()
+    public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest data) where TRequest : class, new()
     {
-        return await SendRequest<TResult, TResponse>(HttpMethod.Post, resource, data);
+        return await SendRequest<TResponse, TRequest>(HttpMethod.Post, resource, data);
     }
 
-    public async Task<TResult> PatchAsync<TResult, TResponse>(string resource, TResponse data) where TResponse : class, new()
+    public async Task<TResponse> PatchAsync<TResponse, TRequest>(string resource, TRequest data) where TRequest : class, new()
     {
-        return await SendRequest<TResult, TResponse>(HttpMethod.Patch, resource, data);
+        return await SendRequest<TResponse, TRequest>(HttpMethod.Patch, resource, data);
     }
 
-    public async Task<TResult> DeleteAsync<TResult>(string resource)
+    public async Task<TResponse> DeleteAsync<TResponse>(string resource)
     {
-        return await SendRequest<TResult, object>(HttpMethod.Delete, resource);
+        return await SendRequest<TResponse, object>(HttpMethod.Delete, resource);
     }
 
-    private async Task<TResult> SendRequest<TResult, TResponse>(HttpMethod method, string resource, TResponse? data = null) where TResponse : class, new()
+    private async Task<TResponse> SendRequest<TResponse, TRequest>(HttpMethod method, string resource, TRequest? data = null) where TRequest : class, new()
     {
         var request = new HttpRequestMessage(method, resource);
 
@@ -44,15 +43,16 @@ public class HttpClientService
         }
 
         var response = await _httpClient.SendAsync(request);
-        return await HandleResponse<TResult, TResponse>(response);
+        return await HandleResponse<TResponse, TRequest>(response);
     }
 
-    private async Task<TResult> HandleResponse<TResult, TResponse>(HttpResponseMessage response)
+    private async Task<TResponse> HandleResponse<TResponse, TRequest>(HttpResponseMessage response)
     {
+        //TODO: 
         if (response.IsSuccessStatusCode)
         {
-            var content = await response.Content.ReadFromJsonAsync<TResult>();
-            return content;
+            var content = await response.Content.ReadFromJsonAsync<TResponse>();
+            return content; 
         }
         
         var message = await response.Content.ReadAsStringAsync();

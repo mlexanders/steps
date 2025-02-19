@@ -49,14 +49,13 @@ public class HttpClientService
 
     private async Task<TResult> HandleResponse<TResult, TResponse>(HttpResponseMessage response)
     {
-        var content = await response.Content.ReadFromJsonAsync<TResult>();
-
-        if (!response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
-            //TODO: 
-            // return content;
+            var content = await response.Content.ReadFromJsonAsync<TResult>();
+            return content;
         }
         
-        return content;
+        var message = await response.Content.ReadAsStringAsync();
+        throw new HttpRequestException(message);
     }
 }

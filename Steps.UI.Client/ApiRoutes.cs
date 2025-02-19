@@ -1,4 +1,4 @@
-﻿namespace Steps.UI.Client.Services;
+﻿namespace Steps.UI.Client;
 
 public static class ApiRoutes
 {
@@ -7,7 +7,7 @@ public static class ApiRoutes
         public const string Register = "Account/register";
         public const string Login = "Account/login";
         public const string Logout = "Account/logout";
-        public const string GetCurrentUser = "Account/current-user";
+        public const string GetCurrentUser = "Account/GetCurrentUser";
         public const string ConfirmAction = "Account/confirm-action";
     }
 }

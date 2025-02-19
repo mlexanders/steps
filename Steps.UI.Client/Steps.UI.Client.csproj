@@ -24,4 +24,10 @@
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="System.Text.Json">
+        <HintPath>..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.2\System.Text.Json.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

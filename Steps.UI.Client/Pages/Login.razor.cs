@@ -14,6 +14,7 @@ public partial class Login : ComponentBase
     private bool _infoVisible;
 
     [Inject] private ApplicationAuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [Inject] private AccountService AccountService { get; set; }
     [Inject] private NavigationManager NavigationManager { get; set; }
     [Inject] public DialogService DialogService { get; set; }
 
@@ -28,7 +29,7 @@ public partial class Login : ComponentBase
 
         try
         {
-            // await AuthenticationStateProvider.Login(model);
+            await AccountService.Login(model);
             NavigationManager.NavigateTo("/", false);
         }
         catch (HttpRequestException e)

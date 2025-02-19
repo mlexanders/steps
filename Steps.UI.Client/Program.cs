@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<HttpClient>(sp =>
     return factory.CreateClient("Default");
 });
 
+builder.Services.AddScoped<ApplicationAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<ApplicationAuthenticationStateProvider>());
 
 builder.Services.AddScoped(typeof(HttpClientService));
 builder.Services.AddScoped(typeof(AccountService));

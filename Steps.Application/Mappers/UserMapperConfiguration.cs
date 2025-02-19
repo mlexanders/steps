@@ -8,13 +8,13 @@ public class UserMapperConfiguration : Profile
 {
     public UserMapperConfiguration()
     {
-        CreateMap<RegistrationRequestViewModel, User>()
+        CreateMap<RegistrationViewModel, User>()
             .ForMember(x => x.Id, o => o.Ignore())
             .ForMember(x => x.PasswordHash, o => o.Ignore())
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
             .ForMember(x => x.Role, o => o.MapFrom(m => m.Role));
 
-        CreateMap<User, RegistrationRequestViewModel>()
+        CreateMap<User, RegistrationViewModel>()
             .ForMember(x => x.Password, o => o.Ignore())
             .ForMember(x => x.PasswordConfirm, o => o.Ignore())
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))

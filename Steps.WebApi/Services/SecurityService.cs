@@ -32,7 +32,7 @@ public class SecurityService : ISecurityService
             Role = Enum.TryParse(userClaims.FindFirstValue(ClaimTypes.Role), out Role role) ? role : Role.Undefined,
         };
 
-        return Task.FromResult<User>(user);
+        return Task.FromResult(user);
     }
 
     protected static ClaimsIdentity CreateClaimsFrom(User user)

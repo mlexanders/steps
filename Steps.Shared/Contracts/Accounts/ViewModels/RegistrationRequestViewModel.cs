@@ -2,7 +2,7 @@ using Steps.Domain.Definitions;
 
 namespace Steps.Shared.Contracts.Accounts.ViewModels;
 
-public class RegistrationRequestViewModel
+public class RegistrationViewModel
 {
     public string Name { get; set; }
     public Role Role { get; set; }

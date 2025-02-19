@@ -21,7 +21,7 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
         {
             var state = await _accountService.GetCurrentUser();
 
-            if (state.IsSuccess)
+            if (state is { IsSuccess: true, Value: not null })
                 identity = CreateClaimsFrom(state.Value);
         }
         catch (HttpRequestException ex)

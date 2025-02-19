@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace Steps.UI.Client.Services;
@@ -48,14 +49,14 @@ public class HttpClientService
 
     private async Task<TResult> HandleResponse<TResult, TResponse>(HttpResponseMessage response)
     {
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadFromJsonAsync<TResult>();
 
         if (!response.IsSuccessStatusCode)
         {
-            return (TResult)Activator.CreateInstance(typeof(TResult), $"Ошибка {response.StatusCode}: {content}")!;
+            //TODO: 
+            // return content;
         }
-
-        var deserialized = JsonSerializer.Deserialize<TResponse>(content, _jsonOptions);
-        return (TResult)Activator.CreateInstance(typeof(TResult), deserialized)!;
+        
+        return content;
     }
 }

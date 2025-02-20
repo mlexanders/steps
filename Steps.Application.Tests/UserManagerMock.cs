@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
+using Steps.Domain.Base;
 using Steps.Domain.Entities;
 
 namespace Steps.Application.Tests;
@@ -13,14 +14,14 @@ public class UserManagerMock : IUserManager<User>
         return Task.FromResult(new Guid());
     }
 
-    public Task<User> Login(string email, string password)
+    public async Task<IUser> Login(string email, string password)
     {
-        return Task.FromResult(new User());
+        return new User();
     }
 
-    public Task<User> FindByEmailAsync(string email)
+    public async Task<IUser> FindByEmailAsync(string email)
     {
-        return Task.FromResult(new User());
+        return new User();
     }
 
     public Task<string> GenerateEmailConfirmationTokenAsync(User user)

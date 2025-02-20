@@ -7,7 +7,7 @@ using Steps.Shared.Contracts.Accounts.ViewModels;
 
 namespace Steps.Application.Requests.Accounts.Commands;
 
-public record LoginRequestCommand(LoginRequestViewModel Model) : IRequest<Result<UserViewModel>>;
+public record LoginRequestCommand(LoginViewModel Model) : IRequest<Result<UserViewModel>>;
 
 public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand,Result<UserViewModel>>
 {

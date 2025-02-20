@@ -2,15 +2,16 @@
 using System.Threading.Tasks;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
+using Steps.Domain.Base;
 using Steps.Domain.Entities;
 
 namespace Steps.Application.Tests;
 
 public class SignInManagerMock : ISignInManager
 {
-    public Task<User> GetCurrentUser()
+    public async Task<IUser> GetCurrentUser()
     {
-        return Task.FromResult(new User());
+        return new User();
     }
 
     public Task<bool> IsSignedIn()
@@ -23,7 +24,7 @@ public class SignInManagerMock : ISignInManager
         throw new NotImplementedException();
     }
 
-    public Task<User> SignInAsync(string email, string password)
+    public Task<IUser> SignInAsync(string email, string password)
     {
         throw new NotImplementedException();
     }

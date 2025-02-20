@@ -1,4 +1,4 @@
-﻿namespace Steps.UI.Client;
+﻿namespace Steps.UI.Client.Services.Api;
 
 public static class ApiRoutes
 {

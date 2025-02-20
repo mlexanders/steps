@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Shared.Contracts.Accounts.ViewModels;
+using Steps.UI.Client.Services.Api;
 
 namespace Steps.UI.Client.Services;
 
@@ -19,20 +20,19 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
 
         try
         {
-            var state = await _accountService.GetCurrentUser();
+            var result = await _accountService.GetCurrentUser();
 
-            if (state is { IsSuccess: true, Value: not null })
-                identity = CreateClaimsFrom(state.Value);
+            if (result is { IsSuccess: true, Value: not null })
+                identity = CreateClaimsFrom(result.Value);
         }
         catch (HttpRequestException ex)
         {
         }
-
-        var result = new AuthenticationState(new ClaimsPrincipal(identity));
-        return result;
+        var state = new AuthenticationState(new ClaimsPrincipal(identity));
+        return state;
     }
     
-    protected static ClaimsIdentity CreateClaimsFrom(UserViewModel user)
+    private static ClaimsIdentity CreateClaimsFrom(UserViewModel user)
     {
         var claims = new List<Claim>
         {
@@ -43,10 +43,5 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
         };
 
         return new ClaimsIdentity(claims, "Some-claims");
-    }
-    
-    private static async Task<AuthenticationState> GetAnonymousState()
-    {
-        return new AuthenticationState(new ClaimsPrincipal());
     }
 }

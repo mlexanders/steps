@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Steps.UI.Client.Services;
+namespace Steps.UI.Client.Services.Api.Base;
 
 public class HttpClientService 
 {

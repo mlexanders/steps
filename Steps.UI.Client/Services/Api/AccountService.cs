@@ -1,8 +1,9 @@
 ﻿using Steps.Shared;
 using Steps.Shared.Contracts.Accounts;
 using Steps.Shared.Contracts.Accounts.ViewModels;
+using Steps.UI.Client.Services.Api.Base;
 
-namespace Steps.UI.Client.Services;
+namespace Steps.UI.Client.Services.Api;
 
 public class AccountService : IAccountService
 {

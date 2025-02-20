@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using Steps.UI.Client;
 using Steps.UI.Client.Services;
+using Steps.UI.Client.Services.Api;
+using Steps.UI.Client.Services.Api.Base;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

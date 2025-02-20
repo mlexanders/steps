@@ -1,14 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
+using Steps.Domain.Base;
 using Steps.Domain.Entities;
 
 namespace Steps.Application.Tests;
 
 public class SecurityServiceMock : ISecurityService
 {
-    public Task<User> GetCurrentUser()
+    public async Task<IUser> GetCurrentUser()
     {
-        return Task.FromResult(new User());
+        return new User();
     }
 }

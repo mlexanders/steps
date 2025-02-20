@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
+using Steps.Domain.Base;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
 using Steps.Shared.Exceptions;
@@ -27,7 +28,7 @@ public class SignInManager : SecurityService, ISignInManager
         await HttpContextAccessor!.HttpContext!.SignOutAsync();
     }
 
-    public async Task<User> SignInAsync(string email, string password)
+    public async Task<IUser> SignInAsync(string email, string password)
     {
         var user = await _userManager.Login(email, password) ?? throw new AppUserNotFoundException(email);
 

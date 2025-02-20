@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
@@ -9,7 +8,7 @@ namespace Steps.Application.Requests.Accounts.Commands;
 
 public record LoginRequestCommand(LoginViewModel Model) : IRequest<Result<UserViewModel>>;
 
-public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand,Result<UserViewModel>>
+public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand, Result<UserViewModel>>
 {
     private readonly ISignInManager _signInManager;
     private readonly IMapper _mapper;

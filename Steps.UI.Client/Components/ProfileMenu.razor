@@ -1,11 +1,8 @@
-﻿@using Steps.Domain.Base
-@using Steps.UI.Client.Services
-@inject NavigationManager NavigationManager
+﻿@inject NavigationManager NavigationManager
 
-<RadzenProfileMenu Click="@Logout">
+<RadzenProfileMenu Click="@OnAction">
     <Template>
-        <RadzenGravatar Email="@CurrentUser.Login"/>
-        <RadzenText Text="@CurrentUser.Login"/>
+        <RadzenGravatar Email="@CurrentUser?.Login"/>
     </Template>
     <ChildContent>
         <RadzenProfileMenuItem Text="Профиль" Path="/Profile" Icon="account_circle"></RadzenProfileMenuItem>

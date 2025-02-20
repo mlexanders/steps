@@ -6,9 +6,9 @@ namespace Steps.UI.Client.Components;
 
 public partial class ProfileMenu
 {
-    [CascadingParameter] private IUser CurrentUser { get; set; } = null!;
+    [CascadingParameter] public IUser CurrentUser { get; set; }
 
-    private async Task Logout(RadzenProfileMenuItem args)
+    private async Task OnAction(RadzenProfileMenuItem args)
     {
         if (args.Value == "logout") NavigationManager.NavigateTo("/logout");
     }

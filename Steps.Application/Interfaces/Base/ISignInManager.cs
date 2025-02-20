@@ -1,6 +1,6 @@
 using Steps.Domain.Entities;
 
-namespace Steps.Application.Interfaces;
+namespace Steps.Application.Interfaces.Base;
 
 public interface ISignInManager : ISecurityService
 {

@@ -3,15 +3,15 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.ExceptionsHandling.Descriptors;
 
-public class BusinessExceptionDescriptor : ExceptionDescriptor<StepsBusinessException>
+internal class BusinessExceptionDescriptor : ExceptionDescriptor<StepsBusinessException>
 {
-    public override (Error Error, int StatusCode) GetDescriptionWithStatusCode(StepsBusinessException exception)
+    public override (Result Result, int StatusCode) GetDescriptionWithStatusCode(StepsBusinessException exception)
     {
-        if (string.IsNullOrEmpty(exception.Message))
-            return GetDescriptionWithStatusCode($"{exception.GetType()}", "Неизвестная ошибка",
-                StatusCodes.Status500InternalServerError);
+        
+        var message = string.IsNullOrEmpty(exception.Message) ? "Неизвестная ошибка" : exception.Message;
+        var statusCode = string.IsNullOrEmpty(exception.Message) ? StatusCodes.Status500InternalServerError : StatusCodes.Status400BadRequest;
 
-        return GetDescriptionWithStatusCode($"{exception.GetType().Name}", exception.Message,
-            StatusCodes.Status400BadRequest);
-    }
+        var desc = GetDescriptionWithStatusCode(exception.GetType().Name, message, statusCode);
+        return (Result.Fail(desc.Error), desc.StatusCode);
+     }
 }

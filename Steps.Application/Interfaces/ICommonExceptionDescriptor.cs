@@ -2,7 +2,7 @@
 
 namespace Steps.Application.Interfaces;
 
-public interface IExceptionDescriptor
+public interface IExceptionHandler
 {
-    Task<(Result content, int statusCode)> GetResult(Exception exception);
+    Task<(Result content, int statusCode)> GetDescription(Exception exception);
 }

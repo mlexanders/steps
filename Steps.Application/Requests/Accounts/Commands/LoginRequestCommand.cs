@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
@@ -26,6 +27,6 @@ public class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand,Re
         var user = await _signInManager.SignInAsync(model.Login, model.Password);
         var viewModel = _mapper.Map<UserViewModel>(user);
         
-        return Result<UserViewModel>.Ok(viewModel).SetMessage("Успешно");
+        return Result<UserViewModel>.Ok(viewModel).SetMessage("Вход выполнен успешно");
     }
 }

@@ -38,7 +38,7 @@ public interface IResult
 {
 }
 
-public class Result<T> : Result // where T : IDTO
+public class Result<T> : Result 
 {
     public T? Value { get; }
 

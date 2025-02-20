@@ -1,6 +1,6 @@
 ﻿using Serilog;
 using Serilog.Events;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.Logging;
 

@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿using Calabonga.PagedListCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Clubs.Commands;
+using Steps.Application.Requests.Clubs.Queries;
 using Steps.Shared;
+using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Clubs.ViewModels;
 
@@ -25,10 +28,28 @@ public class ClubsController : ControllerBase, IClubsService
     {
         return _mediator.Send(new CreateClubCommand(model));
     }
-
+    
     [HttpGet("{clubId:guid}")]
-    public Task<Result<ClubViewModel>> GetClubById(Guid clubId)
+    public Task<Result<ClubViewModel>> GetById(Guid clubId)
     {
-        throw new NotImplementedException();
+        return _mediator.Send(new GetClubByIdQuery(clubId));
+    }
+
+    [HttpGet]
+    public Task<Result<IPagedList<ClubViewModel>>> GetPaged([FromQuery] Page page)
+    {
+        return _mediator.Send(new GetPagedClubsQuery(page));
+    }
+
+    [HttpPatch]
+    public Task<Result> Update([FromBody] UpdateClubViewModel model)
+    {
+        return _mediator.Send(new UpdateClubCommand(model));
+    }
+    
+    [HttpDelete("{clubId:guid}")]
+    public Task<Result> Delete(Guid clubId)
+    {
+        return _mediator.Send(new DeleteClubCommand(clubId));
     }
 }

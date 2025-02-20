@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Steps.Application.Interfaces;
+namespace Steps.Application.Interfaces.Base;
 
 public interface IPasswordHasher
 {

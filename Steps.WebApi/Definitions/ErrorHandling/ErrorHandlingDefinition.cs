@@ -1,7 +1,6 @@
-﻿using Steps.Application.ExceptionsHandling;
-using Steps.Application.Interfaces;
+﻿using Steps.Application.Interfaces;
 using Steps.Services.WebApi.Middleware;
-using Steps.Services.WebApi.Utils.AppDefinition;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.ErrorHandling;
 
@@ -12,7 +11,7 @@ public class ErrorHandlingDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddTransient<IExceptionDescriptor, CommonExceptionDescriptor>();
+        services.AddTransient<IExceptionHandler, AppHandledExceptionHandler>();
     }
 
     public override void Use(WebApplication app)

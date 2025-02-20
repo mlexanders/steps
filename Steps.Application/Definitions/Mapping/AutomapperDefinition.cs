@@ -1,24 +1,13 @@
-﻿using Steps.Services.WebApi.Utils.AppDefinition;
+﻿using Steps.Utils.AppDefinition;
 
-namespace Steps.Services.WebApi.Definitions.Mapping;
+namespace Steps.Application.Definitions.Mapping;
 
-/// <summary>
-/// Register Automapper as application definition
-/// </summary>
 public class AutomapperDefinition : AppDefinition
 {
-    /// <summary>
-    /// Configure services for current application
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="builder"></param>
-    public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
-        => services.AddAutoMapper(typeof(Program));
 
-    /// <summary>
-    /// Configure application for current application
-    /// </summary>
-    /// <param name="app"></param>
+    public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
+        => services.AddAutoMapper(typeof(AutomapperDefinition));
+
     public override void Use(WebApplication app)
     {
         var mapper = app.Services.GetRequiredService<AutoMapper.IConfigurationProvider>();

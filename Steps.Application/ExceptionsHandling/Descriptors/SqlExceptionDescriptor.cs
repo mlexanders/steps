@@ -3,13 +3,13 @@ using Steps.Shared;
 
 namespace Steps.Application.ExceptionsHandling.Descriptors;
 
-public class SqlExceptionDescriptor : ExceptionDescriptor<PostgresException>
+internal class SqlExceptionDescriptor : ExceptionDescriptor<PostgresException>
 {
-    public override (Error Error, int StatusCode) GetDescriptionWithStatusCode(PostgresException exception)
+    public override (Result Result, int StatusCode) GetDescriptionWithStatusCode(PostgresException exception)
     {
         var sqlState = exception.SqlState;
 
-        return sqlState switch
+        var description =  sqlState switch
         {
             "23503" => GetDescriptionWithStatusCode(sqlState, "Ошибка. Связь на несуществующий объект",
                 StatusCodes.Status400BadRequest),
@@ -38,5 +38,7 @@ public class SqlExceptionDescriptor : ExceptionDescriptor<PostgresException>
             _ => GetDescriptionWithStatusCode("DATABASE_ERROR", "Неизвестная ошибка базы данных",
                 StatusCodes.Status500InternalServerError)
         };
+        
+        return (Result.Fail(description.Error), description.StatusCode);
     }
 }

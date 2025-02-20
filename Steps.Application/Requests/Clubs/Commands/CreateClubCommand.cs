@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Behaviors;
 using Steps.Application.Interfaces;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
@@ -10,31 +11,28 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Clubs.Commands;
 
-public record CreateClubCommand(CreateClubViewModel Model) : IRequest<Result<ClubViewModel>>;
+public record CreateClubCommand(CreateClubViewModel Model) : IRequest<Result<ClubViewModel>>, IRequireAuthorization
+{
+    public async Task<bool> CanAccess(User user)
+    {
+        return user.Role is Role.Organizer || Model.OwnerId.Equals(user.Id);
+    }
+}
 
 public class CreateClubCommandHandler : IRequestHandler<CreateClubCommand, Result<ClubViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ISecurityService _securityService;
     private readonly IMapper _mapper;
 
-    public CreateClubCommandHandler(IUnitOfWork unitOfWork, ISecurityService securityService, IMapper mapper)
+    public CreateClubCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _securityService = securityService;
         _mapper = mapper;
     }
 
     public async Task<Result<ClubViewModel>> Handle(CreateClubCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
-
-        var currentUser = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
-
-        if (currentUser.Role is not Role.Organizer && !model.OwnerId.Equals(currentUser.Id))
-        {
-            throw new AppAccessDeniedException();
-        }
 
         var repository = _unitOfWork.GetRepository<Club>();
 

@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
+using Steps.Shared.Exceptions;
 
 namespace Steps.Services.WebApi.Services;
 
@@ -20,7 +22,7 @@ public class SecurityService : ISecurityService
         var userClaims = HttpContextAccessor.HttpContext?.User;
         if (userClaims == null || !userClaims.Identity?.IsAuthenticated == true)
         {
-            throw new UnauthorizedAccessException();
+            throw new AppUnauthorizedAccessException();
         }
 
         var user = new User

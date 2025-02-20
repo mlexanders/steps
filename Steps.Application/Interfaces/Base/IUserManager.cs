@@ -1,4 +1,4 @@
-namespace Steps.Application.Interfaces;
+namespace Steps.Application.Interfaces.Base;
 
 public interface IUserManager<TUser>
 {

@@ -9,8 +9,8 @@ public class CreateClubCommandValidator : AbstractValidator<CreateClubCommand>
     {
         RuleFor(x => x.Model).NotNull().DependentRules(() =>
         {
-            //TODO:
+            RuleFor(x => x.Model.Name).Length(2, 1024).WithMessage("Введите имя");
+            RuleFor(x => x.Model.OwnerId).NotEmpty().WithMessage("Выберите владельца");
         }).WithMessage("Заполните форму");
-       
     }
 }

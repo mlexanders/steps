@@ -1,6 +1,7 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Steps.Application.Interfaces;
+using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
 using Steps.Shared.Exceptions;
@@ -41,10 +42,10 @@ public class UserManager : IUserManager<User>
                 predicate: u => u.Login.Equals(email),
                 trackingType: TrackingType.NoTracking);
 
-        if (user == null) throw new UserNotFoundException(email);
+        if (user == null) throw new AppUserNotFoundException(email);
 
         var result = _passwordHasher.VerifyHashedPassword(user.PasswordHash, password);
-        return result is PasswordVerificationResult.Success ? user : throw new InvalidCredentialsException();
+        return result is PasswordVerificationResult.Success ? user : throw new AppInvalidCredentialsException();
     }
 
     public async Task<User?> FindByEmailAsync(string email)

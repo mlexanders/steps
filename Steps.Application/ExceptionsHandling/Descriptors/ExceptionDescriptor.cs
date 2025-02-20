@@ -9,5 +9,5 @@ public abstract class ExceptionDescriptor<TE> where TE : Exception
         return (new Error(code, message), statusCode);
     }
 
-    public abstract (Error Error, int StatusCode) GetDescriptionWithStatusCode(TE exception);
+    public abstract (Result Result, int StatusCode) GetDescriptionWithStatusCode(TE exception);
 }

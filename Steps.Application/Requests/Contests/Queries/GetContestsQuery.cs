@@ -1,15 +1,16 @@
-﻿using AutoMapper;
-using Calabonga.PagedListCore;
+﻿using Calabonga.PagedListCore;
 using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
 using Steps.Shared;
+using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-public record GetContestsQuery (int Take, int Skip) : IRequest<Result<IPagedList<Contest>>>;
+public record GetContestsQuery (Page Page) : IRequest<Result<IPagedList<ContestViewModel>>>;
 
-public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IPagedList<Contest>>?>
+public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IPagedList<ContestViewModel>>>
 {
     private readonly IContestManager _contestManager;
 
@@ -18,9 +19,9 @@ public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IP
         _contestManager = contestManager;
     }
 
-    public async Task<Result<IPagedList<Contest>>?> Handle(GetContestsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IPagedList<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
     {
-        var contests = await _contestManager.Read(request.Take, request.Skip);
-        return Result<IPagedList<Contest>>.Ok(contests);
+        var contests = await _contestManager.Read(request.Page);
+        return Result<IPagedList<ContestViewModel>>.Ok(contests);
     }
 }

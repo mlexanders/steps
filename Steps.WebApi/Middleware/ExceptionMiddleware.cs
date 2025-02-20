@@ -6,12 +6,12 @@ namespace Steps.Services.WebApi.Middleware;
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IExceptionDescriptor _exceptionDescriptor;
+    private readonly IExceptionHandler _exceptionHandler;
 
-    public ExceptionMiddleware(RequestDelegate next, IExceptionDescriptor exceptionDescriptor)
+    public ExceptionMiddleware(RequestDelegate next, IExceptionHandler exceptionHandler)
     {
         _next = next;
-        _exceptionDescriptor = exceptionDescriptor;
+        _exceptionHandler = exceptionHandler;
     }
 
     public async Task InvokeAsync(HttpContext httpContext)
@@ -28,7 +28,7 @@ public class ExceptionMiddleware
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var result = await _exceptionDescriptor.GetResult(exception);
+        var result = await _exceptionHandler.GetDescription(exception);
         context.Response.ContentType = "application/json";
 
         context.Response.StatusCode = result.statusCode;

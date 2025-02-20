@@ -1,38 +1,14 @@
-﻿@using Steps.UI.Client.Services
-
+﻿@using Steps.Domain.Base
+@using Steps.UI.Client.Services
+@inject NavigationManager NavigationManager
 
 <RadzenProfileMenu Click="@Logout">
     <Template>
-        <RadzenGravatar Email="@_email">
-        </RadzenGravatar>
+        <RadzenGravatar Email="@CurrentUser.Login"/>
+        <RadzenText Text="@CurrentUser.Login"/>
     </Template>
     <ChildContent>
         <RadzenProfileMenuItem Text="Профиль" Path="/Profile" Icon="account_circle"></RadzenProfileMenuItem>
         <RadzenProfileMenuItem Text="Выйти" Icon="power_settings_new" Value="logout"/>
     </ChildContent>
 </RadzenProfileMenu>
-
-@code
-{
-    [Inject] private SecurityService SecurityService { get; set; } = null!;
-    private string? _email;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-
-            var user = await SecurityService.GetCurrentUser();
-            _email = user?.Login ?? "null";
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    private async Task Logout(RadzenProfileMenuItem args)
-    {
-        if (args.Value == "logout") await SecurityService.Logout();
-    }
-}

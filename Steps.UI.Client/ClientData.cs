@@ -1,6 +1,6 @@
 ﻿namespace Steps.UI.Client;
 
-public class ClientData
+public static class ClientData
 {
     public const string AppName = "Ступени мастерства";
     

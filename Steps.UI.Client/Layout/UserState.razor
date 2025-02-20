@@ -6,24 +6,3 @@
 <CascadingValue Value="@_currentUser">
     @ChildContent
 </CascadingValue>
-
-@code
-{
-    private IUser? _currentUser;
-
-    [Inject] private SecurityService SecurityService { get; set; } = null!;
-
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Console.WriteLine(this.ToString());
-        _currentUser = await SecurityService.GetCurrentUser();
-        SecurityService.OnUserChanged += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        SecurityService.OnUserChanged -= StateHasChanged;
-    }
-}

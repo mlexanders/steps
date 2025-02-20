@@ -2,7 +2,6 @@
 using Radzen;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.UI.Client.Services;
-using Steps.UI.Client.Services.Api;
 
 namespace Steps.UI.Client.Pages;
 
@@ -16,9 +15,9 @@ public partial class Login : ComponentBase
 
     [Inject] private SecurityService SecurityService { get; set; }
     [Inject] private NavigationManager NavigationManager { get; set; }
-    [Inject] public DialogService DialogService { get; set; }
 
-
+    //TODO:
+    
     private async Task Submit(LoginArgs args)
     {
         var model = new LoginViewModel
@@ -32,7 +31,6 @@ public partial class Login : ComponentBase
             var result = await SecurityService.Login(model);
             _errorVisible = !result.IsSuccess;
             _error = result.Message ?? result.Errors.FirstOrDefault()?.Message ?? "Ошибка авторизации";
-            // NavigationManager.NavigateTo("/", false);
         }
         catch (HttpRequestException e)
         {
@@ -48,13 +46,7 @@ public partial class Login : ComponentBase
     }
 
 
-    private async Task OnReset()
+    private async Task OnResetPassword()
     {
-    }
-
-    private Task InvalidSubmit(FormInvalidSubmitEventArgs formInvalidSubmitEventArgs)
-    {
-        var e = formInvalidSubmitEventArgs.Errors;
-        return Task.CompletedTask;
     }
 }

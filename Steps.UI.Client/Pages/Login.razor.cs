@@ -14,8 +14,7 @@ public partial class Login : ComponentBase
     private string _info;
     private bool _infoVisible;
 
-    [Inject] private ApplicationAuthenticationStateProvider AuthenticationStateProvider { get; set; }
-    [Inject] private AccountService AccountService { get; set; }
+    [Inject] private SecurityService SecurityService { get; set; }
     [Inject] private NavigationManager NavigationManager { get; set; }
     [Inject] public DialogService DialogService { get; set; }
 
@@ -30,8 +29,10 @@ public partial class Login : ComponentBase
 
         try
         {
-            await AccountService.Login(model);
-            NavigationManager.NavigateTo("/", false);
+            var result = await SecurityService.Login(model);
+            _errorVisible = !result.IsSuccess;
+            _error = result.Message ?? result.Errors.FirstOrDefault()?.Message ?? "Ошибка авторизации";
+            // NavigationManager.NavigateTo("/", false);
         }
         catch (HttpRequestException e)
         {
@@ -43,10 +44,17 @@ public partial class Login : ComponentBase
             _errorVisible = true;
             _error = e.Message;
         }
+        StateHasChanged();
     }
 
 
     private async Task OnReset()
     {
+    }
+
+    private Task InvalidSubmit(FormInvalidSubmitEventArgs formInvalidSubmitEventArgs)
+    {
+        var e = formInvalidSubmitEventArgs.Errors;
+        return Task.CompletedTask;
     }
 }

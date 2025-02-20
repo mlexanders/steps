@@ -4,10 +4,10 @@
 @attribute [AllowAnonymous]
 
 <PageTitle>Вход</PageTitle>
-<RadzenText Text="Войти" TextStyle="TextStyle.H5" class="mb-4" TagName="TagName.H2"/>
+<RadzenText Text="Вход" TextStyle="TextStyle.H5" class="mb-4" TagName="TagName.H2"/>
 <RadzenRow>
     <RadzenColumn SizeMD="12">
-        <RadzenTemplateForm TItem="LoginViewModel" Data="@_model">
+        <RadzenTemplateForm TItem="LoginViewModel" Data="@_model" InvalidSubmit="@((e) => InvalidSubmit(e))">
             <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@_errorVisible">@_error</RadzenAlert>
             <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Info" Visible="@_infoVisible">@_info</RadzenAlert>
             <RadzenLogin

@@ -33,5 +33,6 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredServ
 
 builder.Services.AddScoped(typeof(HttpClientService));
 builder.Services.AddScoped(typeof(AccountService));
+builder.Services.AddScoped(typeof(SecurityService));
 
 await builder.Build().RunAsync();

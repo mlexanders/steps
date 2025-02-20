@@ -30,4 +30,17 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Counter\Components\" />
+      <Folder Include="Features\Counter\Layout\" />
+      <Folder Include="Features\Judje\Components\" />
+      <Folder Include="Features\Judje\Layout\" />
+      <Folder Include="Features\Organizer\Components\" />
+      <Folder Include="Features\Organizer\Layout\" />
+      <Folder Include="Features\Undefined\Components\" />
+      <Folder Include="Features\Undefined\Layout\" />
+      <Folder Include="Features\User\Components\" />
+      <Folder Include="Features\User\Layout\" />
+    </ItemGroup>
+
 </Project>

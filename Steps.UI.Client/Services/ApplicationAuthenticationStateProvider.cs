@@ -1,17 +1,24 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
+using Steps.Domain.Base;
 using Steps.Shared.Contracts.Accounts.ViewModels;
-using Steps.UI.Client.Services.Api;
+using Steps.Shared.Utils;
 
 namespace Steps.UI.Client.Services;
 
-public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider
+public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {
-    private readonly AccountService _accountService;
+    private readonly SecurityService _securityService;
 
-    public ApplicationAuthenticationStateProvider(AccountService accountService)
+    public ApplicationAuthenticationStateProvider(SecurityService securityService)
     {
-        _accountService = accountService;
+        _securityService = securityService;
+        _securityService.OnUserChanged += OnChangeState;
+    }
+
+    private void OnChangeState()
+    {
+        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -20,19 +27,20 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
 
         try
         {
-            var result = await _accountService.GetCurrentUser();
+            var user = await _securityService.GetCurrentUser();
 
-            if (result is { IsSuccess: true, Value: not null })
-                identity = CreateClaimsFrom(result.Value);
+            if (user is not null)
+                identity = CreateClaimsFrom(user);
         }
         catch (HttpRequestException ex)
         {
         }
+        
         var state = new AuthenticationState(new ClaimsPrincipal(identity));
         return state;
     }
     
-    private static ClaimsIdentity CreateClaimsFrom(UserViewModel user)
+    private static ClaimsIdentity CreateClaimsFrom(IUser user)
     {
         var claims = new List<Claim>
         {
@@ -43,5 +51,10 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
         };
 
         return new ClaimsIdentity(claims, "Some-claims");
+    }
+
+    public void Dispose()
+    {
+        _securityService.OnUserChanged -= OnChangeState;
     }
 }

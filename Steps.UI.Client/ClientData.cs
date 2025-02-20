@@ -1,0 +1,8 @@
+﻿namespace Steps.UI.Client;
+
+public class ClientData
+{
+    public const string AppName = "Ступени мастерства";
+    
+    public static string PageTittle (string pageName) => $"{AppName} - {pageName}";
+}

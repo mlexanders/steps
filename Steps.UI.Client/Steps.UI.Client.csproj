@@ -25,6 +25,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Authentication.Cookies">
+        <HintPath>..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.2\Microsoft.AspNetCore.Authentication.Cookies.dll</HintPath>
+      </Reference>
       <Reference Include="System.Text.Json">
         <HintPath>..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.2\System.Text.Json.dll</HintPath>
       </Reference>

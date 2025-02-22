@@ -34,9 +34,9 @@ public class ContestsController : ControllerBase, IContestService
     }
 
     [HttpGet]
-    public async Task<Result<IPagedList<ContestViewModel>>> GetPaged([FromQuery] Page page)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page)
     {
-        return await _mediator.Send(new GetContestsQuery(page));
+        return (await _mediator.Send(new GetContestsQuery(page)));
     }
     
     [HttpPatch]

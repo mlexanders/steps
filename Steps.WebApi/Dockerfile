@@ -8,7 +8,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Steps.WebApi/Steps.WebApi.csproj", "Steps.WebApi/"]
 COPY ["Steps.Infrastructure.Data/Steps.Infrastructure.Data.csproj", "Steps.Infrastructure.Data/"]
-COPY [" Steps.Domain/Steps.Domain.csproj", " Steps.Domain/"]
+COPY ["Steps.Domain/Steps.Domain.csproj", "Steps.Domain/"]
 COPY ["Steps.Application/Steps.Application.csproj", "Steps.Application/"]
 COPY ["Steps.Shared/Steps.Shared.csproj", "Steps.Shared/"]
 RUN dotnet restore "Steps.WebApi/Steps.WebApi.csproj"

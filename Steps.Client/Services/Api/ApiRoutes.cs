@@ -18,7 +18,7 @@ public static class ApiRoutes
         private const string BasePath = "Contests";
         public static string Create =>  $"{BasePath}/";
         public static string GetById (Guid contestId) => $"{BasePath}/{contestId}";
-        public static string GetPaged(Page page ) => $"{BasePath}/";
+        public static string GetPaged(Page page) => $"{BasePath}/{page.GetQuery()}";
         public static string Update = $"{BasePath}/";
         public static string Delete (Guid contestId) => $"{BasePath}/{contestId}";
     }

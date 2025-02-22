@@ -9,6 +9,6 @@ public interface IContestService
     Task<Result<Guid>> Create(CreateContestViewModel createContestViewModel);
     Task<Result<Guid>> Update(UpdateContestViewModel updateContestViewModel);
     Task<Result<ContestViewModel>> GetById(Guid clubId);
-    Task<Result<IPagedList<ContestViewModel>>> GetPaged(Page page);
+    Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged(Page page);
     Task<Result> Delete(Guid id);
 }

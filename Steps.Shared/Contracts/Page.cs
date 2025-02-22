@@ -2,7 +2,7 @@
 
 public class Page
 {
-    private const int DefaultPageSize = 10;
+    public const int DefaultPageSize = 10;
 
     public int PageIndex { get; init; }
 
@@ -16,6 +16,12 @@ public class Page
 
     public Page() : this(0)
     {
+    }
+
+    public Page(int skip, int take)
+    {
+        PageIndex = skip > 0 ? (skip / take) : 0;
+        PageSize = take > 0 ? take : DefaultPageSize;
     }
 
     public string GetQuery()

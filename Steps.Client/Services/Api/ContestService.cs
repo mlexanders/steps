@@ -31,10 +31,10 @@ public class ContestService : IContestService
         return _httpClient.GetAsync<Result<ContestViewModel>>(route);
     }
 
-    public Task<Result<IPagedList<ContestViewModel>>> GetPaged(Page page)
+    public Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged(Page page)
     {
         var route = ApiRoutes.Contests.GetPaged(page);
-        return _httpClient.GetAsync<Result<IPagedList<ContestViewModel>>>(route);
+        return _httpClient.GetAsync<Result<PaggedListViewModel<ContestViewModel>>>(route);
     }
 
     public Task<Result> Delete(Guid clubId)

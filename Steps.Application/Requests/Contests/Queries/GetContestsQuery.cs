@@ -6,23 +6,24 @@ using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests.ViewModels;
+using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-public record GetContestsQuery (Page Page) : IRequest<Result<IPagedList<ContestViewModel>>>;
+public record GetContestsQuery (Page Page) : IRequest<Result<PaggedListViewModel<ContestViewModel>>>;
 
-public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IPagedList<ContestViewModel>>>
+public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<PaggedListViewModel<ContestViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private IMapper _mapper;
 
-    public GetEventsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetContestsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<Result<IPagedList<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
     {
         var page = request.Page;
         
@@ -35,6 +36,6 @@ public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IP
             cancellationToken: cancellationToken,
             trackingType: TrackingType.NoTracking);
 
-        return Result<IPagedList<ContestViewModel>>.Ok(contests);
+        return Result<PaggedListViewModel<ContestViewModel>>.Ok(contests.GetPaginatedList());
     }
 }

@@ -17,10 +17,10 @@ public class HttpClientService
         _httpClient = httpClient;
     }
 
-    public async Task<TResponse> GetAsync<TResponse, TRequest>(string resource) where TRequest : class, new()
+    public async Task<TResponse> GetAsync<TResponse>(string resource)
         where TResponse : Result
     {
-        return await SendRequest<TResponse, TRequest>(HttpMethod.Get, resource);
+        return await SendRequest<TResponse, object>(HttpMethod.Get, resource);
     }
 
     public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest data)
@@ -55,10 +55,10 @@ public class HttpClientService
         }
 
         var response = await _httpClient.SendAsync(request);
-        return await HandleResponse<TResponse, TRequest>(response);
+        return await HandleResponse<TResponse>(response);
     }
 
-    private async Task<TResponse> HandleResponse<TResponse, TRequest>(HttpResponseMessage response)
+    private async Task<TResponse> HandleResponse<TResponse>(HttpResponseMessage response)
         where TResponse : Result
     {
         //TODO: 

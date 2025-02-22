@@ -17,4 +17,11 @@ public class Page
     public Page() : this(0)
     {
     }
+
+    public string GetQuery()
+    {
+        var indexName = nameof(PageIndex);
+        var sizename = nameof(PageSize);
+        return $"?{indexName}={PageIndex}&{sizename}={PageSize}";
+    }
 }

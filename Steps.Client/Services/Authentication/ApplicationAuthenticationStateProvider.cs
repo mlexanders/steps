@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Domain.Base;
 
-namespace Steps.Client.Services;
+namespace Steps.Client.Services.Authentication;
 
 public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {

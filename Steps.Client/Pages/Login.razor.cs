@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Radzen;
 using Steps.Client.Services;
 using Steps.Shared.Contracts.Accounts.ViewModels;
@@ -17,7 +21,7 @@ public partial class Login : ComponentBase
     [Inject] private NavigationManager NavigationManager { get; set; }
 
     //TODO:
-    
+
     private async Task Submit(LoginArgs args)
     {
         var model = new LoginViewModel
@@ -44,6 +48,7 @@ public partial class Login : ComponentBase
             _errorVisible = true;
             _error = e.Message;
         }
+
         StateHasChanged();
     }
 

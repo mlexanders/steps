@@ -1,4 +1,6 @@
-﻿using Steps.Client.Services.Api;
+﻿using System;
+using System.Threading.Tasks;
+using Steps.Client.Services.Api;
 using Steps.Domain.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
@@ -9,7 +11,7 @@ public class SecurityService
 {
     private readonly AccountService _accountService;
     private IUser? _currentUser;
-    
+
     public event Action<IUser?>? OnUserChanged;
 
     public SecurityService(AccountService accountService)
@@ -26,8 +28,11 @@ public class SecurityService
             var result = await _accountService.GetCurrentUser();
             return result.Value;
         }
-        catch {/*ignore*/ }
-        
+        catch
+        {
+            /*ignore*/
+        }
+
         return null;
     }
 
@@ -35,7 +40,7 @@ public class SecurityService
     {
         var result = await _accountService.Login(model);
         if (result.Value is null) return result;
-        
+
         _currentUser = result.Value;
         NotifyUserChanged(_currentUser);
 

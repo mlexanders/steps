@@ -1,12 +1,14 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Steps.Shared;
 
 namespace Steps.Client.Services.Api.Base;
 
-public class HttpClientService 
+public class HttpClientService
 {
     private readonly HttpClient _httpClient;
 
@@ -21,13 +23,15 @@ public class HttpClientService
         return await SendRequest<TResponse, TRequest>(HttpMethod.Get, resource);
     }
 
-    public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest data) where TRequest : class, new()
+    public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest data)
+        where TRequest : class, new()
         where TResponse : Result
     {
         return await SendRequest<TResponse, TRequest>(HttpMethod.Post, resource, data);
     }
 
-    public async Task<TResponse> PatchAsync<TResponse, TRequest>(string resource, TRequest data) where TRequest : class, new()
+    public async Task<TResponse> PatchAsync<TResponse, TRequest>(string resource, TRequest data)
+        where TRequest : class, new()
         where TResponse : Result
     {
         return await SendRequest<TResponse, TRequest>(HttpMethod.Patch, resource, data);
@@ -39,7 +43,8 @@ public class HttpClientService
         return await SendRequest<TResponse, object>(HttpMethod.Delete, resource);
     }
 
-    private async Task<TResponse> SendRequest<TResponse, TRequest>(HttpMethod method, string resource, TRequest? data = null) where TRequest : class, new()
+    private async Task<TResponse> SendRequest<TResponse, TRequest>(HttpMethod method, string resource,
+        TRequest? data = null) where TRequest : class, new()
         where TResponse : Result
     {
         var request = new HttpRequestMessage(method, resource);
@@ -60,11 +65,11 @@ public class HttpClientService
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadFromJsonAsync<TResponse>();
-            return content; 
+            return content;
         }
-        
+
         var message = await response.Content.ReadAsStringAsync();
-        
+
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -72,6 +77,6 @@ public class HttpClientService
         };
         var result = await response.Content.ReadFromJsonAsync<TResponse>(options);
 
-        return result; 
+        return result;
     }
 }

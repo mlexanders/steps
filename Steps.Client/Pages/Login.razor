@@ -7,8 +7,10 @@
 <RadzenRow>
     <RadzenColumn SizeMD="12">
         <RadzenTemplateForm TItem="LoginViewModel" Data="@_model">
-            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@_errorVisible">@_error</RadzenAlert>
-            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Info" Visible="@_infoVisible">@_info</RadzenAlert>
+            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small"
+                         AlertStyle="AlertStyle.Danger" Visible="@_errorVisible">@_error</RadzenAlert>
+            <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small"
+                         AlertStyle="AlertStyle.Info" Visible="@_infoVisible">@_info</RadzenAlert>
             <RadzenLogin
                 Username="@_model.Login" Password="@_model.Password"
                 Login="@(async a => await Submit(a))"
@@ -27,8 +29,10 @@
 </RadzenRow>
 
 @code {
+
     private async Task OnRegister()
     {
         NavigationManager.NavigateTo("/reg");
     }
+
 }

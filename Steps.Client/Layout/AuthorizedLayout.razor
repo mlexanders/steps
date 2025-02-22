@@ -1,11 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
+<HeadContent>
+    <RadzenTheme Theme="standard"/>
+</HeadContent>
+<RadzenComponents/>
+
 <AuthorizeView>
     <Authorized>
         <LayoutView Layout="@typeof(MainLayout)">@Body</LayoutView>
     </Authorized>
     <Authorizing>
-        Authorizing....
+        <ProgressBar/>
     </Authorizing>
     <NotAuthorized>
         <RedirectToLogin/>

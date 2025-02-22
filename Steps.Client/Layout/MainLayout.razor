@@ -1,9 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-<HeadContent>
-    <RadzenTheme Theme="standard"/>
-</HeadContent>
-<RadzenComponents/>
 
 <RadzenLayout style="position: relative;grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
     <RadzenHeader>
@@ -12,9 +8,9 @@
                 <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
             </RadzenColumn>
             <RadzenColumn Size="7">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    @* <ProfileMenu/> *@
-                    ProfileMenu
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal"
+                             JustifyContent="JustifyContent.End">
+                    <ProfileMenu/>
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
@@ -43,7 +39,3 @@
              style="position: absolute; z-index: 2"></div>
     }
 </RadzenLayout>
-
-@code {
-    private bool _sidebarExpanded;
-}

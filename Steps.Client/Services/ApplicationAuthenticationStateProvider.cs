@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Domain.Base;
 
@@ -22,27 +24,31 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name,
-            ClaimTypes.Role);
-
+        await Task.Delay(1200);
         try
         {
             var user = await _securityService.GetCurrentUser();
 
-            if (user is null)
-                return new AuthenticationState(new());
-            
-            identity = CreateClaimsFrom(user);
+            if (user is not null)
+            {
+                var identity = GetClaimsFrom(user);
+                return new AuthenticationState(new ClaimsPrincipal(identity));
+            }
         }
-        catch (HttpRequestException ex)
+        catch
         {
+            // ignored
         }
-        
-        var state = new AuthenticationState(new ClaimsPrincipal(identity));
-        return state;
+
+        return GetAnonymousState();
     }
-    
-    private static ClaimsIdentity CreateClaimsFrom(IUser user)
+
+    private static AuthenticationState GetAnonymousState()
+    {
+        return new AuthenticationState(new ClaimsPrincipal());
+    }
+
+    private static ClaimsIdentity GetClaimsFrom(IUser user)
     {
         var claims = new List<Claim>
         {
@@ -52,7 +58,7 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
             new(ClaimTypes.Role, user.Role.ToString()),
         };
 
-        return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name,
+        return new ClaimsIdentity(claims, "Cookies", ClaimTypes.Name,
             ClaimTypes.Role);
     }
 

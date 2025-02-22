@@ -5,7 +5,6 @@
         <RootNamespace>Steps.Domain</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <UserSecretsId>721650ee-52dc-4c41-8f34-7e9994b968ae</UserSecretsId>
     </PropertyGroup>
 
 </Project>

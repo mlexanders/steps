@@ -24,16 +24,16 @@ public class ContestsManagement
     }
 
     public bool IsLoading { get; private set; }
-    
+
     public int TotalCount { get; private set; }
-    
-    public int PageSize { get; private set;}
+
+    public int PageSize { get; private set; }
 
     public List<ContestViewModel> Contests { get; set; }
 
-    public event Action? ContestsChanged; 
+    public event Action? ContestsChanged;
 
-    
+
     public async Task Initialize()
     {
         await Load();
@@ -50,14 +50,14 @@ public class ContestsManagement
             var pagedList = result.Value;
             Contests = pagedList?.Items.ToList() ?? [];
             TotalCount = pagedList?.TotalCount ?? 0;
-            
+
             OnContestsChanged();
         }
         catch (Exception e)
         {
             HandleException(e);
         }
-        
+
         IsLoading = false;
     }
 
@@ -73,43 +73,43 @@ public class ContestsManagement
     {
         PageSize = pageSize > 0 ? pageSize : Page.DefaultPageSize;
     }
-    
+
     public async Task Create()
     {
-        
-        var result = await _dialogService.OpenAsync<ContestDialog>("Создать мероприятие", new Dictionary<string, object> { { "IsNew", true } });
+        var result = await _dialogService.OpenAsync<ContestDialog>("Создать мероприятие",
+            new Dictionary<string, object> { { "IsNew", true } });
         if (result == true) await Load();
-
     }
-    
+
     public async Task Update(ContestViewModel contest)
     {
-        var result = await _dialogService.OpenAsync<ContestDialog>("Редактировать мероприятие", new Dictionary<string, object> { { "Contest", contest }, { "IsNew", false } });
+        var result = await _dialogService.OpenAsync<ContestDialog>("Редактировать мероприятие",
+            new Dictionary<string, object> { { "Contest", contest }, { "IsNew", false } });
         if (result == true) await Load();
-
     }
-    
+
     public async Task Delete(ContestViewModel contest)
     {
-        var confirmed = await _dialogService.Confirm("Вы уверены, что хотите удалить это мероприятие?", $"Удаление {contest.Name}",
+        var confirmed = await _dialogService.Confirm("Вы уверены, что хотите удалить это мероприятие?",
+            $"Удаление {contest.Name}",
             new ConfirmOptions
             {
                 OkButtonText = "Да, удалить",
                 CancelButtonText = "Отмена"
             });
-        
+
         if (confirmed == true)
         {
             await _contestService.Delete(contest.Id);
             await Load();
         }
     }
-    
+
     protected virtual void OnContestsChanged()
     {
         ContestsChanged?.Invoke();
     }
-    
+
     private void HandleException(Exception exception)
     {
         Console.WriteLine(exception.Message);
@@ -120,5 +120,4 @@ public class ContestsManagement
     {
         Console.WriteLine(result?.Message);
     }
-    
 }

@@ -1,7 +1,7 @@
 ﻿services:
   postgres:
     image: postgres:17.2
-    container_name: comp_postgres
+    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -11,11 +11,24 @@
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app_network
 
+  
+  api:
+    image: steps.webapi
+    container_name: api
+    restart: always
+    build:
+      context: .
+      dockerfile: Steps.WebApi/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: Host=postgres; Port=5432; Username=postgres; Password=mypassword123; Database=comp;
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+
+        
 volumes:
   postgres_data:
-
-networks:
-  app_network:

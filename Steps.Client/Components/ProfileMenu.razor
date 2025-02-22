@@ -1,0 +1,9 @@
+﻿<RadzenProfileMenu Click="@OnAction">
+    <Template>
+        <RadzenGravatar Email="@CurrentUser?.Login"/>
+    </Template>
+    <ChildContent>
+        <RadzenProfileMenuItem Text="Профиль" Path="/Profile" Icon="account_circle"></RadzenProfileMenuItem>
+        <RadzenProfileMenuItem Text="Выйти" Icon="power_settings_new" Value="logout"/>
+    </ChildContent>
+</RadzenProfileMenu>

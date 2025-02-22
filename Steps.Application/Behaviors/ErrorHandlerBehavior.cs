@@ -1,33 +1,27 @@
-﻿using MediatR;
+﻿using MediatR.Pipeline;
 using Steps.Application.Exceptions;
 using Steps.Application.ExceptionsHandling;
 using Steps.Shared;
 
 namespace Steps.Application.Behaviors;
 
-public class ErrorHandlerBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class RequestExceptionHandler<TRequest, TResponse, TException>
+    : IRequestExceptionHandler<TRequest, TResponse, TException>
+    where TException : Exception
     where TResponse : Result
     where TRequest : notnull
 {
     private readonly CommonExceptionHandler _exceptionHandler;
 
-    public ErrorHandlerBehavior(CommonExceptionHandler exceptionHandler)
+    public RequestExceptionHandler(CommonExceptionHandler exceptionHandler)
     {
         _exceptionHandler = exceptionHandler;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+    public async Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var result = await next();
-            return result;
-        }
-        catch (Exception e)
-        {
-            var description = await _exceptionHandler.GetDescription(e);
-            throw new AppHandledException(description.content, description.statusCode, e);
-        }
+        var description = await _exceptionHandler.GetDescription(exception);
+        throw new AppHandledException(description.content, description.statusCode, exception);
     }
 }

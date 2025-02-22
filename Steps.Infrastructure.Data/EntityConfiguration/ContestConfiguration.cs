@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Steps.Domain.Entities;
+using Steps.Domain.Entities.AthletesLists;
 
 namespace Steps.Infrastructure.Data.EntityConfiguration;
 
@@ -21,5 +22,21 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
             .WithOne(e => e.Contest)
             .HasForeignKey(e => e.ContestId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(c => c.GroupBlocks)
+            .WithOne(gb => gb.Contest)
+            .HasForeignKey(gb => gb.ContestId);
+        
+        builder.HasOne(c => c.LateAthletesList)
+            .WithOne(lal => lal.Contest)
+            .HasForeignKey<LateAthletesList>(lal => lal.ContestId);
+        
+        builder.HasOne(c => c.PreAthletesList)
+            .WithOne(pal => pal.Contest)
+            .HasForeignKey<PreAthletesList>(pal => pal.ContestId);
+        
+        builder.HasOne(c => c.GeneratedAthletesList)
+            .WithOne(gal => gal.Contest)
+            .HasForeignKey<GeneratedAthletesList>(gal => gal.ContestId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Steps.Domain.Base;
+using Steps.Domain.Entities.AthletesLists;
 
 namespace Steps.Domain.Entities;
 
@@ -10,4 +11,15 @@ public class Contest : Entity
     public DateTime EndDate { get; set; }
     
     public List<Entry>? Entries { get; set; }
+    
+    public Guid? GeneratedAthletesListId { get; set; }
+    public GeneratedAthletesList? GeneratedAthletesList { get; set; }
+    
+    public Guid? LateAthletesListId { get; set; }
+    public LateAthletesList? LateAthletesList { get; set; }
+    
+    public Guid? PreAthletesListId { get; set; }
+    public PreAthletesList? PreAthletesList { get; set; }
+    
+    public List<GroupBlock>? GroupBlocks { get; set; }
 }

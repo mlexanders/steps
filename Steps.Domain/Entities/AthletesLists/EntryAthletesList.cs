@@ -2,6 +2,9 @@
 
 namespace Steps.Domain.Entities.AthletesLists;
 
+/// <summary>
+/// Список спортсменов в заявке
+/// </summary>
 public class EntryAthletesList : Entity
 {
     public Guid EntryId { get; set; }

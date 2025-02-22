@@ -34,6 +34,7 @@
       <Folder Include="Requests\Accounts\Validators\" />
       <Folder Include="Requests\Contests\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
+      <Folder Include="Requests\Entries\Validators\" />
     </ItemGroup>
 
 </Project>

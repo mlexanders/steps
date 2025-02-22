@@ -10,4 +10,6 @@ public class Athlete : Entity
     public Guid TeamId { get; set; }
     
     public List<EntryAthletesList>? EntryAthletesLists { get; set; }
+    public List<PreAthletesList>? PreAthletesLists { get; set; }
+    public List<GroupBlock>? GroupBlocks { get; set; }
 }

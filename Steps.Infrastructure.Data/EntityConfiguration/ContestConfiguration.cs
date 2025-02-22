@@ -16,5 +16,10 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
         builder.Property(t => t.Name)
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
+        
+        builder.HasMany(c => c.Entries)
+            .WithOne(e => e.Contest)
+            .HasForeignKey(e => e.ContestId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -8,4 +8,6 @@ public class User : Entity
     public string Login { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public Role Role { get; set; }
+    
+    public List<Entry>? Entries { get; set; }
 }

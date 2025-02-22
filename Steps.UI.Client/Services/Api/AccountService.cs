@@ -1,8 +1,9 @@
 ﻿using Steps.Shared;
 using Steps.Shared.Contracts.Accounts;
 using Steps.Shared.Contracts.Accounts.ViewModels;
+using Steps.UI.Client.Services.Api.Base;
 
-namespace Steps.UI.Client.Services;
+namespace Steps.UI.Client.Services.Api;
 
 public class AccountService : IAccountService
 {
@@ -13,14 +14,14 @@ public class AccountService : IAccountService
         _httpClientService = httpClientService;
     }
 
-    public async Task<Result> Registration(RegistrationRequestViewModel model)
+    public async Task<Result> Registration(RegistrationViewModel model)
     {
-        return await _httpClientService.PostAsync<Result, RegistrationRequestViewModel>(ApiRoutes.Auth.Register, model);
+        return await _httpClientService.PostAsync<Result, RegistrationViewModel>(ApiRoutes.Auth.Register, model);
     }
 
-    public async Task<Result<UserViewModel>> Login(LoginRequestViewModel model)
+    public async Task<Result<UserViewModel>> Login(LoginViewModel model)
     {
-        return await _httpClientService.PostAsync<Result<UserViewModel>, LoginRequestViewModel>(ApiRoutes.Auth.Login, model);
+        return await _httpClientService.PostAsync<Result<UserViewModel>, LoginViewModel>(ApiRoutes.Auth.Login, model);
     }
 
     public async Task<Result<UserViewModel>> GetCurrentUser()

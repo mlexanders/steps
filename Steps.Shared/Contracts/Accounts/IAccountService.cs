@@ -5,8 +5,8 @@ namespace Steps.Shared.Contracts.Accounts;
 
 public interface IAccountService
 {
-    Task<Result> Registration(RegistrationRequestViewModel model);
-    Task<Result<UserViewModel>> Login(LoginRequestViewModel model);
+    Task<Result> Registration(RegistrationViewModel model);
+    Task<Result<UserViewModel>> Login(LoginViewModel model);
     Task<Result<UserViewModel>> GetCurrentUser();
 
     Task<Result> Logout();

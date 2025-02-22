@@ -1,25 +1,16 @@
 ﻿@using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Shared.Contracts.Contests
+@using Steps.Client.Features.Organizer.Forms
 @inject IContestService ContestService
 @inject DialogService DialogService
 
 <RadzenTemplateForm TItem="ContestViewModel" Submit="SaveContest">
     <RadzenCard>
-        <RadzenFieldset Text="@Title">
-            <RadzenTextBox @bind-Value="Contest.Name" Placeholder="Введите название" Style="width: 100%" />
-            <RadzenRequiredValidator Component="Name" Text="Название обязательно" />
-
-            <RadzenTextArea @bind-Value="Contest.Description" Placeholder="Введите описание" Style="width: 100%" />
-
-            <RadzenDatePicker @bind-Value="Contest.StartDate" Placeholder="Дата начала" Style="width: 100%" />
-            <RadzenRequiredValidator Component="StartDate" Text="Дата начала обязательна" />
-
-            <RadzenDatePicker @bind-Value="Contest.EndDate" Placeholder="Дата окончания" Style="width: 100%" />
-            <RadzenRequiredValidator Component="EndDate" Text="Дата окончания обязательна" />
-        </RadzenFieldset>
         
-        <RadzenButton Text="Сохранить" Icon="save" Click="SaveContest" ButtonStyle="ButtonStyle.Primary" />
-        <RadzenButton Text="Отмена" Icon="cancel" Click="Close" ButtonStyle="ButtonStyle.Secondary" Style="margin-left: 10px;" />
+        <ContestForm Contest="@Contest" Title="@Title"/>
+        
+        <RadzenButton Text="Сохранить" Icon="save" Click="SaveContest" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="Close" ButtonStyle="ButtonStyle.Secondary" Style="margin-left: 10px;"/>
     </RadzenCard>
 </RadzenTemplateForm>
 

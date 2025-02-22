@@ -1,0 +1,21 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Shared.Contracts.Contests.ViewModels
+
+<RadzenFieldset Text="@Title">
+    <RadzenTextBox @bind-Value="@Contest.Name" Placeholder="Введите название" Style="width: 100%" />
+    <RadzenRequiredValidator Component="@nameof(Contest.Name)" Text="Название обязательно" />
+
+    <RadzenTextArea @bind-Value="@Contest.Description" Placeholder="Введите описание" Style="width: 100%" />
+
+    <RadzenDatePicker @bind-Value="@Contest.StartDate" Placeholder="Дата начала" Style="width: 100%" />
+    <RadzenRequiredValidator Component="@nameof(Contest.StartDate)" Text="Дата начала обязательна" />
+
+    <RadzenDatePicker @bind-Value="@Contest.EndDate" Placeholder="Дата окончания" Style="width: 100%" />
+    <RadzenRequiredValidator Component="@nameof(Contest.EndDate)" Text="Дата окончания обязательна" />
+</RadzenFieldset>
+
+
+@code {
+    [Parameter] [Required]  public string Title { get; set; } = null!;
+    [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;
+}

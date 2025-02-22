@@ -60,7 +60,7 @@ public class CreateClubCommandTest
         try
         {
             var result = await mediator.Send(command);
-            Assert.True(result.Success);
+            Assert.True(result.IsSuccess);
             Assert.Null(result.Value);
         }
         catch (AppHandledException ex)
@@ -84,7 +84,7 @@ public class CreateClubCommandTest
                     return;
 
                 default:
-                    Assert.False(ex.Result.Success);
+                    Assert.False(ex.Result.IsSuccess);
                     break;
             }
         }

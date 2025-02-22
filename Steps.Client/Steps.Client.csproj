@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+        <AssemblyName>Steps.Client</AssemblyName>
+        <RootNamespace>Steps.Client</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -35,6 +37,13 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\ProfileMenu.razor" />
+      <AdditionalFiles Include="Components\ProgressBar.razor" />
+      <AdditionalFiles Include="Components\RedirectToLogin.razor" />
+      <AdditionalFiles Include="Components\StepsPageTitle.razor" />
     </ItemGroup>
 
 </Project>

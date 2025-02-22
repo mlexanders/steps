@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Steps.Shared;
 
-namespace BlazorApp2.Services.Api.Base;
+namespace Steps.Client.Services.Api.Base;
 
 public class HttpClientService 
 {

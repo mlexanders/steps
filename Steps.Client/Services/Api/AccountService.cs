@@ -1,9 +1,9 @@
-﻿using BlazorApp2.Services.Api.Base;
+﻿using Steps.Client.Services.Api.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
-namespace BlazorApp2.Services.Api;
+namespace Steps.Client.Services.Api;
 
 public class AccountService : IAccountService
 {

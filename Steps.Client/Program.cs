@@ -1,9 +1,7 @@
-using System.Security.Claims;
-using BlazorApp2;
-using BlazorApp2.Services;
-using BlazorApp2.Services.Api;
-using BlazorApp2.Services.Api.Base;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Steps.Client;
+using Steps.Client.Services;
+using Steps.Client.Services.Api;
+using Steps.Client.Services.Api.Base;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -13,9 +11,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddRadzenComponents();
-
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore(options =>
@@ -41,26 +37,3 @@ builder.Services.AddScoped(typeof(HttpClientService));
 builder.Services.AddScoped(typeof(AccountService));
 builder.Services.AddScoped(typeof(SecurityService));
 await builder.Build().RunAsync();
-
-namespace BlazorApp2
-{
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
-    {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
-
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, "user.Login"),
-                new(ClaimTypes.Sid, "user.Id.ToString()"),
-                new(ClaimTypes.Email, "user.Login"),
-                new(ClaimTypes.Role, "user.Role.ToString()"),
-            };
-            identity.AddClaims(claims);
-            // return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
-            var state = new AuthenticationState(new ClaimsPrincipal(identity));
-            return Task.FromResult(state);
-        }
-    }
-}

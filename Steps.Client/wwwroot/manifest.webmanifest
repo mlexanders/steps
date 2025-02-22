@@ -1,6 +1,6 @@
 {
-  "name": "BlazorApp2",
-  "short_name": "BlazorApp2",
+  "name": "Ступени мастерства",
+  "short_name": "Ступени мастерства",
   "id": "./",
   "start_url": "./",
   "display": "standalone",

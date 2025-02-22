@@ -1,16 +1,16 @@
-﻿using BlazorApp2.Services.Api;
+﻿using Steps.Client.Services.Api;
 using Steps.Domain.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
-namespace BlazorApp2.Services;
+namespace Steps.Client.Services;
 
 public class SecurityService
 {
     private readonly AccountService _accountService;
     private IUser? _currentUser;
     
-    public event Action? OnUserChanged;
+    public event Action<IUser?>? OnUserChanged;
 
     public SecurityService(AccountService accountService)
     {
@@ -26,10 +26,8 @@ public class SecurityService
             var result = await _accountService.GetCurrentUser();
             return result.Value;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        catch {/*ignore*/ }
+        
         return null;
     }
 
@@ -39,7 +37,7 @@ public class SecurityService
         if (result.Value is null) return result;
         
         _currentUser = result.Value;
-        NotifyUserChanged();
+        NotifyUserChanged(_currentUser);
 
         return result;
     }
@@ -53,11 +51,11 @@ public class SecurityService
         }
 
         _currentUser = null;
-        NotifyUserChanged();
+        NotifyUserChanged(_currentUser);
     }
 
-    private void NotifyUserChanged()
+    private void NotifyUserChanged(IUser? resultValue)
     {
-        OnUserChanged?.Invoke();
+        OnUserChanged?.Invoke(resultValue);
     }
 }

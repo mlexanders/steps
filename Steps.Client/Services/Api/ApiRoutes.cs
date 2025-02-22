@@ -1,4 +1,4 @@
-﻿namespace BlazorApp2.Services.Api;
+﻿namespace Steps.Client.Services.Api;
 
 public static class ApiRoutes
 {

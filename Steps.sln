@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steps.Application.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steps.Utils", "Steps.Utils\Steps.Utils.csproj", "{232481AE-9B15-4820-B947-09AA5FB35B4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp2", "BlazorApp2\BlazorApp2.csproj", "{3C7722FA-311C-420D-9C99-768328771E8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steps.Client", "Steps.Client\Steps.Client.csproj", "{3C7722FA-311C-420D-9C99-768328771E8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

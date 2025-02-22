@@ -1,9 +1,9 @@
-﻿using BlazorApp2.Services;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Radzen;
+using Steps.Client.Services;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
-namespace BlazorApp2.Pages;
+namespace Steps.Client.Pages;
 
 public partial class Login : ComponentBase
 {

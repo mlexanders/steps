@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Domain.Base;
 
-namespace BlazorApp2.Services;
+namespace Steps.Client.Services;
 
 public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {
@@ -15,9 +15,8 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
         _securityService.OnUserChanged += OnChangeState;
     }
 
-    private void OnChangeState()
+    private void OnChangeState(IUser? user)
     {
-        Console.WriteLine("OnChangeState");
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 

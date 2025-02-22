@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
-namespace BlazorApp2.Services.Api.Base;
+namespace Steps.Client.Services.Api.Base;
 
 public class CookieHandler : DelegatingHandler
 {

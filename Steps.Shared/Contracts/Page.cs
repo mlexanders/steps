@@ -18,7 +18,7 @@ public class Page
     {
     }
 
-    public Page(int skip, int take)
+    public Page(bool isSkipTake, int skip, int take)
     {
         PageIndex = skip > 0 ? (skip / take) : 0;
         PageSize = take > 0 ? take : DefaultPageSize;

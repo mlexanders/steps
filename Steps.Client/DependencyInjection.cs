@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Steps.Client.Features.Organizer.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Authentication;
@@ -11,6 +12,7 @@ public static class AddIdentityDependencyInjection
 
     public static void AddDependencyContainer(this IServiceCollection services)
     {
+        services.AddTransient<ContestsManagement>();
         services.AddTransient<IContestService, ContestService>();
     }
     

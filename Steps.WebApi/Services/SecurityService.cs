@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Base;
 using Steps.Domain.Definitions;

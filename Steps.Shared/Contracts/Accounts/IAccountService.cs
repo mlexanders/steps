@@ -1,5 +1,4 @@
-﻿using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Accounts.ViewModels;
+﻿using Steps.Shared.Contracts.Accounts.ViewModels;
 
 namespace Steps.Shared.Contracts.Accounts;
 

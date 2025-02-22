@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj"/>
         <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj"/>
     </ItemGroup>
 

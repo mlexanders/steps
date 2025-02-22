@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
@@ -11,12 +12,12 @@ public record CreateContestCommand (CreateContestViewModel Model) : IRequest<Res
 
 public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, Result<Guid>>
 {
-    private readonly IContestManager _contestManager;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateEventCommandHandler(IContestManager contestManager, IMapper mapper)
+    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _contestManager = contestManager;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -25,7 +26,10 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
         var model = request.Model;
         var contest = _mapper.Map<Contest>(model);
 
-        await _contestManager.Create(contest);
+        var repository = _unitOfWork.GetRepository<Contest>();
+
+        await repository.InsertAsync(contest, cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         return Result<Guid>.Ok(contest.Id).SetMessage("Мероприятие успешно создано!");
     }

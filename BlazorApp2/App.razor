@@ -1,18 +1,16 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(AuthorizedLayout)">
+                <Authorizing>
+                    Authorizing...
+                </Authorizing>
+                
+                @* Access is denied by the [Authorize] attribute *@
                 <NotAuthorized >
-                    @* "NotAuthorized in AuthorizeRouteView" *@
-                    @* @if (context.User.Identity?.IsAuthenticated != true) *@
-                    @* { *@
-                        <RedirectToLogin/>
-                    @* } *@
-                    @* else *@
-                    @* { *@
-                        <p role="alert">You are not authorized to access this resource.</p>
-                    @* } *@
+                    Access is denied
                 </NotAuthorized>
+                
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
         </Found>

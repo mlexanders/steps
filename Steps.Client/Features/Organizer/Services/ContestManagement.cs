@@ -50,6 +50,8 @@ public class ContestsManagement
             var pagedList = result.Value;
             Contests = pagedList?.Items.ToList() ?? [];
             TotalCount = pagedList?.TotalCount ?? 0;
+            
+            OnContestsChanged();
         }
         catch (Exception e)
         {
@@ -57,8 +59,6 @@ public class ContestsManagement
         }
         
         IsLoading = false;
-
-        OnContestsChanged();
     }
 
 
@@ -91,7 +91,13 @@ public class ContestsManagement
     
     public async Task Delete(ContestViewModel contest)
     {
-        var confirmed = await _dialogService.Confirm("Вы уверены, что хотите удалить мероприятие?", "Удаление");
+        var confirmed = await _dialogService.Confirm("Вы уверены, что хотите удалить это мероприятие?", $"Удаление {contest.Name}",
+            new ConfirmOptions
+            {
+                OkButtonText = "Да, удалить",
+                CancelButtonText = "Отмена"
+            });
+        
         if (confirmed == true)
         {
             await _contestService.Delete(contest.Id);
@@ -106,6 +112,7 @@ public class ContestsManagement
     
     private void HandleException(Exception exception)
     {
+        Console.WriteLine(exception.Message);
         // cw.Log.Error(exception);
     }
 

@@ -4,11 +4,14 @@
 @implements IDisposable
 
 <RadzenCard>
-    <RadzenButton Text="Создать мероприятие" Icon="add" Click="OnCreate" Style="margin-bottom: 10px;" />
-    
     <RadzenDataGrid TItem="ContestViewModel" Data="ContestsManagement.Contests" AllowPaging="true" 
                     PageSize="ContestsManagement.PageSize" EmptyText="Мероприятия еще не созданы"
-                    IsLoading=@ContestsManagement.IsLoading Count="@ContestsManagement.TotalCount"  LoadData="@LoadData">
+                    IsLoading=@ContestsManagement.IsLoading Count="@ContestsManagement.TotalCount"  LoadData="@OnChangePage">
+        
+        <HeaderTemplate>
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать мероприятие" Click="@OnCreate" />
+        </HeaderTemplate>
+        
         <Columns>
             <RadzenDataGridColumn TItem="ContestViewModel" Property="Name" Title="Название" />
             <RadzenDataGridColumn TItem="ContestViewModel" Property="StartDate" Title="Дата начала" />
@@ -54,7 +57,7 @@
         return ContestsManagement.Delete(contest);
     }
 
-    private Task LoadData(LoadDataArgs arg)
+    private Task OnChangePage(LoadDataArgs arg)
     {
         var skip = arg.Skip;
         var take = arg.Top;

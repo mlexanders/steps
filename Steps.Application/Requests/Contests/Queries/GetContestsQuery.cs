@@ -31,6 +31,7 @@ public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<
 
         var contests = await repository.GetPagedListAsync(
             selector: contest => _mapper.Map<ContestViewModel>(contest),
+            orderBy: contest => contest.OrderBy(c => c.StartDate),
             pageIndex: page.PageIndex,
             pageSize: page.PageSize,
             cancellationToken: cancellationToken,

@@ -11,12 +11,10 @@ public class ContestsManagement
 {
     private Page _currentPage;
     private readonly IContestService _contestService;
-    private readonly DialogService _dialogService;
 
-    public ContestsManagement(IContestService contestService, DialogService dialogService)
+    public ContestsManagement(IContestService contestService)
     {
         _contestService = contestService;
-        _dialogService = dialogService;
         PageSize = Page.DefaultPageSize;
         _currentPage = new Page(0, PageSize);
         Contests = [];
@@ -33,7 +31,6 @@ public class ContestsManagement
 
     public event Action? ContestsChanged;
 
-
     public async Task Initialize()
     {
         await Load();
@@ -45,7 +42,7 @@ public class ContestsManagement
         try
         {
             var result = await _contestService.GetPaged(_currentPage);
-            if (!result.IsSuccess) ShowMessage(result);
+            // if (!result.IsSuccess) ShowMessage(result.Message);
 
             var pagedList = result.Value;
             Contests = pagedList?.Items.ToList() ?? [];
@@ -74,34 +71,39 @@ public class ContestsManagement
         PageSize = pageSize > 0 ? pageSize : Page.DefaultPageSize;
     }
 
-    public async Task Create()
+    public async Task<Result<Guid>> Create(CreateContestViewModel contest)
     {
-        var result = await _dialogService.OpenAsync<ContestDialog>("Создать мероприятие",
-            new Dictionary<string, object> { { "IsNew", true } });
-        if (result == true) await Load();
-    }
-
-    public async Task Update(ContestViewModel contest)
-    {
-        var result = await _dialogService.OpenAsync<ContestDialog>("Редактировать мероприятие",
-            new Dictionary<string, object> { { "Contest", contest }, { "IsNew", false } });
-        if (result == true) await Load();
-    }
-
-    public async Task Delete(ContestViewModel contest)
-    {
-        var confirmed = await _dialogService.Confirm("Вы уверены, что хотите удалить это мероприятие?",
-            $"Удаление {contest.Name}",
-            new ConfirmOptions
-            {
-                OkButtonText = "Да, удалить",
-                CancelButtonText = "Отмена"
-            });
-
-        if (confirmed == true)
+        try
         {
-            await _contestService.Delete(contest.Id);
-            await Load();
+            return await _contestService.Create(contest);
+        }
+        catch (Exception e)
+        {
+            return Result<Guid>.Fail(e.Message);
+        }
+    }
+
+    public async Task<Result<Guid>> Update(UpdateContestViewModel contest)
+    {
+        try
+        {
+            return await _contestService.Update(contest);
+        }
+        catch (Exception e)
+        {
+            return Result<Guid>.Fail(e.Message);
+        }
+    }
+
+    public async Task<Result> Delete(ContestViewModel contest)
+    {
+        try
+        {
+            return await _contestService.Delete(contest.Id);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(e.Message);
         }
     }
 
@@ -114,10 +116,5 @@ public class ContestsManagement
     {
         Console.WriteLine(exception.Message);
         // cw.Log.Error(exception);
-    }
-
-    private void ShowMessage(Result<PaggedListViewModel<ContestViewModel>> result)
-    {
-        Console.WriteLine(result?.Message);
     }
 }

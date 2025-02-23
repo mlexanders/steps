@@ -46,8 +46,8 @@ public class ContestsController : ControllerBase, IContestService
     }
 
     [HttpDelete("{contestId:guid}")]
-    public async Task<Result> Delete(Guid id)
+    public async Task<Result> Delete(Guid contestId)
     {
-        return await _mediator.Send(new DeleteContestCommand(id));
+        return await _mediator.Send(new DeleteContestCommand(contestId));
     }
 }

@@ -15,14 +15,17 @@ public class ContestService : IContestService
     {
         _httpClient = httpClient;
     }
+
     public Task<Result<Guid>> Create(CreateContestViewModel createContestViewModel)
     {
-        return _httpClient.PostAsync<Result<Guid>, CreateContestViewModel>(ApiRoutes.Contests.Create, createContestViewModel);
+        return _httpClient.PostAsync<Result<Guid>, CreateContestViewModel>(ApiRoutes.Contests.Create,
+            createContestViewModel);
     }
 
     public Task<Result<Guid>> Update(UpdateContestViewModel updateContestViewModel)
     {
-        return _httpClient.PatchAsync<Result<Guid>, UpdateContestViewModel>(ApiRoutes.Contests.Update, updateContestViewModel);
+        return _httpClient.PatchAsync<Result<Guid>, UpdateContestViewModel>(ApiRoutes.Contests.Update,
+            updateContestViewModel);
     }
 
     public Task<Result<ContestViewModel>> GetById(Guid clubId)

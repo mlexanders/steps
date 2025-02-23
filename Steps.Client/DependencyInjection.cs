@@ -9,18 +9,18 @@ namespace Steps.Client;
 
 public static class AddIdentityDependencyInjection
 {
-
     public static void AddDependencyContainer(this IServiceCollection services)
     {
+        services.AddTransient<ContestDialogManager>();
         services.AddTransient<ContestsManagement>();
         services.AddTransient<IContestService, ContestService>();
     }
-    
+
     public static void AddIdentity(this IServiceCollection services)
     {
         services.AddOptions();
         services.AddAuthorizationCore();
-    
+
         services.AddScoped<AuthenticationStateProvider, ApplicationAuthenticationStateProvider>();
 
         services.AddScoped(typeof(CookieHandler));

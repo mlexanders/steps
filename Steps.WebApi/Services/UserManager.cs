@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
+using Steps.Domain.Base;
 using Steps.Domain.Entities;
 using Steps.Infrastructure.Data;
 using Steps.Shared.Exceptions;
@@ -35,7 +36,7 @@ public class UserManager : IUserManager<User>
         return entry.Entity.Id;
     }
 
-    public async Task<User> Login(string email, string password)
+    public async Task<IUser> Login(string email, string password)
     {
         var user = await _unitOfWork.GetRepository<User>()
             .GetFirstOrDefaultAsync(
@@ -48,7 +49,7 @@ public class UserManager : IUserManager<User>
         return result is PasswordVerificationResult.Success ? user : throw new AppInvalidCredentialsException();
     }
 
-    public async Task<User?> FindByEmailAsync(string email)
+    public async Task<IUser?> FindByEmailAsync(string email)
     {
         var user = await _unitOfWork.GetRepository<User>()
             .GetFirstOrDefaultAsync(

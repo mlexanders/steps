@@ -1,8 +1,9 @@
-﻿using Steps.Domain.Definitions;
+﻿using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 
 namespace Steps.Shared.Contracts.Accounts.ViewModels;
 
-public class UserViewModel
+public class UserViewModel : IUser
 {
     public Guid Id { get; set; }
     public string Login { get; set; } = null!;

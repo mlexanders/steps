@@ -1,0 +1,72 @@
+﻿@using Steps.Client.Features.Organizer.Services
+@using Steps.Shared.Contracts.Contests.ViewModels
+
+@implements IDisposable
+
+<RadzenCard>
+    <RadzenDataGrid TItem="ContestViewModel" Data="ContestsManagement.Contests" AllowPaging="true" 
+                    PageSize="ContestsManagement.PageSize" EmptyText="Мероприятия еще не созданы"
+                    IsLoading=@ContestsManagement.IsLoading Count="@ContestsManagement.TotalCount"  LoadData="@OnChangePage">
+        
+        <HeaderTemplate>
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать мероприятие" Click="@OnCreate" />
+        </HeaderTemplate>
+        
+        <Columns>
+            <RadzenDataGridColumn TItem="ContestViewModel" Property="Name" Title="Название" />
+            <RadzenDataGridColumn TItem="ContestViewModel" Property="StartDate" Title="Дата начала" />
+            <RadzenDataGridColumn TItem="ContestViewModel" Property="EndDate" Title="Дата окончания" />
+     
+            <RadzenDataGridColumn Width="16%" Context="contest" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Frozen="true" FrozenPosition="FrozenColumnPosition.Right">
+                <Template Context="order">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="rz-my-1 rz-ms-1" 
+                                  Click="@(() => OnUpdate(order))" @onclick:stopPropagation="true" />
+                    
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Medium" Shade="Shade.Lighter" class="rz-my-1 rz-ms-1" 
+                                  Click="@(()=> OnDelete(order))" @onclick:stopPropagation="true" />
+                </Template>
+            </RadzenDataGridColumn>
+            
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+
+@code {
+
+    [Inject] private ContestsManagement ContestsManagement { get; set; } = null!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await ContestsManagement.Initialize();
+        ContestsManagement.ContestsChanged += StateHasChanged;
+    }
+
+    private Task OnCreate()
+    {
+        return ContestsManagement.Create();
+    }
+
+    private Task OnUpdate(ContestViewModel contest)
+    {
+        return ContestsManagement.Update(contest);
+    }
+
+    private Task OnDelete(ContestViewModel contest)
+    {
+        return ContestsManagement.Delete(contest);
+    }
+
+    private Task OnChangePage(LoadDataArgs arg)
+    {
+        var skip = arg.Skip;
+        var take = arg.Top;
+
+        return ContestsManagement.ChangePage(skip, take);
+    }
+
+    public void Dispose()
+    {
+        ContestsManagement.ContestsChanged -= StateHasChanged;
+    }
+}

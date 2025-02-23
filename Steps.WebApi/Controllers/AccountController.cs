@@ -21,13 +21,13 @@ public class AccountController : Controller, IAccountService
     }
 
     [HttpPost]
-    public async Task<Result> Registration([FromBody] RegistrationRequestViewModel model)
+    public async Task<Result> Registration([FromBody] RegistrationViewModel model)
     {
         return await _mediator.Send(new CreateUserCommand(model));
     }
 
     [HttpPost]
-    public async Task<Result<UserViewModel>> Login(LoginRequestViewModel model)
+    public async Task<Result<UserViewModel>> Login(LoginViewModel model)
     {
         var loginResult = await _mediator.Send(new LoginRequestCommand(model));
         return loginResult;
@@ -44,11 +44,11 @@ public class AccountController : Controller, IAccountService
     [HttpPost]
     public async Task<Result> Logout()
     {
-        throw new NotImplementedException();
+       return await _mediator.Send(new LogoutUserCommand());
     }
 
     [HttpPost]
-    public async Task<Result<string>> ChangePassword(ChangePasswordRequestViewModel model)
+    public async Task<Result<string>> ChangePassword(ChangePasswordViewModel model)
     {
         throw new NotImplementedException();
     }

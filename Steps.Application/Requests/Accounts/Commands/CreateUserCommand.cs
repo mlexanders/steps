@@ -8,7 +8,7 @@ using Steps.Shared;
 
 namespace Steps.Application.Requests.Accounts.Commands;
 
-public record CreateUserCommand(RegistrationRequestViewModel Model) : IRequest<Result<Guid>>;
+public record CreateUserCommand(RegistrationViewModel Model) : IRequest<Result<Guid>>;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<Guid>>
 {

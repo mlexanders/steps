@@ -61,7 +61,7 @@ public class CreateClubCommandIntegrationTest
         catch (AppHandledException e)
         {
             // assert
-            Assert.False(e.Result.Success);
+            Assert.False(e.Result.IsSuccess);
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5000
+EXPOSE 5001
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Steps.WebApi/Steps.WebApi.csproj", "Steps.WebApi/"]
 COPY ["Steps.Infrastructure.Data/Steps.Infrastructure.Data.csproj", "Steps.Infrastructure.Data/"]
-COPY [" Steps.Domain/Steps.Domain.csproj", " Steps.Domain/"]
+COPY ["Steps.Domain/Steps.Domain.csproj", "Steps.Domain/"]
 COPY ["Steps.Application/Steps.Application.csproj", "Steps.Application/"]
 COPY ["Steps.Shared/Steps.Shared.csproj", "Steps.Shared/"]
 RUN dotnet restore "Steps.WebApi/Steps.WebApi.csproj"

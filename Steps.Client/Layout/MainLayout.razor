@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+
+
+<RadzenLayout style="position: relative;grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+    <RadzenHeader>
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenColumn Size="5">
+                <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
+            </RadzenColumn>
+            <RadzenColumn Size="7">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal"
+                             JustifyContent="JustifyContent.End">
+                    <ProfileMenu/>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+    <RadzenSidebar Responsive="false" @bind-Expanded="@_sidebarExpanded" style="position: absolute; z-index: 3">
+        <RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
+            <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary"
+                          Click="@(() => _sidebarExpanded = false)"/>
+        </RadzenStack>
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Home" Icon="home"/>
+            <RadzenPanelMenuItem Text="Users" Icon="account_box"/>
+        </RadzenPanelMenu>
+        <div class="rz-p-4">
+            Sidebar
+        </div>
+    </RadzenSidebar>
+    <RadzenBody>
+        <div class="rz-p-4">
+            @Body
+        </div>
+    </RadzenBody>
+    @if (_sidebarExpanded)
+    {
+        <div @onclick="@(() => _sidebarExpanded = false)" class="rz-dialog-mask"
+             style="position: absolute; z-index: 2"></div>
+    }
+</RadzenLayout>

@@ -1,27 +1,42 @@
-﻿using Calabonga.PagedListCore;
+﻿using AutoMapper;
+using Calabonga.PagedListCore;
+using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests.ViewModels;
+using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-public record GetContestsQuery (Page Page) : IRequest<Result<IPagedList<ContestViewModel>>>;
+public record GetContestsQuery (Page Page) : IRequest<Result<PaggedListViewModel<ContestViewModel>>>;
 
-public class GetEventsQueryHandler : IRequestHandler<GetContestsQuery, Result<IPagedList<ContestViewModel>>>
+public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<PaggedListViewModel<ContestViewModel>>>
 {
-    private readonly IContestManager _contestManager;
+    private readonly IUnitOfWork _unitOfWork;
+    private IMapper _mapper;
 
-    public GetEventsQueryHandler(IContestManager contestManager)
+    public GetContestsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _contestManager = contestManager;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    public async Task<Result<IPagedList<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
     {
-        var contests = await _contestManager.Read(request.Page);
-        return Result<IPagedList<ContestViewModel>>.Ok(contests);
+        var page = request.Page;
+        
+        var repository = _unitOfWork.GetRepository<Contest>();
+
+        var contests = await repository.GetPagedListAsync(
+            selector: contest => _mapper.Map<ContestViewModel>(contest),
+            orderBy: contest => contest.OrderBy(c => c.StartDate),
+            pageIndex: page.PageIndex,
+            pageSize: page.PageSize,
+            cancellationToken: cancellationToken,
+            trackingType: TrackingType.NoTracking);
+
+        return Result<PaggedListViewModel<ContestViewModel>>.Ok(contests.GetPaginatedList());
     }
 }

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
+using Steps.Application.Requests.Contests.Queries;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
@@ -11,11 +12,11 @@ namespace Steps.Services.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[Controller]")]
-public class ContestController : ControllerBase, IContestService
+public class ContestsController : ControllerBase, IContestService
 {
     private readonly IMediator _mediator;
 
-    public ContestController(IMediator mediator)
+    public ContestsController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -27,17 +28,15 @@ public class ContestController : ControllerBase, IContestService
     }
 
     [HttpGet("{contestId:guid}")]
-    public Task<Result<ContestViewModel>> GetById(Guid contestId)
+    public async Task<Result<ContestViewModel>> GetById(Guid contestId)
     {
-        throw new NotImplementedException(); //TODO:
+        return await _mediator.Send(new GetContestByIdQuery(contestId));
     }
 
     [HttpGet]
-    public async Task<Result<IPagedList<ContestViewModel>>> GetPaged([FromQuery] Page page)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page)
     {
-        throw new NotImplementedException(); //TODO:
-
-        // return await _mediator.Send(new GetContestsQuery(page));
+        return (await _mediator.Send(new GetContestsQuery(page)));
     }
     
     [HttpPatch]

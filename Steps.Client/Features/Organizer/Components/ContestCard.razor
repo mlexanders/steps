@@ -1,0 +1,12 @@
+﻿@using Steps.Shared.Contracts.Contests.ViewModels
+
+<h3>ContestCard</h3>
+@Contest.Name
+@Contest.Description
+@Contest.EndDate
+@Contest.StartDate
+
+@code {
+    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+
+}

@@ -2,20 +2,32 @@
 @using Steps.Shared.Contracts.Contests.ViewModels
 
 <RadzenFieldset Text="@Title">
-    <RadzenTextBox @bind-Value="@Contest.Name" Placeholder="Введите название" Style="width: 100%" />
-    <RadzenRequiredValidator Component="@nameof(Contest.Name)" Text="Название обязательно" />
+    <RadzenStack Gap="2rem">
 
-    <RadzenTextArea @bind-Value="@Contest.Description" Placeholder="Введите описание" Style="width: 100%" />
+        <RadzenTextBox @bind-Value="@Contest.Name" Name="@nameof(Contest.Name)" Placeholder="Введите название"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Contest.Name)" Text="Название обязательно"
+                                 Style="position: absolute"/>
 
-    <RadzenDatePicker @bind-Value="@Contest.StartDate" Placeholder="Дата начала" Style="width: 100%" />
-    <RadzenRequiredValidator Component="@nameof(Contest.StartDate)" Text="Дата начала обязательна" />
+        <RadzenTextArea @bind-Value="@Contest.Description" Placeholder="Введите описание" Style="width: 100%"/>
 
-    <RadzenDatePicker @bind-Value="@Contest.EndDate" Placeholder="Дата окончания" Style="width: 100%" />
-    <RadzenRequiredValidator Component="@nameof(Contest.EndDate)" Text="Дата окончания обязательна" />
+        <RadzenDatePicker @bind-Value="@Contest.StartDate" Name="@nameof(Contest.StartDate)" Placeholder="Дата начала"
+                          Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Contest.StartDate)" Text="Дата начала обязательна"/>
+        <RadzenCustomValidator Validator="() => Contest.StartDate > DateTime.Now" Component="@nameof(Contest.StartDate)"
+                               Text="Укажите дату и время начала"/>
+
+        <RadzenDatePicker @bind-Value="@Contest.EndDate" Name="@nameof(Contest.EndDate)" Placeholder="Дата окончания"
+                          Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Contest.EndDate)" Text="Дата окончания обязательна"/>
+        <RadzenCustomValidator Validator="() => Contest.EndDate < DateTime.Now.AddMonths(12)"
+                               Component="@nameof(Contest.EndDate)" Text="Укажите дату и время начала"/>
+    </RadzenStack>
+
 </RadzenFieldset>
 
 
 @code {
-    [Parameter] [Required]  public string Title { get; set; } = null!;
+    [Parameter] [Required] public string Title { get; set; } = null!;
     [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;
 }

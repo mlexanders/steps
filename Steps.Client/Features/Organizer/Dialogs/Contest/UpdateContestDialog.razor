@@ -1,0 +1,38 @@
+﻿@using Steps.Client.Features.Organizer.Forms
+@using Steps.Client.Features.Organizer.Services
+@using Steps.Shared.Contracts.Contests.ViewModels
+
+@inherits BaseModal
+@inject ContestsManagement ContestsManagement
+
+<RadzenTemplateForm TItem="ContestViewModel" Submit="Update" Data="Contest">
+    <RadzenCard>
+
+        <ContestForm Contest="@Contest" Title="Мероприятие"/>
+
+        <RadzenButton Text="Сохранить" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+
+    private async Task Update()
+    {
+        var result = await ContestsManagement.Update(new UpdateContestViewModel()
+        {
+            Id = Contest.Id,
+            Name = Contest.Name,
+            Description = Contest.Description,
+            StartDate = DateTime.SpecifyKind(Contest.StartDate, DateTimeKind.Utc),
+            EndDate = DateTime.SpecifyKind(Contest.EndDate, DateTimeKind.Utc),
+        });
+
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

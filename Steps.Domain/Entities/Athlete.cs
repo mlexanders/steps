@@ -7,6 +7,7 @@ public class Athlete : Entity
 {
     public string FullName { get; set; } = null!;
     public DateTime BirthDate { get; set; }
+    public DateTime? ExitTime { get; set; }
     public Guid TeamId { get; set; }
     
     public List<EntryAthletesList>? EntryAthletesLists { get; set; }

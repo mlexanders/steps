@@ -5,6 +5,7 @@ namespace Steps.Shared.Contracts.AthletesLists.PreAthletesList.ViewModels;
 
 public class PreAthletesListViewModel
 {
+    public Guid Id { get; set; }
     public Guid ContestId { get; set; }
     public ContestViewModel Contest { get; set; }
     

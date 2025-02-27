@@ -11,11 +11,11 @@ namespace Steps.Services.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[Controller]")]
-public class ContestsesController : ControllerBase, IContestsService
+public class ContestsController : ControllerBase, IContestsService
 {
     private readonly IMediator _mediator;
 
-    public ContestsesController(IMediator mediator)
+    public ContestsController(IMediator mediator)
     {
         _mediator = mediator;
     }

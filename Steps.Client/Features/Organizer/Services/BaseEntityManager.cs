@@ -103,7 +103,7 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
         Console.WriteLine(exception);
     }
 
-    private async Task LoadPage()
+    public async Task LoadPage()
     {
         IsLoading = true;
         try

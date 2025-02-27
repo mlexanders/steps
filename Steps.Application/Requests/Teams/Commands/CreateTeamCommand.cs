@@ -37,10 +37,10 @@ public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Resul
             throw new AppAccessDeniedException();
         }
 
-        var entity = _unitOfWork.GetRepository<Team>().Insert(team);
+        var entry = await _unitOfWork.GetRepository<Team>().InsertAsync(team, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        var viewModel = _mapper.Map<TeamViewModel>(entity);
+        var viewModel = _mapper.Map<TeamViewModel>(entry.Entity);
         
         return Result<TeamViewModel>.Ok(viewModel).SetMessage("Команда создана");
     }

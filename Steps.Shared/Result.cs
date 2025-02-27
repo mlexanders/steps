@@ -14,6 +14,11 @@ public class Result
         Errors = errors ?? [];
     }
 
+    public Result()
+    {
+        IsSuccess = false;
+    }
+    
     [JsonConstructor]
     public Result(string? message, bool isSuccess, List<Error>? errors = null)
     {
@@ -62,7 +67,11 @@ public class Result<T> : Result
     {
         Value = value;
     }
-    
+
+    public Result() : base()
+    {
+    }
+
     public static Result<T> Ok(T value) => new(value);
 
     public static new Result<T> Fail(List<Error> errors) => new(errors);

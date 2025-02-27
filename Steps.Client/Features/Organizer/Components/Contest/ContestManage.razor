@@ -51,16 +51,19 @@
     private async Task OnCreate()
     {
         var result = await ContestDialogManager.ShowCreateDialog();
+        if (result) await ContestsManagement.LoadPage();
     }
 
     private async Task OnUpdate(ContestViewModel contest)
     {
         var result = await ContestDialogManager.ShowUpdateDialog(contest);
+        if (result) await ContestsManagement.LoadPage();
     }
 
     private async Task OnDelete(ContestViewModel contest)
     {
         var result = await ContestDialogManager.ShowDeleteDialog(contest);
+        if (result) await ContestsManagement.LoadPage();
     }
 
     private Task OnChangePage(LoadDataArgs arg)

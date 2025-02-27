@@ -10,8 +10,7 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-
-public record GetContestByIdQuery (Guid ContestId) : IRequest<Result<ContestViewModel>>;
+public record GetContestByIdQuery(Guid ContestId) : IRequest<Result<ContestViewModel>>;
 
 public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, Result<ContestViewModel>>
 {
@@ -31,10 +30,11 @@ public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, R
             .GetFirstOrDefaultAsync(
                 predicate: c => c.Id.Equals(request.ContestId),
                 selector: c => _mapper.Map<ContestViewModel>(c),
+                orderBy: c => c.OrderByDescending(o => o.StartDate),
                 trackingType: TrackingType.NoTracking);
 
         if (contest == null) throw new AppNotFoundException("Мероприятие не найдено");
-        
+
         return Result<ContestViewModel>.Ok(contest);
     }
 }

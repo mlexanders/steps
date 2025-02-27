@@ -44,10 +44,10 @@ public class CreateClubCommandHandler : IRequestHandler<CreateClubCommand, Resul
 
         var club = _mapper.Map<Club>(model);
 
-        var entity = repository.Insert(club);
+        var entry = await repository.InsertAsync(club, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        var viewModel = _mapper.Map<ClubViewModel>(entity);
+        var viewModel = _mapper.Map<ClubViewModel>(entry.Entity);
 
         return Result<ClubViewModel>.Ok(viewModel).SetMessage("Клуб успешно создан");
     }

@@ -18,21 +18,21 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
     {
         var options = new Dictionary<string, object> { { "Contest", model } };
         var result = await _dialogService.OpenAsync<ContestCardDialog>("Создание мероприятия", options);
-
-        return result;
+        return result ?? false;
     }
 
     public async Task<bool> ShowCreateDialog()
     {
         var result = await _dialogService.OpenAsync<CreateContestDialog>("Создание мероприятия");
-        return result;
+        return result ?? false;
+
     }
 
     public async Task<bool> ShowUpdateDialog(ContestViewModel model)
     {
         var options = new Dictionary<string, object> { { "Contest", model } };
         var result = await _dialogService.OpenAsync<UpdateContestDialog>("Редактирование мероприятия", options);
-        return result;
+        return result ?? false;
     }
 
     public async Task<bool> ShowDeleteDialog(ContestViewModel model)
@@ -40,6 +40,6 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
         var options = new Dictionary<string, object> { { "Contest", model } };
         var result = await _dialogService
             .OpenAsync<DeleteContestDialog>("Вы уверены, что хотите удалить это мероприятие?", options);
-        return result;
+        return result ?? false;
     }
 }

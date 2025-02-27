@@ -4,7 +4,6 @@
 
 @inherits BaseModal
 @inject ContestsManagement ContestsManagement
-
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create" Data="_contest">
     <RadzenCard>
 
@@ -33,5 +32,4 @@
 
         if (result.IsSuccess) Close(true);
     }
-
 }

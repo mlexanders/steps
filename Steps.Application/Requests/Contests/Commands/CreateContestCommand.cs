@@ -30,7 +30,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
         var entry = await repository.InsertAsync(contest, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
         
-        var viewModel = _mapper.Map<ContestViewModel>(entry);
+        var viewModel = _mapper.Map<ContestViewModel>(entry.Entity);
         
         return Result<ContestViewModel>.Ok(viewModel).SetMessage("Мероприятие успешно создано!");
     }

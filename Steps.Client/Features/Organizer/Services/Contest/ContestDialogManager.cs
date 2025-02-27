@@ -1,9 +1,8 @@
 ﻿using Radzen;
-using Steps.Client.Features.Organizer.Components;
 using Steps.Client.Features.Organizer.Dialogs.Contest;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Client.Features.Organizer.Services;
+namespace Steps.Client.Features.Organizer.Services.Contest;
 
 public class ContestDialogManager : IDialogManager<ContestViewModel, CreateContestViewModel>
 {
@@ -25,7 +24,6 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
     {
         var result = await _dialogService.OpenAsync<CreateContestDialog>("Создание мероприятия");
         return result ?? false;
-
     }
 
     public async Task<bool> ShowUpdateDialog(ContestViewModel model)

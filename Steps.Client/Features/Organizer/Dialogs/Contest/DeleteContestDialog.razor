@@ -1,9 +1,10 @@
 ﻿@using Steps.Client.Features.Organizer.Services
 @using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Client.Features.Organizer.Components
+@using Steps.Client.Features.Organizer.Services.Contest
 
 @inherits BaseModal
-@inject ContestsManagement ContestsManagement
+@inject ContestManager ContestManager
 
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
 
@@ -21,7 +22,7 @@
 
     private async Task Create()
     {
-        var result = await ContestsManagement.Delete(Contest);
+        var result = await ContestManager.Delete(Contest);
 
         ShowResultMessage(result);
 

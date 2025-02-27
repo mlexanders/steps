@@ -1,9 +1,10 @@
 ﻿@using Steps.Client.Features.Organizer.Forms
 @using Steps.Client.Features.Organizer.Services
+@using Steps.Client.Features.Organizer.Services.Contest
 @using Steps.Shared.Contracts.Contests.ViewModels
 
 @inherits BaseModal
-@inject ContestsManagement ContestsManagement
+@inject ContestManager ContestManager
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create" Data="_contest">
     <RadzenCard>
 
@@ -20,7 +21,7 @@
 
     private async Task Create()
     {
-        var result = await ContestsManagement.Create(new CreateContestViewModel
+        var result = await ContestManager.Create(new CreateContestViewModel
         {
             Name = _contest.Name,
             Description = _contest.Description,

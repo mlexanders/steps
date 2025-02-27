@@ -1,16 +1,16 @@
 ﻿@using Steps.Client.Features.Organizer.Forms
 @using Steps.Client.Features.Organizer.Services
-@using Steps.Client.Features.Organizer.Services.Contest
+@using Steps.Client.Features.Organizer.Services.Club
+@using Steps.Shared.Contracts.Clubs.ViewModels
 @using Steps.Shared.Contracts.Contests.ViewModels
 
 @inherits BaseModal
-@inject ContestManager ContestManager
+@inject ClubsManager ContestManager
 
-<RadzenTemplateForm TItem="ContestViewModel" Submit="Update" Data="Contest">
+<RadzenTemplateForm TItem="ClubViewModel" Submit="Update" Data="Club">
     <RadzenCard>
 
-        <ContestForm Contest="@Contest" Title="Мероприятие"/>
-
+        <ClubForm Club="@Club" Title="Мероприятие"/>
         <RadzenButton Text="Сохранить" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -18,19 +18,15 @@
 </RadzenTemplateForm>
 
 @code {
-    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+    [Parameter] public ClubViewModel Club { get; set; } = null!;
 
     private async Task Update()
     {
-        var result = await ContestManager.Update(new UpdateContestViewModel()
+        var result = await ContestManager.Update(new UpdateClubViewModel
         {
-            Id = Contest.Id,
-            Name = Contest.Name,
-            Description = Contest.Description,
-            StartDate = DateTime.SpecifyKind(Contest.StartDate, DateTimeKind.Utc),
-            EndDate = DateTime.SpecifyKind(Contest.EndDate, DateTimeKind.Utc),
+            Name = Club.Name,
+            OwnerId = Club.OwnerId
         });
-
         ShowResultMessage(result);
 
         if (result.IsSuccess) Close(true);

@@ -1,0 +1,18 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Shared.Contracts.Clubs.ViewModels
+<RadzenFieldset Text="@Title">
+    <RadzenStack Gap="2rem">
+
+        <RadzenTextBox @bind-Value="@Club.Name" Name="@nameof(Club.Name)" Placeholder="Введите название"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Club.Name)" Text="Название обязательно" Style="position: absolute"/>
+
+        user
+    </RadzenStack>
+
+</RadzenFieldset>
+
+@code {
+    [Parameter] [Required] public string Title { get; set; } = null!;
+    [Parameter] [Required] public ClubViewModel Club { get; set; } = null!;
+}

@@ -1,0 +1,16 @@
+﻿@using Steps.Client.Features.Organizer.Components.Club
+@using Steps.Shared.Contracts.Clubs.ViewModels
+
+@inherits BaseModal
+
+
+<RadzenText Text="Вы уверены, что хотите удалить этот клуб?"/>
+
+<ClubCard Club="@Club"/>
+
+<RadzenButton Text="Закрыть" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
+              Style="margin-left: 10px;"/>
+
+@code {
+    [Parameter] public ClubViewModel Club { get; set; } = null!;
+}

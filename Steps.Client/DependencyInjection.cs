@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Client.Features.Organizer.Services;
+using Steps.Client.Features.Organizer.Services.Club;
+using Steps.Client.Features.Organizer.Services.Contest;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Authentication;
@@ -14,9 +16,13 @@ public static class AddIdentityDependencyInjection
     public static void AddDependencyContainer(this IServiceCollection services)
     {
         services.AddTransient<ContestDialogManager>();
-        services.AddTransient<ContestsManagement>();
+        services.AddTransient<ContestManager>();
         services.AddTransient<IContestsService, ContestsesService>();
+        
+        services.AddTransient<ClubsDialogManager>();
+        services.AddTransient<ClubsManager>();
         services.AddTransient<IClubsService, ClubsService>();
+        
         services.AddTransient<ITeamsService, TeamsService>();
     }
 

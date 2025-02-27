@@ -51,4 +51,16 @@ public class ContestController : ControllerBase, IContestService
     {
         return await _mediator.Send(new DeleteContestCommand(id));
     }
+    
+    [HttpPost("Generate-Group-Blocks")]
+    public async Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount)
+    {
+        return await _mediator.Send(new GenerateGroupBlocksCommand(contestId, athletesCount));
+    }
+    
+    [HttpPost("Check-Athlete-Appeared")]
+    public async Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared)
+    {
+        return await _mediator.Send(new CheckAthleteCommand(athleteId, contestId, isAppeared));
+    }
 }

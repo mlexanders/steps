@@ -30,6 +30,7 @@
     
     <ItemGroup>
       <Folder Include="Definitions\" />
+      <Folder Include="Mappers\AthletesLists\" />
       <Folder Include="Requests\Accounts\Queries\" />
       <Folder Include="Requests\Accounts\Validators\" />
       <Folder Include="Requests\Contests\Validators\" />

@@ -12,7 +12,7 @@ public class Entry : Entity
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }
     
-    public Guid UserId { get; set; }
+    public Guid UserId { get; set; } //TODO:название
     public User User { get; set; }
     
     public Guid? EntryAthletesListId { get; set; }

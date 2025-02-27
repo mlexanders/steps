@@ -11,4 +11,7 @@ public interface IContestService
     Task<Result<ContestViewModel>> GetById(Guid clubId);
     Task<Result<IPagedList<ContestViewModel>>> GetPaged(Page page);
     Task<Result> Delete(Guid id);
+    
+    Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount);
+    Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared);
 }

@@ -9,7 +9,7 @@ using Steps.Shared.Contracts.AthletesLists.PreAthletesList.ViewModels;
 
 namespace Steps.Application.Requests.Contests.Commands
 {
-    public record GenerateGroupBlocksCommand(PreAthletesListViewModel Model, int athletesCount) : IRequest<Result>;
+    public record GenerateGroupBlocksCommand(Guid Id, int athletesCount) : IRequest<Result>;
 
     public class GenerateGroupBlocksCommandHandler : IRequestHandler<GenerateGroupBlocksCommand, Result>
     {
@@ -26,20 +26,19 @@ namespace Steps.Application.Requests.Contests.Commands
         {
             try
             {
-                var model = request.Model;
-                var preAthletesList = _mapper.Map<PreAthletesList>(model);
-
                 var preAthletesListRepository = _unitOfWork.GetRepository<PreAthletesList>();
                 var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
                 var contestRepository = _unitOfWork.GetRepository<Contest>();
-
-                var contest = await contestRepository.GetFirstOrDefaultAsync(c => c.Id == preAthletesList.ContestId,
-                        null,
-                        null,
-                        TrackingType.NoTracking,
-                        false,
-                        false
+                
+                var contest = await contestRepository.GetFirstOrDefaultAsync(c => c.Id == request.Id,
+                    null,
+                    c => c.Include(pre => pre.PreAthletesList),
+                    TrackingType.NoTracking,
+                    false,
+                    false
                 );
+                
+                var preAthletesList = contest.PreAthletesList;
 
                 var athletes = preAthletesList.Athletes;
 

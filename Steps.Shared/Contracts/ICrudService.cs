@@ -1,4 +1,5 @@
 ﻿using Steps.Domain.Base;
+using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Shared.Contracts;
 

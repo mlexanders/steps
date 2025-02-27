@@ -2,4 +2,4 @@
 
 namespace Steps.Shared.Contracts.Contests;
 
-public interface IContestService : ICrudService<ContestViewModel, CreateContestViewModel, UpdateContestViewModel>;
+public interface IContestsService : ICrudService<ContestViewModel, CreateContestViewModel, UpdateContestViewModel>;

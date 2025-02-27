@@ -6,7 +6,7 @@ namespace Steps.Client.Features.Organizer.Services;
 
 public class ContestsManagement : BaseEntityManager<ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 {
-    public ContestsManagement(IContestService contestService) : base(contestService)
+    public ContestsManagement(IContestsService contestsService) : base(contestsService)
     {
     }
 }

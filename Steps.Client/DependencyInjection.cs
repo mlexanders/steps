@@ -3,7 +3,9 @@ using Steps.Client.Features.Organizer.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Authentication;
+using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
+using Steps.Shared.Contracts.Teams;
 
 namespace Steps.Client;
 
@@ -13,7 +15,9 @@ public static class AddIdentityDependencyInjection
     {
         services.AddTransient<ContestDialogManager>();
         services.AddTransient<ContestsManagement>();
-        services.AddTransient<IContestService, ContestService>();
+        services.AddTransient<IContestsService, ContestsesService>();
+        services.AddTransient<IClubsService, ClubsService>();
+        services.AddTransient<ITeamsService, TeamsService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

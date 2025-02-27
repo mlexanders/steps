@@ -1,5 +1,4 @@
-﻿using Calabonga.PagedListCore;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
@@ -22,7 +21,7 @@ public class ContestsController : ControllerBase, IContestService
     }
     
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateContestViewModel createContestViewModel)
+    public async Task<Result<ContestViewModel>> Create([FromBody] CreateContestViewModel createContestViewModel)
     {
         return await _mediator.Send(new CreateContestCommand(createContestViewModel));
     }

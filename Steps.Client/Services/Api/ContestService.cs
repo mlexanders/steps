@@ -16,9 +16,9 @@ public class ContestService : IContestService
         _httpClient = httpClient;
     }
 
-    public Task<Result<Guid>> Create(CreateContestViewModel createContestViewModel)
+    public Task<Result<ContestViewModel>> Create(CreateContestViewModel createContestViewModel)
     {
-        return _httpClient.PostAsync<Result<Guid>, CreateContestViewModel>(ApiRoutes.Contests.Create,
+        return _httpClient.PostAsync<Result<ContestViewModel>, CreateContestViewModel>(ApiRoutes.Contests.Create,
             createContestViewModel);
     }
 

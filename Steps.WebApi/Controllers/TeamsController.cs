@@ -24,13 +24,13 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel model)
+    public async Task<Result<TeamViewModel>> Create([FromBody] CreateTeamViewModel model)
     {
         return await _mediator.Send(new CreateTeamCommand(model));
     }
 
     [HttpPatch]
-    public async Task<Result> Update([FromBody] UpdateTeamViewModel model)
+    public async Task<Result<Guid>> Update([FromBody] UpdateTeamViewModel model)
     {
         return await _mediator.Send(new UpdateTeamCommand(model));
     }
@@ -42,7 +42,7 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpGet]
-    public async Task<Result<IPagedList<TeamViewModel>>> GetPaged([FromQuery] Page page)
+    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page)
     {
         return await _mediator.Send(new GetPagedTeamsQuery(page));
     }

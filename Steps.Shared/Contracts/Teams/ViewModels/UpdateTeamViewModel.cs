@@ -1,6 +1,8 @@
-﻿namespace Steps.Shared.Contracts.Teams.ViewModels;
+﻿using Steps.Domain.Base;
 
-public class UpdateTeamViewModel
+namespace Steps.Shared.Contracts.Teams.ViewModels;
+
+public class UpdateTeamViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

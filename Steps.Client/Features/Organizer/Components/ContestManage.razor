@@ -4,7 +4,7 @@
 @implements IDisposable
 
 <RadzenCard>
-    <RadzenDataGrid TItem="ContestViewModel" Data="ContestsManagement.Contests" AllowPaging="true"
+    <RadzenDataGrid TItem="ContestViewModel" Data="ContestsManagement.Data" AllowPaging="true"
                     PageSize="ContestsManagement.PageSize" EmptyText="Мероприятия еще не созданы"
                     IsLoading=@ContestsManagement.IsLoading Count="@ContestsManagement.TotalCount"
                     LoadData="@OnChangePage">
@@ -45,7 +45,7 @@
     protected override async Task OnInitializedAsync()
     {
         await ContestsManagement.Initialize();
-        ContestsManagement.ContestsChanged += StateHasChanged;
+        ContestsManagement.ChangedList += StateHasChanged;
     }
 
     private async Task OnCreate()
@@ -73,7 +73,7 @@
 
     public void Dispose()
     {
-        ContestsManagement.ContestsChanged -= StateHasChanged;
+        ContestsManagement.ChangedList -= StateHasChanged;
     }
 
 }

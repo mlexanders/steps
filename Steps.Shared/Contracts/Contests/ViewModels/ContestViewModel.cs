@@ -1,6 +1,8 @@
-﻿namespace Steps.Shared.Contracts.Contests.ViewModels;
+﻿using Steps.Domain.Base;
 
-public class ContestViewModel
+namespace Steps.Shared.Contracts.Contests.ViewModels;
+
+public class ContestViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

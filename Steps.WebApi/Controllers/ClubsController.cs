@@ -36,13 +36,13 @@ public class ClubsController : ControllerBase, IClubsService
     }
 
     [HttpGet]
-    public Task<Result<IPagedList<ClubViewModel>>> GetPaged([FromQuery] Page page)
+    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery] Page page)
     {
         return _mediator.Send(new GetPagedClubsQuery(page));
     }
 
     [HttpPatch]
-    public Task<Result> Update([FromBody] UpdateClubViewModel model)
+    public Task<Result<Guid>> Update([FromBody] UpdateClubViewModel model)
     {
         return _mediator.Send(new UpdateClubCommand(model));
     }

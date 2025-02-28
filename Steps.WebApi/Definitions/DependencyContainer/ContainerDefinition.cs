@@ -1,4 +1,5 @@
-﻿using Steps.Application.Interfaces;
+﻿using Steps.Application;
+using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Services.WebApi.Services;
@@ -17,6 +18,6 @@ public class ContainerDefinition : AppDefinition
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IUserManager<User>, UserManager>();
         services.AddTransient<ISignInManager, SignInManager>();
-        // services.AddTransient<IContestManager, ContestManager>();
+        services.AddTransient<IContestManager, ContestManager>();
     }
 }

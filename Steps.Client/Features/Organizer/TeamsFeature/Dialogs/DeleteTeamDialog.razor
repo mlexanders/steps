@@ -1,15 +1,16 @@
-﻿@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.Organizer.Services.Contest
-@using Steps.Client.Features.Organizer.Components.Contest
+﻿@using Steps.Client.Features.Organizer.TeamsFeature.Services
+@using Steps.Shared.Contracts.Contests.ViewModels
+@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.Organizer.TeamsFeature.Components
 
 @inherits BaseModal
-@inject ContestManager ContestManager
+@inject TeamsManager Manager
 
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
 
-    <RadzenText Text="Вы уверены, что хотите удалить это мероприятие?"/>
+    <RadzenText Text="Вы уверены, что хотите удалить эту команду?"/>
 
-    <ContestCard Model="@Model"/>
+    <TeamCard Model="@Model"/>
 
     <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
     <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
@@ -17,11 +18,11 @@
 </RadzenTemplateForm>
 
 @code {
-    [Parameter] public ContestViewModel Model { get; set; } = null!;
+    [Parameter] public TeamViewModel Model { get; set; } = null!;
 
     private async Task Create()
     {
-        var result = await ContestManager.Delete(Model);
+        var result = await Manager.Delete(Model);
 
         ShowResultMessage(result);
 

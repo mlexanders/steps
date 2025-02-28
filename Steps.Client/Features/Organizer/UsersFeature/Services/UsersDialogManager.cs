@@ -5,7 +5,7 @@ using Steps.Shared.Contracts.Users.ViewModels;
 
 namespace Steps.Client.Features.Organizer.UsersFeature.Services;
 
-public class UsersDialogManager : IDialogManager<UserViewModel, CreateUserViewModel>
+public class UsersDialogManager : IDialogManager<UserViewModel>
 {
     private readonly DialogService _dialogService;
 
@@ -14,7 +14,7 @@ public class UsersDialogManager : IDialogManager<UserViewModel, CreateUserViewMo
         _dialogService = dialogService;
     }
 
-    public async Task<bool> ShowCardDialog(CreateUserViewModel model)
+    public async Task<bool> ShowCardDialog(UserViewModel model)
     {
         var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService.OpenAsync<UserCardDialog>("Пользователь", options);

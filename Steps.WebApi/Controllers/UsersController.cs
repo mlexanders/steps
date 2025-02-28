@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Users.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Accounts.ViewModels;
@@ -24,6 +25,11 @@ public class UsersController : IUsersService
     
     [HttpPost]
     public Task<Result<UserViewModel>> Create([FromBody] CreateUserViewModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result<List<UserViewModel>>> GetBy(FilterGroup filter)
     {
         throw new NotImplementedException();
     }

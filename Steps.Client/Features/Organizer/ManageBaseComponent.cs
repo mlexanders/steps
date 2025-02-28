@@ -11,7 +11,7 @@ public class ManageBaseComponent<TViewModel, TCreateViewModel, TUpdateViewModel>
     where TUpdateViewModel : IHaveId
 {
     [Parameter] public BaseEntityManager<TViewModel, TCreateViewModel, TUpdateViewModel> Manager { get; set; } = null!;
-    [Parameter] public IDialogManager<TViewModel, TCreateViewModel> DialogManager { get; set; } = null!;
+    [Parameter] public IDialogManager<TViewModel> DialogManager { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

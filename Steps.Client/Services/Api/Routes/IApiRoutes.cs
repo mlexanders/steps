@@ -8,6 +8,7 @@ public interface IApiRoutes
     string Create();
     string GetById(Guid id);
     string GetPaged(Page page);
+    string GetBy();
     string Update ();
     string Delete(Guid id);
 }

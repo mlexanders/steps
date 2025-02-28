@@ -20,7 +20,7 @@
 
     <RadzenDropDownDataGrid @bind-Value=@UserId Data=@UsersManager.Data Change="@((o) => OnChange(o))"
                             TextProperty="@nameof(UserViewModel.Login)" ValueProperty="@nameof(UserViewModel.Id)"
-                            Name="DropDownDataGridTextValueProperties"/>
+                            Name="DropDownDataGridTextValueProperties" IsLoading="@UsersManager.IsLoading"/>
 
 </RadzenStack>
 

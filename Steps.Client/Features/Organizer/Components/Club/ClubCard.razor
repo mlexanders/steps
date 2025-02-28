@@ -1,9 +1,65 @@
-﻿@using Steps.Shared.Contracts.Clubs.ViewModels
+﻿@using Steps.Client.Features.Organizer.UsersFeature.Components
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Contracts.Clubs.ViewModels
+@using Steps.Client.Features.Organizer.TeamsFeature.Components
+@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Client.Services.Api
+@using Steps.Domain.Entities
+@using Steps.Filters.Filters
+@using Steps.Shared.Contracts.Clubs
 
-<h3>@this</h3>
-@Model.Name
-@Model.OwnerId
+
+<RadzenPanel AllowCollapse="true" class="rz-my-10 rz-mx-auto" Style="width: 700px;">
+    <HeaderTemplate>
+        <RadzenCard Variant="Variant.Filled" class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem"
+                         class="rz-p-4">
+                <RadzenStack Gap="0">
+                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">
+                        Название
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1"><b>@(Model.Name)</b></RadzenText>
+
+                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">
+                        Владелец
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1"><b>
+                            @if (_owner is null)
+                            {
+                                <RadzenBadge Shade="Shade.Darker" Text="" Style="width: 100px"/>
+                            }
+                            else
+                            {
+                                <RadzenBadge Shade="Shade.Darker" Variant="Variant.Outlined" Text="@_owner.Login"/>
+                            }
+                        </b></RadzenText>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+
+    </HeaderTemplate>
+    <ChildContent>
+        <TeamsManage/>
+    </ChildContent>
+    <SummaryTemplate>
+        <RadzenCard class="rz-mt-4">
+            кол-во
+            @* <b>@orders.Count() Orders</b> *@
+        </RadzenCard>
+    </SummaryTemplate>
+</RadzenPanel>
+
 
 @code {
+    private UserViewModel? _owner;
+
+    [Inject] public UsersManager UsersManager { get; set; } = null!;
     [Parameter] public ClubViewModel Model { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // var result = await UsersManager.Read(Model.OwnerId);
+        // if (result?.IsSuccess == true) _owner = result.Value;
+    }
+
 }

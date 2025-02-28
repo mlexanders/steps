@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Clubs.Commands;
 using Steps.Application.Requests.Clubs.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs;
@@ -50,5 +51,11 @@ public class ClubsController : ControllerBase, IClubsService
     public Task<Result> Delete(Guid clubId)
     {
         return _mediator.Send(new DeleteClubCommand(clubId));
+    }
+
+    [HttpPost("by")]
+    public Task<Result<List<ClubViewModel>>> GetBy([FromBody] FilterGroup filter)
+    {
+        return _mediator.Send(new GetByFilterQuery(filter));
     }
 }

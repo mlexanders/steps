@@ -1,4 +1,5 @@
 ﻿using Steps.Domain.Base;
+using Steps.Filters.Filters;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Shared.Contracts;
@@ -9,8 +10,9 @@ public interface ICrudService<TViewModel, in TCreateViewModel, in TUpdateViewMod
     where TUpdateViewModel : IHaveId
 {
     Task<Result<TViewModel>> Create(TCreateViewModel model);
-    Task<Result<Guid>> Update(TUpdateViewModel model);
     Task<Result<TViewModel>> GetById(Guid id);
+    Task<Result<List<TViewModel>>> GetBy(FilterGroup filter);
+    Task<Result<Guid>> Update(TUpdateViewModel model);
     Task<Result<PaggedListViewModel<TViewModel>>> GetPaged(Page page);
     Task<Result> Delete(Guid id);
 }

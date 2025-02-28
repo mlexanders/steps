@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
@@ -32,6 +33,11 @@ public class ContestsController : ControllerBase, IContestsService
     public async Task<Result<ContestViewModel>> GetById(Guid contestId)
     {
         return await _mediator.Send(new GetContestByIdQuery(contestId));
+    }
+
+    public Task<Result<List<ContestViewModel>>> GetBy(FilterGroup filter)
+    {
+        throw new NotImplementedException();
     }
 
     [HttpGet]

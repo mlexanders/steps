@@ -2,6 +2,7 @@
 using Steps.Client.Features.Organizer.Services;
 using Steps.Client.Features.Organizer.Services.Club;
 using Steps.Client.Features.Organizer.Services.Contest;
+using Steps.Client.Features.Organizer.TeamsFeature.Services;
 using Steps.Client.Features.Organizer.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
@@ -29,7 +30,10 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<UsersManager>();
         services.AddTransient<IUsersService, UsersService>();
         
+        services.AddTransient<TeamsDialogManager>();
+        services.AddTransient<TeamsManager>();
         services.AddTransient<ITeamsService, TeamsService>();
+
     }
 
     public static void AddIdentity(this IServiceCollection services)

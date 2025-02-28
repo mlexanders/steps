@@ -1,0 +1,40 @@
+﻿@using Steps.Client.Features.Organizer.TeamsFeature.Services
+@using Steps.Client.Features.Organizer.UsersFeature.Components
+@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Contracts.Teams.ViewModels
+@using TeamsManage = Steps.Client.Features.Organizer.TeamsFeature.Components.TeamsManage
+@using Steps.Client.Features.Organizer.TeamsFeature.Forms
+
+@inherits BaseModal
+@inject TeamsManager Manager
+
+
+<RadzenTemplateForm TItem="TeamViewModel" Submit="Create" Data="_creatingTeam">
+    <RadzenCard>
+        
+        <TeamForm Model="@_creatingTeam" Title="Команда"/>
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly TeamViewModel _creatingTeam = new();
+
+    private async Task Create()
+    {
+        var result = await Manager.Create(new()
+        {
+            Name = _creatingTeam.Name,
+            Address = _creatingTeam.Address,
+            ClubId = _creatingTeam.ClubId,
+            OwnerId = _creatingTeam.OwnerId
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

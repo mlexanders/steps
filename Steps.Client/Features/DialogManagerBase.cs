@@ -2,9 +2,9 @@
 
 namespace Steps.Client.Features;
 
-public interface IDialogManager<in TViewModel, in TCreateViewModel>
+public interface IDialogManager<in TViewModel>
 {
-    Task<bool> ShowCardDialog(TCreateViewModel model);
+    Task<bool> ShowCardDialog(TViewModel model);
     Task<bool> ShowCreateDialog();
     Task<bool> ShowUpdateDialog(TViewModel model);
     Task<bool> ShowDeleteDialog(TViewModel model);

@@ -4,7 +4,7 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Features.Organizer.Services.Contest;
 
-public class ContestDialogManager : IDialogManager<ContestViewModel, CreateContestViewModel>
+public class ContestDialogManager : IDialogManager<ContestViewModel>
 {
     private readonly DialogService _dialogService;
 
@@ -13,10 +13,10 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
         _dialogService = dialogService;
     }
 
-    public async Task<bool> ShowCardDialog(CreateContestViewModel model)
+    public async Task<bool> ShowCardDialog(ContestViewModel model)
     {
         var options = new Dictionary<string, object> { { "Model", model } };
-        var result = await _dialogService.OpenAsync<ContestCardDialog>("Создание мероприятия", options);
+        var result = await _dialogService.OpenAsync<ContestCardDialog>("Мероприятие", options);
         return result ?? false;
     }
 

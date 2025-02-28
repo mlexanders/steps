@@ -1,5 +1,6 @@
 ﻿using Steps.Client.Services.Api.Routes;
 using Steps.Domain.Base;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 
@@ -11,7 +12,7 @@ public abstract class CrudService<TViewModel, TCreateViewModel, TUpdateViewModel
     where TCreateViewModel : class, new()
     where TUpdateViewModel : class, IHaveId, new()
 {
-    private readonly HttpClientService _httpClient;
+    protected readonly HttpClientService _httpClient;
     protected readonly IApiRoutes ApiRoutes;
 
     protected CrudService(HttpClientService httpClient, IApiRoutes apiRoutes)
@@ -24,6 +25,11 @@ public abstract class CrudService<TViewModel, TCreateViewModel, TUpdateViewModel
     {
         return _httpClient.PostAsync<Result<TViewModel>, TCreateViewModel>(ApiRoutes.Create(),
             model);
+    }
+
+    public Task<Result<List<TViewModel>>> GetBy(FilterGroup filter)
+    {
+        return _httpClient.PostAsync<Result<List<TViewModel>>, FilterGroup>(ApiRoutes.GetBy(), filter);
     }
 
     public Task<Result<Guid>> Update(TUpdateViewModel model)

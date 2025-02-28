@@ -1,0 +1,8 @@
+﻿@using Steps.Shared.Contracts.Teams.ViewModels
+
+<h3>@this</h3>
+@Model.Name
+
+@code {
+    [Parameter] public TeamViewModel Model { get; set; } = null!;
+}

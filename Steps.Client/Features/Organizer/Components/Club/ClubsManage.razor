@@ -6,7 +6,8 @@
     <RadzenDataGrid TItem="ClubViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Клубы еще не созданы"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage" 
+                    SelectionMode="DataGridSelectionMode.Single" bind-Value="@_selectedClub" RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
             <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать клуб"

@@ -9,6 +9,7 @@ public partial class ClubsManage : ManageBaseComponent<ClubViewModel, CreateClub
     [Inject] protected ClubsManager ClubsManager { get; set; } = null!;
     [Inject] protected ClubsDialogManager ClubsDialogManager { get; set; } = null!;
 
+    private List<ClubViewModel> _selectedClub;
     protected override void OnInitialized()
     {
         Manager = ClubsManager;

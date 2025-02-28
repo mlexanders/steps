@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Teams.Commands;
 using Steps.Application.Requests.Teams.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Teams;
@@ -26,6 +27,11 @@ public class TeamsController : ControllerBase, ITeamsService
     public async Task<Result<TeamViewModel>> Create([FromBody] CreateTeamViewModel model)
     {
         return await _mediator.Send(new CreateTeamCommand(model));
+    }
+
+    public Task<Result<List<TeamViewModel>>> GetBy(FilterGroup filter)
+    {
+        throw new NotImplementedException();
     }
 
     [HttpPatch]

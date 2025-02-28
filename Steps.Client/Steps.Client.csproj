@@ -17,6 +17,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
         <PackageReference Include="Radzen.Blazor" Version="6.0.19"/>
     </ItemGroup>
@@ -34,6 +35,11 @@
         <AdditionalFiles Include="Components\ProfileMenu.razor"/>
         <AdditionalFiles Include="Components\ProgressBar.razor"/>
         <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
+        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\CreateUserDialog.razor" />
+        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\DeleteUserDialog.razor" />
+        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\UpdateUserDialog.razor" />
+        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\UserCardDialog.razor" />
+        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Forms\UserForm.razor" />
     </ItemGroup>
 
 </Project>

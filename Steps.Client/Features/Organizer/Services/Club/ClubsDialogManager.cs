@@ -4,7 +4,7 @@ using Steps.Shared.Contracts.Clubs.ViewModels;
 
 namespace Steps.Client.Features.Organizer.Services.Club;
 
-public class ClubsDialogManager : IDialogManager<ClubViewModel, CreateClubViewModel>
+public class ClubsDialogManager : IDialogManager<ClubViewModel>
 {
     private DialogService _dialogService;
 
@@ -13,10 +13,10 @@ public class ClubsDialogManager : IDialogManager<ClubViewModel, CreateClubViewMo
         _dialogService = dialogService;
     }
 
-    public async Task<bool> ShowCardDialog(CreateClubViewModel model)
+    public async Task<bool> ShowCardDialog(ClubViewModel model)
     {
         var options = new Dictionary<string, object> { { "Model", model } };
-        var result = await _dialogService.OpenAsync<ClubCardDialog>("Создание клуба", options);
+        var result = await _dialogService.OpenAsync<ClubCardDialog>("Клуб", options);
         return result ?? false;
     }
 

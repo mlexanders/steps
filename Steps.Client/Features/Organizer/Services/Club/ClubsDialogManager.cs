@@ -15,7 +15,7 @@ public class ClubsDialogManager : IDialogManager<ClubViewModel, CreateClubViewMo
 
     public async Task<bool> ShowCardDialog(CreateClubViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Club", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService.OpenAsync<ClubCardDialog>("Создание клуба", options);
         return result ?? false;
     }
@@ -28,14 +28,14 @@ public class ClubsDialogManager : IDialogManager<ClubViewModel, CreateClubViewMo
 
     public async Task<bool> ShowUpdateDialog(ClubViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Club", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService.OpenAsync<UpdateClubDialog>("Редактирование клуба", options);
         return result ?? false;
     }
 
     public async Task<bool> ShowDeleteDialog(ClubViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Club", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService
             .OpenAsync<DeleteClubDialog>("Вы уверены, что хотите удалить этот клуб?", options);
         return result ?? false;

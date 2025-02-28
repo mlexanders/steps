@@ -47,7 +47,7 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
     {
         PageSize = pageSize > 0 ? pageSize : Page.DefaultPageSize;
     }
-    
+
     public virtual async Task<Result<TViewModel>> Create(TCreateViewModel model)
     {
         try
@@ -59,8 +59,7 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
             return Result<TViewModel>.Fail(e.Message);
         }
     }
-    
-    
+
     public virtual async Task<Result<TViewModel>> Read(Guid id)
     {
         try

@@ -1,14 +1,13 @@
-﻿@using Steps.Client.Features.Organizer.Forms
-@using Steps.Client.Features.Organizer.Services.Club
-@using Steps.Shared.Contracts.Clubs.ViewModels
+﻿@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Shared.Contracts.Accounts.ViewModels
 
 @inherits BaseModal
-@inject ClubsManager Manager
+@inject UsersManager Manager
 
 
-<RadzenTemplateForm TItem="ClubViewModel" Submit="Create" Data="_creatingClub">
+<RadzenTemplateForm TItem="UserViewModel" Submit="Create" Data="_creatingUser">
     <RadzenCard>
-        <ClubForm Model="@_creatingClub" Title="Новый клуб"/>
+        @* <ClubForm Club="@_creatingUser" Title="Новый клуб"/> *@
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -16,14 +15,13 @@
 </RadzenTemplateForm>
 
 @code {
-    private readonly ClubViewModel _creatingClub = new();
+    private readonly UserViewModel _creatingUser = new();
 
     private async Task Create()
     {
         var result = await Manager.Create(new()
         {
-            Name = _creatingClub.Name,
-            OwnerId = _creatingClub.OwnerId
+            Login = _creatingUser.Login,
         });
         ShowResultMessage(result);
 

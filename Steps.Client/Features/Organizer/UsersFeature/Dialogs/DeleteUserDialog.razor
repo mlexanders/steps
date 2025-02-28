@@ -1,16 +1,16 @@
 ﻿@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.Organizer.Services.Club
-@using Steps.Shared.Contracts.Clubs.ViewModels
-@using Steps.Client.Features.Organizer.Components.Club
+@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Client.Features.Organizer.UsersFeature.Components
 
 @inherits BaseModal
-@inject ClubsManager Manager
+@inject UsersManager Manager
 
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
 
-    <RadzenText Text="Вы уверены, что хотите удалить этот клуб?"/>
+    <RadzenText Text="Вы уверены, что хотите удалить этого пользователя?"/>
 
-    <ClubCard Model="@Model"/>
+    <UserCard Model="@Model"/>
 
     <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
     <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
@@ -18,7 +18,7 @@
 </RadzenTemplateForm>
 
 @code {
-    [Parameter] public ClubViewModel Model { get; set; } = null!;
+    [Parameter] public UserViewModel Model { get; set; } = null!;
 
     private async Task Create()
     {

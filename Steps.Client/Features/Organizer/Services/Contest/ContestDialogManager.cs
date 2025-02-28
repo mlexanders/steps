@@ -15,7 +15,7 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
 
     public async Task<bool> ShowCardDialog(CreateContestViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Contest", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService.OpenAsync<ContestCardDialog>("Создание мероприятия", options);
         return result ?? false;
     }
@@ -28,14 +28,14 @@ public class ContestDialogManager : IDialogManager<ContestViewModel, CreateConte
 
     public async Task<bool> ShowUpdateDialog(ContestViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Contest", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService.OpenAsync<UpdateContestDialog>("Редактирование мероприятия", options);
         return result ?? false;
     }
 
     public async Task<bool> ShowDeleteDialog(ContestViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Contest", model } };
+        var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService
             .OpenAsync<DeleteContestDialog>("Вы уверены, что хотите удалить это мероприятие?", options);
         return result ?? false;

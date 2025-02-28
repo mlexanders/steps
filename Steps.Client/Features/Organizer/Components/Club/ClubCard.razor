@@ -1,10 +1,9 @@
 ﻿@using Steps.Shared.Contracts.Clubs.ViewModels
-@using Steps.Shared.Contracts.Contests.ViewModels
 
 <h3>@this</h3>
-@Club.Name
-@Club.OwnerId
+@Model.Name
+@Model.OwnerId
 
 @code {
-    [Parameter] public ClubViewModel Club { get; set; } = null!;
+    [Parameter] public ClubViewModel Model { get; set; } = null!;
 }

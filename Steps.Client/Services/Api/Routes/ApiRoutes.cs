@@ -10,9 +10,10 @@ public static class ApiRoutes
         public const string GetCurrentUser = "Account/GetCurrentUser";
         public const string ConfirmAction = "Account/confirm-action";
     }
-    
+
     public class ContestsRoute() : BaseApiRoutes("Contests");
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
     public class AthletesRoute() : BaseApiRoutes("Athletes");
+    public class UsersRoute() : BaseApiRoutes("Users");
 }

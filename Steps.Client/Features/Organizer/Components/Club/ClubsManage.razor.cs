@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Steps.Client.Features.Organizer.Services;
 using Steps.Client.Features.Organizer.Services.Club;
 using Steps.Shared.Contracts.Clubs.ViewModels;
 

@@ -34,10 +34,6 @@
         <AdditionalFiles Include="Components\ProfileMenu.razor"/>
         <AdditionalFiles Include="Components\ProgressBar.razor"/>
         <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
-        <AdditionalFiles Include="Features\Organizer\Dialogs\Clubs\ClubsCardDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\Dialogs\Clubs\CreateContestDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\Dialogs\Clubs\DeleteContestDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\Dialogs\Clubs\UpdateContestDialog.razor" />
     </ItemGroup>
 
 </Project>

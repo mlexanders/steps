@@ -6,10 +6,10 @@
 @inherits BaseModal
 @inject ContestManager ContestManager
 
-<RadzenTemplateForm TItem="ContestViewModel" Submit="Update" Data="Contest">
+<RadzenTemplateForm TItem="ContestViewModel" Submit="Update" Data="Model">
     <RadzenCard>
 
-        <ContestForm Contest="@Contest" Title="Мероприятие"/>
+        <ContestForm Contest="@Model" Title="Мероприятие"/>
 
         <RadzenButton Text="Сохранить" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
@@ -18,17 +18,17 @@
 </RadzenTemplateForm>
 
 @code {
-    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+    [Parameter] public ContestViewModel Model { get; set; } = null!;
 
     private async Task Update()
     {
         var result = await ContestManager.Update(new UpdateContestViewModel()
         {
-            Id = Contest.Id,
-            Name = Contest.Name,
-            Description = Contest.Description,
-            StartDate = DateTime.SpecifyKind(Contest.StartDate, DateTimeKind.Utc),
-            EndDate = DateTime.SpecifyKind(Contest.EndDate, DateTimeKind.Utc),
+            Id = Model.Id,
+            Name = Model.Name,
+            Description = Model.Description,
+            StartDate = DateTime.SpecifyKind(Model.StartDate, DateTimeKind.Utc),
+            EndDate = DateTime.SpecifyKind(Model.EndDate, DateTimeKind.Utc),
         });
 
         ShowResultMessage(result);

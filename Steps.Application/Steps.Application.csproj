@@ -33,6 +33,8 @@
       <Folder Include="Requests\Accounts\Queries\" />
       <Folder Include="Requests\Accounts\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
+      <Folder Include="Requests\Users\Commands\" />
+      <Folder Include="Requests\Users\Validators\" />
     </ItemGroup>
 
 </Project>

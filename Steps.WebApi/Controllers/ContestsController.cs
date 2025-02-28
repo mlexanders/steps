@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
@@ -9,6 +10,7 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
 public class ContestsController : ControllerBase, IContestsService

@@ -1,7 +1,6 @@
-﻿@using Steps.Client.Features.Organizer.Services
-@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.Organizer.Components
+﻿@using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Client.Features.Organizer.Services.Contest
+@using Steps.Client.Features.Organizer.Components.Contest
 
 @inherits BaseModal
 @inject ContestManager ContestManager
@@ -10,7 +9,7 @@
 
     <RadzenText Text="Вы уверены, что хотите удалить это мероприятие?"/>
 
-    <ContestCard Contest="@Contest"/>
+    <ContestCard Contest="@Model"/>
 
     <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
     <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
@@ -18,11 +17,11 @@
 </RadzenTemplateForm>
 
 @code {
-    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+    [Parameter] public ContestViewModel Model { get; set; } = null!;
 
     private async Task Create()
     {
-        var result = await ContestManager.Delete(Contest);
+        var result = await ContestManager.Delete(Model);
 
         ShowResultMessage(result);
 

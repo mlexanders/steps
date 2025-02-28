@@ -1,8 +1,6 @@
 ﻿@using Steps.Client.Features.Organizer.Forms
-@using Steps.Client.Features.Organizer.Services
 @using Steps.Client.Features.Organizer.Services.Club
 @using Steps.Shared.Contracts.Clubs.ViewModels
-@using Steps.Shared.Contracts.Contests.ViewModels
 
 @inherits BaseModal
 @inject ClubsManager ContestManager
@@ -24,6 +22,7 @@
     {
         var result = await ContestManager.Update(new UpdateClubViewModel
         {
+            Id = Club.Id,
             Name = Club.Name,
             OwnerId = Club.OwnerId
         });

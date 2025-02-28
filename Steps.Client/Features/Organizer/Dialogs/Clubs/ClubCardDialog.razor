@@ -6,11 +6,11 @@
 
 <RadzenText Text="Вы уверены, что хотите удалить этот клуб?"/>
 
-<ClubCard Club="@Club"/>
+<ClubCard Model="@Model"/>
 
 <RadzenButton Text="Закрыть" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
               Style="margin-left: 10px;"/>
 
 @code {
-    [Parameter] public ClubViewModel Club { get; set; } = null!;
+    [Parameter] public ClubViewModel Model { get; set; } = null!;
 }

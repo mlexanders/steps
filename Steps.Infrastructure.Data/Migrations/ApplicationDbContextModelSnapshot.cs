@@ -69,6 +69,36 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.ToTable("AthletePreAthletesList");
                 });
 
+            modelBuilder.Entity("ContestUser", b =>
+                {
+                    b.Property<Guid>("JudgingContestsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("JudjesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("JudgingContestsId", "JudjesId");
+
+                    b.HasIndex("JudjesId");
+
+                    b.ToTable("ContestUser");
+                });
+
+            modelBuilder.Entity("ContestUser1", b =>
+                {
+                    b.Property<Guid>("CountersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CountingContestsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("CountersId", "CountingContestsId");
+
+                    b.HasIndex("CountingContestsId");
+
+                    b.ToTable("ContestUser1");
+                });
+
             modelBuilder.Entity("Steps.Domain.Entities.Athlete", b =>
                 {
                     b.Property<Guid>("Id")
@@ -337,12 +367,6 @@ namespace Steps.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ContestId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ContestId1")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(512)
@@ -357,10 +381,6 @@ namespace Steps.Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContestId");
-
-                    b.HasIndex("ContestId1");
 
                     b.HasIndex("Login")
                         .IsUnique();
@@ -409,6 +429,36 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.HasOne("Steps.Domain.Entities.AthletesLists.PreAthletesList", null)
                         .WithMany()
                         .HasForeignKey("PreAthletesListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContestUser", b =>
+                {
+                    b.HasOne("Steps.Domain.Entities.Contest", null)
+                        .WithMany()
+                        .HasForeignKey("JudgingContestsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("JudjesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContestUser1", b =>
+                {
+                    b.HasOne("Steps.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CountersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.Contest", null)
+                        .WithMany()
+                        .HasForeignKey("CountingContestsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -538,17 +588,6 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Steps.Domain.Entities.User", b =>
-                {
-                    b.HasOne("Steps.Domain.Entities.Contest", null)
-                        .WithMany("Counters")
-                        .HasForeignKey("ContestId");
-
-                    b.HasOne("Steps.Domain.Entities.Contest", null)
-                        .WithMany("Judjes")
-                        .HasForeignKey("ContestId1");
-                });
-
             modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.GeneratedAthletesList", b =>
                 {
                     b.Navigation("GroupBlocks");
@@ -566,15 +605,11 @@ namespace Steps.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Steps.Domain.Entities.Contest", b =>
                 {
-                    b.Navigation("Counters");
-
                     b.Navigation("Entries");
 
                     b.Navigation("GeneratedAthletesList");
 
                     b.Navigation("GroupBlocks");
-
-                    b.Navigation("Judjes");
 
                     b.Navigation("LateAthletesList");
 

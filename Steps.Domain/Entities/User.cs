@@ -10,4 +10,6 @@ public class User : Entity, IUser
     public Role Role { get; set; }
     
     public List<Entry>? Entries { get; set; }
+    public List<Contest> JudgingContests { get; set; } = new();
+    public List<Contest> CountingContests { get; set; } = new();
 }

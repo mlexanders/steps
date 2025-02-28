@@ -38,5 +38,13 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
         builder.HasOne(c => c.GeneratedAthletesList)
             .WithOne(gal => gal.Contest)
             .HasForeignKey<GeneratedAthletesList>(gal => gal.ContestId);
+        
+        builder
+            .HasMany(c => c.Judjes)
+            .WithMany(u => u.JudgingContests);
+
+        builder
+            .HasMany(c => c.Counters)
+            .WithMany(u => u.CountingContests);
     }
 }

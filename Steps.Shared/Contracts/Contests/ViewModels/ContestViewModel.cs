@@ -1,4 +1,7 @@
-﻿namespace Steps.Shared.Contracts.Contests.ViewModels;
+﻿using Steps.Domain.Entities;
+using Steps.Shared.Contracts.Accounts.ViewModels;
+
+namespace Steps.Shared.Contracts.Contests.ViewModels;
 
 public class ContestViewModel
 {
@@ -7,4 +10,7 @@ public class ContestViewModel
     public string? Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+
+    public List<UserViewModel> Judjes { get; set; }
+    public List<UserViewModel> Counters { get; set; }
 }

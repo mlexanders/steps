@@ -22,15 +22,15 @@ public class AthleteMapperConfiguration : Profile
             .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
             .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
-        
-        // CreateMap<CreateAthleteViewModel, Athlete>()
-        //     .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
-        //     .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
-        //     .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
-        //
-        // CreateMap<Athlete, CreateAthleteViewModel>()
-        //     .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
-        //     .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
-        //     .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
+
+        CreateMap<CreateAthleteViewModel, Athlete>()
+            .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
+            .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
+            .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
+
+        CreateMap<Athlete, CreateAthleteViewModel>()
+            .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
+            .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
+            .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
     }
 }

@@ -9,6 +9,9 @@ public class Contest : Entity
     public string? Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+
+    public List<User>? Judjes { get; set; }
+    public List<User>? Counters { get; set; }
     
     public List<Entry>? Entries { get; set; }
     

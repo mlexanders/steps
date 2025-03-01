@@ -1,6 +1,7 @@
 ﻿using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using Steps.Application.Interfaces;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests.ViewModels;
@@ -19,6 +20,27 @@ public class ContestManager : IContestManager
     public async Task Create(Contest contest)
     {
         var repository = _unitOfWork.GetRepository<Contest>();
+
+        var userRepository = _unitOfWork.GetRepository<User>();
+
+        var judjes = await userRepository.GetAllAsync(
+            predicate: j => j.Role == Role.Judje,
+            orderBy: null,
+            include: null,
+            disableTracking: false,
+            ignoreQueryFilters: false
+        );
+        
+        var counters = await userRepository.GetAllAsync(
+            predicate: j => j.Role == Role.Counter,
+            orderBy: null,
+            include: null,
+            disableTracking: false,
+            ignoreQueryFilters: false
+        );
+        
+        contest.Counters = counters?.ToList();
+        contest.Judjes = judjes?.ToList();
 
         await repository.InsertAsync(contest);
         await _unitOfWork.SaveChangesAsync();

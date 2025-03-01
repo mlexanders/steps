@@ -7,7 +7,7 @@ public class GroupBlock : Entity
     public List<int> Numbers { get; set; }
     public DateTime ExitTime { get; set; }
     
-    public List<Athlete> Athletes { get; set; }
+    public List<Athlete> Athletes { get; set; } = new List<Athlete>();
     
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }

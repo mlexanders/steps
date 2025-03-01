@@ -13,7 +13,7 @@ public class Contest : Entity
     public List<User>? Judjes { get; set; } = new List<User>();
     public List<User>? Counters { get; set; } = new List<User>();
     
-    public List<Entry>? Entries { get; set; }
+    public List<Entry>? Entries { get; set; } = new List<Entry>();
     
     public Guid? GeneratedAthletesListId { get; set; }
     public GeneratedAthletesList? GeneratedAthletesList { get; set; }
@@ -24,5 +24,5 @@ public class Contest : Entity
     public Guid? PreAthletesListId { get; set; }
     public PreAthletesList? PreAthletesList { get; set; }
     
-    public List<GroupBlock>? GroupBlocks { get; set; }
+    public List<GroupBlock>? GroupBlocks { get; set; } = new List<GroupBlock>();
 }

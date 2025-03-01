@@ -18,8 +18,7 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Contest, x => x.MapFrom(m => m.Contest))
             .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
             .ForMember(x => x.User, x => x.MapFrom(m => m.User))
-            .ForMember(x => x.EntryAthletesListId, x => x.MapFrom(m => m.EntryAthletesListId))
-            .ForMember(x => x.EntryAthletesList, x => x.MapFrom(m => m.EntryAthletesList));
+            .ForMember(x => x.Athletes, x => x.MapFrom(m => m.Athletes));
 
         // Из EntryViewModel в Entry
         CreateMap<EntryViewModel, Entry>()
@@ -31,25 +30,25 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Contest, x => x.Ignore())
             .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
             .ForMember(x => x.User, x => x.Ignore())
-            .ForMember(x => x.EntryAthletesListId, x => x.MapFrom(m => m.EntryAthletesListId))
-            .ForMember(x => x.EntryAthletesList, x => x.Ignore());
+            .ForMember(x => x.Athletes, x => x.MapFrom(m => m.Athletes));
 
         // Из CreateEntryViewModel в Entry
         CreateMap<CreateEntryViewModel, Entry>()
-            .ForMember(x => x.Number, x => x.MapFrom(m => m.Number))
-            .ForMember(x => x.IsSuccess, x => x.MapFrom(m => m.IsSuccess))
+            .ForMember(x => x.Id, x => x.Ignore())
+            .ForMember(x => x.Contest, x => x.Ignore())
+            .ForMember(x => x.User, x => x.Ignore())
+            .ForMember(x => x.Number, x => x.Ignore())
+            .ForMember(x => x.IsSuccess, x => x.Ignore())
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
-            .ForMember(x => x.EntryAthletesListId, x => x.MapFrom(m => m.EntryAthletesListId));
+            .ForMember(x => x.Athletes, x => x.Ignore());
         
         // Из Entry в CreateEntryViewModel
         CreateMap<Entry, CreateEntryViewModel>()
-            .ForMember(x => x.Number, x => x.MapFrom(m => m.Number))
-            .ForMember(x => x.IsSuccess, x => x.MapFrom(m => m.IsSuccess))
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
-            .ForMember(x => x.EntryAthletesListId, x => x.MapFrom(m => m.EntryAthletesListId));
+            .ForMember(x => x.AthletesIds, x => x.Ignore());
     }
 }

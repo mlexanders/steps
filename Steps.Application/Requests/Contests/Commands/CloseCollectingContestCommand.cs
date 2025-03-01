@@ -36,7 +36,7 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
                 c => c.Id == modelId,
                 null,
                 q => q.Include(c => c.Entries)
-                    .ThenInclude(a => a.EntryAthletesList).ThenInclude(a => a.Athletes),
+                    .ThenInclude(a => a.Athletes),
                 TrackingType.NoTracking, 
                 false,
                 false
@@ -49,7 +49,7 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
 
             foreach (var entry in contest.Entries)
             {
-                foreach (var athlete in entry.EntryAthletesList.Athletes)
+                foreach (var athlete in entry.Athletes)
                 {
                     preAthletesList.Athletes.Add(athlete);
                 }

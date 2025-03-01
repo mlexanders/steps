@@ -15,7 +15,9 @@ public class AthleteMapperConfiguration : Profile
             .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate))
             .ForMember(x => x.GroupBlocks, o => o.Ignore())
             .ForMember(x => x.EntryAthletesLists, o => o.Ignore())
-            .ForMember(x => x.PreAthletesLists, o => o.Ignore());
+            .ForMember(x => x.PreAthletesLists, o => o.Ignore())
+            .ForMember(x => x.ExitTime, o => o.Ignore())
+            .ForMember(x => x.IsAppeared, o => o.Ignore());
 
         CreateMap<Athlete, AthleteViewModel>()
             .ForMember(x => x.Id, x => x.MapFrom(m => m.Id))
@@ -24,9 +26,15 @@ public class AthleteMapperConfiguration : Profile
             .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
 
         CreateMap<CreateAthleteViewModel, Athlete>()
+            .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
-            .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate));
+            .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate))
+            .ForMember(x => x.ExitTime, x => x.Ignore())
+            .ForMember(x => x.IsAppeared, x => x.Ignore())
+            .ForMember(x => x.EntryAthletesLists, x => x.Ignore()) 
+            .ForMember(x => x.PreAthletesLists, x => x.Ignore()) 
+            .ForMember(x => x.GroupBlocks, x => x.Ignore()); 
 
         CreateMap<Athlete, CreateAthleteViewModel>()
             .ForMember(x => x.FullName, x => x.MapFrom(m => m.FullName))

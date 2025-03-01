@@ -24,6 +24,21 @@ namespace Steps.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AthleteEntry", b =>
+                {
+                    b.Property<Guid>("AthletesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EntriesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AthletesId", "EntriesId");
+
+                    b.HasIndex("EntriesId");
+
+                    b.ToTable("AthleteEntry");
+                });
+
             modelBuilder.Entity("AthleteEntryAthletesList", b =>
                 {
                     b.Property<Guid>("AthletesId")
@@ -140,8 +155,7 @@ namespace Steps.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntryId")
-                        .IsUnique();
+                    b.HasIndex("EntryId");
 
                     b.ToTable("EntryAthletesLists");
                 });
@@ -303,9 +317,6 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.Property<Guid>("ContestId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("EntryAthletesListId")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("IsSuccess")
                         .HasColumnType("boolean");
 
@@ -386,6 +397,21 @@ namespace Steps.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("AthleteEntry", b =>
+                {
+                    b.HasOne("Steps.Domain.Entities.Athlete", null)
+                        .WithMany()
+                        .HasForeignKey("AthletesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.Entry", null)
+                        .WithMany()
+                        .HasForeignKey("EntriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AthleteEntryAthletesList", b =>
@@ -475,8 +501,8 @@ namespace Steps.Infrastructure.Data.Migrations
             modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.EntryAthletesList", b =>
                 {
                     b.HasOne("Steps.Domain.Entities.Entry", "Entry")
-                        .WithOne("EntryAthletesList")
-                        .HasForeignKey("Steps.Domain.Entities.AthletesLists.EntryAthletesList", "EntryId")
+                        .WithMany()
+                        .HasForeignKey("EntryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -614,11 +640,6 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.Navigation("LateAthletesList");
 
                     b.Navigation("PreAthletesList");
-                });
-
-            modelBuilder.Entity("Steps.Domain.Entities.Entry", b =>
-                {
-                    b.Navigation("EntryAthletesList");
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.Team", b =>

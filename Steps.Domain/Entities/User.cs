@@ -9,7 +9,7 @@ public class User : Entity, IUser
     public string PasswordHash { get; set; } = null!;
     public Role Role { get; set; }
     
-    public List<Entry>? Entries { get; set; }
+    public List<Entry>? Entries { get; set; } = new List<Entry>();
     public List<Contest> JudgingContests { get; set; } = new();
     public List<Contest> CountingContests { get; set; } = new();
 }

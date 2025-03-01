@@ -24,7 +24,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
     {
         var model = request.Model;
         var contest = _mapper.Map<Contest>(model);
-
+        
         await _contestManager.Create(contest);
 
         return Result<Guid>.Ok(contest.Id).SetMessage("Мероприятие успешно создано!");

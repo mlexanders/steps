@@ -9,6 +9,4 @@ public class UserViewModel : IUser
     public Guid Id { get; set; }
     public string Login { get; set; } = null!;
     public Role Role { get; set; }
-    
-    public List<EntryViewModel>? Entries { get; set; }
 }

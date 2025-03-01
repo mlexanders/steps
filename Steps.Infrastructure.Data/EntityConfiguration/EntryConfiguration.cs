@@ -9,10 +9,8 @@ public class EntryConfiguration : IEntityTypeConfiguration<Entry>
 {
     public void Configure(EntityTypeBuilder<Entry> builder)
     {
-        builder.HasOne(e => e.EntryAthletesList)
-            .WithOne(eal => eal.Entry)
-            .HasForeignKey<EntryAthletesList>(eal => eal.EntryId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(e => e.Athletes)
+            .WithMany(eal => eal.Entries);
         
         builder.HasOne(e => e.Contest)
             .WithMany(c => c.Entries)

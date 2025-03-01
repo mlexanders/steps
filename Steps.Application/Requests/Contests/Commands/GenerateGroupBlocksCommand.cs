@@ -26,132 +26,91 @@ namespace Steps.Application.Requests.Contests.Commands
         {
             try
             {
-                var preAthletesListRepository = _unitOfWork.GetRepository<PreAthletesList>();
                 var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
                 var contestRepository = _unitOfWork.GetRepository<Contest>();
 
-                // Получаем соревнование с предварительным списком спортсменов и судьями
                 var contest = await contestRepository.GetFirstOrDefaultAsync(
                     c => c.Id == request.Id,
                     null,
                     c => c.Include(pre => pre.PreAthletesList)
-                            .ThenInclude(pre => pre.Athletes)
-                            .Include(c => c.Judjes), // Включаем судей
-                    TrackingType.NoTracking,
+                        .ThenInclude(pre => pre.Athletes)
+                        .Include(c => c.Judjes),
+                    TrackingType.Tracking,
                     false,
                     false
                 );
 
                 if (contest == null)
-                {
                     return Result.Fail("Соревнование не найдено.");
-                }
 
-                var preAthletesList = contest.PreAthletesList;
+                var athletes = contest.PreAthletesList?.Athletes?
+                    .OrderBy(a => a.BirthDate)
+                    .ToList();
 
-                if (preAthletesList == null || preAthletesList.Athletes == null || !preAthletesList.Athletes.Any())
-                {
+                if (athletes == null || !athletes.Any())
                     return Result.Fail("В предварительном списке нет спортсменов.");
-                }
 
-                var athletes = preAthletesList.Athletes;
-
-                // Сортируем спортсменов по дате рождения
-                var sortedAthletes = athletes.OrderBy(a => a.BirthDate).ToList();
-
-                // Количество судей
                 int judgesCount = contest.Judjes?.Count ?? 0;
                 if (judgesCount == 0)
-                {
-                    return Result.Fail("Нет назначенных судей для соревнования.");
-                }
+                    return Result.Fail("Нет назначенных судей.");
 
-                // Желаемое количество спортсменов в блоке (из запроса)
                 int athletesPerBlock = request.athletesCount;
-
-                // Время начала сдачи зачета
-                DateTime exitTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 9, 0, 0);
-
+                DateTime currentExitTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month,
+                    DateTime.UtcNow.Day, 9, 0, 0);
                 int exitNumber = 1;
 
                 var blocks = new List<GroupBlock>();
-                int totalAthletes = sortedAthletes.Count();
-
-                // Рассчитываем общее количество блоков
+                int totalAthletes = athletes.Count;
                 int totalBlocks = (int)Math.Ceiling((double)totalAthletes / athletesPerBlock);
 
                 for (int blockIndex = 0; blockIndex < totalBlocks; blockIndex++)
                 {
-                    // Количество спортсменов в текущем блоке
-                    int athletesInCurrentBlock = (blockIndex == totalBlocks - 1)
-                        ? totalAthletes - (blockIndex * athletesPerBlock)
-                        : athletesPerBlock;
-
-                    // Получаем спортсменов для текущего блока
-                    var blockAthletes = sortedAthletes
+                    var blockAthletes = athletes
                         .Skip(blockIndex * athletesPerBlock)
-                        .Take(athletesInCurrentBlock)
+                        .Take(athletesPerBlock)
                         .ToList();
 
-                    // Разбиваем спортсменов на подгруппы по количеству судей
-                    for (int judgeGroupIndex = 0; judgeGroupIndex < (int)Math.Ceiling((double)athletesInCurrentBlock / judgesCount); judgeGroupIndex++)
+                    var groupBlock = new GroupBlock
                     {
-                        // Количество спортсменов в текущей подгруппе
-                        int athletesInJudgeGroup = (judgeGroupIndex == (int)Math.Ceiling((double)athletesInCurrentBlock / judgesCount) - 1)
-                            ? athletesInCurrentBlock - (judgeGroupIndex * judgesCount)
-                            : judgesCount;
+                        ContestId = contest.Id,
+                        Athletes = new List<Athlete>(),
+                        Numbers = new List<int>(),
+                        ExitTime = DateTime.SpecifyKind(currentExitTime, DateTimeKind.Utc)
+                    };
 
-                        // Получаем спортсменов для текущей подгруппы
-                        var judgeGroupAthletes = blockAthletes
-                            .Skip(judgeGroupIndex * judgesCount)
-                            .Take(athletesInJudgeGroup)
-                            .ToList();
-
-                        // Создаем блок для текущей подгруппы
-                        var groupBlock = new GroupBlock
+                    // Распределяем спортсменов внутри блока с интервалами
+                    for (int i = 0; i < blockAthletes.Count; i++)
+                    {
+                        if (i > 0 && i % judgesCount == 0)
                         {
-                            ContestId = preAthletesList.ContestId,
-                            Athletes = judgeGroupAthletes,
-                            Numbers = new List<int>(),
-                            ExitTime = exitTime
-                        };
-
-                        // Назначаем время выхода и номера спортсменам
-                        foreach (var athlete in judgeGroupAthletes)
-                        {
-                            athlete.ExitTime = exitTime;
-                            groupBlock.Numbers.Add(exitNumber);
-                            exitNumber++;
+                            currentExitTime = currentExitTime.AddMinutes(2);
                         }
 
-                        // Добавляем блок в список
-                        blocks.Add(groupBlock);
-
-                        // Увеличиваем время выхода на 2 минуты для следующей подгруппы
-                        exitTime = exitTime.AddMinutes(2);
+                        var athlete = blockAthletes[i];
+                        athlete.ExitTime = DateTime.SpecifyKind(currentExitTime, DateTimeKind.Utc);
+                        groupBlock.Athletes.Add(athlete);
+                        groupBlock.Numbers.Add(exitNumber++);
                     }
+
+                    blocks.Add(groupBlock);
+                    currentExitTime = currentExitTime.AddMinutes(2); // Следующий блок начинается через 2 минуты
                 }
 
-                // Сохраняем блоки в базу данных
+                // Сохраняем блоки
                 foreach (var block in blocks)
                 {
                     await groupBlockRepository.InsertAsync(block);
                 }
 
-                // Обновляем соревнование с новыми блоками
-                contest.GroupBlocks ??= new List<GroupBlock>();
-                contest.GroupBlocks.AddRange(blocks);
-
+                contest.GroupBlocks = blocks;
                 contestRepository.Update(contest);
-
-                // Сохраняем изменения в базе данных
                 await _unitOfWork.SaveChangesAsync();
 
-                return Result.Ok().SetMessage("Список спортсменов сформирован!");
+                return Result.Ok().SetMessage("Блоки сформированы!");
             }
             catch (Exception ex)
             {
-                return Result.Fail($"Ошибка при формировании списка спортсменов: {ex.Message}");
+                return Result.Fail($"Ошибка: {ex.Message}");
             }
         }
     }

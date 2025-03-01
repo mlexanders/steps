@@ -28,8 +28,6 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
         var contestRepository = _unitOfWork.GetRepository<Contest>();
         var preAthletesListRepository = _unitOfWork.GetRepository<PreAthletesList>();
         
-        await _unitOfWork.BeginTransactionAsync();
-        
         try
         {
             var contest = await contestRepository.GetFirstOrDefaultAsync(
@@ -37,7 +35,7 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
                 null,
                 q => q.Include(c => c.Entries)
                     .ThenInclude(a => a.Athletes),
-                TrackingType.NoTracking, 
+                TrackingType.Tracking, 
                 false,
                 false
             );

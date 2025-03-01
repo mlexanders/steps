@@ -14,4 +14,5 @@ public interface IContestService
     
     Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount);
     Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared);
+    Task<Result> CloseCollectingEntries(Guid contestId);
 }

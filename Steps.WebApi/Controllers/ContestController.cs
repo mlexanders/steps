@@ -63,4 +63,10 @@ public class ContestController : ControllerBase, IContestService
     {
         return await _mediator.Send(new CheckAthleteCommand(athleteId, contestId, isAppeared));
     }
+
+    [HttpPost("Close-collecting")]
+    public async Task<Result> CloseCollectingEntries(Guid contestId)
+    {
+        return await _mediator.Send(new CloseCollectingContestCommand(contestId));
+    }
 }

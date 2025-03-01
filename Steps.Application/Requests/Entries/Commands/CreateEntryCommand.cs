@@ -34,18 +34,17 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
         var entryAthletesRepository = _unitOfWork.GetRepository<EntryAthletesList>();
         var userRepository = _unitOfWork.GetRepository<User>();
         var athleteRepository = _unitOfWork.GetRepository<Athlete>();
-
-        await _unitOfWork.BeginTransactionAsync();
     
         try
         {
             entryRepository.Insert(entry);
+            await _unitOfWork.SaveChangesAsync();
         
             var contest = await contestRepository.GetFirstOrDefaultAsync(
                 c => c.Id == entry.ContestId,
                 null,
                 q => q.Include(c => c.Entries),
-                TrackingType.NoTracking, 
+                TrackingType.Tracking, 
                 false,
                 false
             );
@@ -62,7 +61,7 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
                 c => c.Id == entry.UserId,
                 null,
                 q => q.Include(u => u.Entries), 
-                TrackingType.NoTracking, 
+                TrackingType.Tracking, 
                 false, 
                 false   
             );
@@ -90,7 +89,7 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
                 athletes.Add(athlete);
             }
             
-            entry.Athletes.AddRange(athletes);
+            entry.Athletes = (athletes);
             
             entryRepository.Update(entry);
             

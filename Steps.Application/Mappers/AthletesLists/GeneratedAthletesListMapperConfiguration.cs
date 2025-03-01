@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities.AthletesLists;
-using Steps.Shared.Contracts.AthletesLists.EntryAthletesList.ViewModels;
 using Steps.Shared.Contracts.AthletesLists.GeneratedAthletesList.ViewModels;
 
 namespace Steps.Application.Mappers.AthletesLists

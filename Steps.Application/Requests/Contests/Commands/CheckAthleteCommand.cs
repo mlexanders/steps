@@ -71,8 +71,11 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
                         for (int i = shiftedIndex; i > athleteIndex; i--)
                         {
                             blockAthletes[i].ExitTime = blockAthletes[i - 1].ExitTime;
+                            athleteRepository.Update(blockAthletes[i]);
                         }
                         previousAthlete.ExitTime = originalTime;
+                        
+                        athleteRepository.Update(previousAthlete);
                     }
                 }
 
@@ -86,7 +89,7 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
             {
                 blockAthletes[i].ExitTime = (blockAthletes[i - 1].ExitTime ?? DateTime.UtcNow).AddMinutes(2);
             }
-
+            
             await _unitOfWork.SaveChangesAsync();
 
             return Result.Ok().SetMessage("Спортсмен отмечен как прибывший, расписание обновлено.");

@@ -39,21 +39,6 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.ToTable("AthleteEntry");
                 });
 
-            modelBuilder.Entity("AthleteEntryAthletesList", b =>
-                {
-                    b.Property<Guid>("AthletesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("EntryAthletesListsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("AthletesId", "EntryAthletesListsId");
-
-                    b.HasIndex("EntryAthletesListsId");
-
-                    b.ToTable("AthleteEntryAthletesList");
-                });
-
             modelBuilder.Entity("AthleteGroupBlock", b =>
                 {
                     b.Property<Guid>("AthletesId")
@@ -142,22 +127,6 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("Athletes");
-                });
-
-            modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.EntryAthletesList", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("EntryId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EntryId");
-
-                    b.ToTable("EntryAthletesLists");
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.GeneratedAthletesList", b =>
@@ -414,21 +383,6 @@ namespace Steps.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AthleteEntryAthletesList", b =>
-                {
-                    b.HasOne("Steps.Domain.Entities.Athlete", null)
-                        .WithMany()
-                        .HasForeignKey("AthletesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Steps.Domain.Entities.AthletesLists.EntryAthletesList", null)
-                        .WithMany()
-                        .HasForeignKey("EntryAthletesListsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("AthleteGroupBlock", b =>
                 {
                     b.HasOne("Steps.Domain.Entities.Athlete", null)
@@ -496,17 +450,6 @@ namespace Steps.Infrastructure.Data.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.EntryAthletesList", b =>
-                {
-                    b.HasOne("Steps.Domain.Entities.Entry", "Entry")
-                        .WithMany()
-                        .HasForeignKey("EntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Entry");
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.GeneratedAthletesList", b =>

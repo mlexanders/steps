@@ -31,7 +31,6 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
     
         var entryRepository = _unitOfWork.GetRepository<Entry>();
         var contestRepository = _unitOfWork.GetRepository<Contest>();
-        var entryAthletesRepository = _unitOfWork.GetRepository<EntryAthletesList>();
         var userRepository = _unitOfWork.GetRepository<User>();
         var athleteRepository = _unitOfWork.GetRepository<Athlete>();
     

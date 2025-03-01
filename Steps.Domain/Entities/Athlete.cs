@@ -12,7 +12,6 @@ public class Athlete : Entity
     public Guid TeamId { get; set; }
 
     public List<Entry> Entries { get; set; } = new List<Entry>();
-    public List<EntryAthletesList>? EntryAthletesLists { get; set; } = new List<EntryAthletesList>();
     public List<PreAthletesList>? PreAthletesLists { get; set; } = new List<PreAthletesList>();
     public List<GroupBlock>? GroupBlocks { get; set; } = new List<GroupBlock>();
 }

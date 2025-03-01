@@ -1,5 +1,5 @@
-﻿using Steps.Domain.Entities.AthletesLists;
-using Steps.Shared.Contracts.AthletesLists.EntryAthletesList.ViewModels;
+﻿using Steps.Domain.Entities;
+using Steps.Domain.Entities.AthletesLists;
 using Steps.Shared.Contracts.AthletesLists.GroupBlock.ViewModels;
 using Steps.Shared.Contracts.AthletesLists.PreAthletesList.ViewModels;
 
@@ -13,7 +13,7 @@ public class AthleteViewModel
     public DateTime BirthDate { get; set; }
     public Guid TeamId { get; set; }
     
-    public List<EntryAthletesList>? EntryAthletesLists { get; set; }
+    public List<Entry>? Entries { get; set; }
     public List<PreAthletesList>? PreAthletesLists { get; set; }
     public List<GroupBlock>? GroupBlocks { get; set; }
 }

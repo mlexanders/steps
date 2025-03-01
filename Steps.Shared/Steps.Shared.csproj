@@ -15,8 +15,4 @@
       <PackageReference Include="Calabonga.PagedListCore" Version="1.0.4" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Contracts\AthletesLists\EntryAthletesList\" />
-    </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
 ﻿using Steps.Domain.Entities;
 using Steps.Domain.Entities.AthletesLists;
 using Steps.Shared.Contracts.Accounts.ViewModels;
-using Steps.Shared.Contracts.AthletesLists.EntryAthletesList.ViewModels;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Shared.Contracts.Entries.ViewModels;

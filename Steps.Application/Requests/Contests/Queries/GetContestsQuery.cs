@@ -37,6 +37,6 @@ public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<
             cancellationToken: cancellationToken,
             trackingType: TrackingType.NoTracking);
 
-        return Result<PaggedListViewModel<ContestViewModel>>.Ok(contests.GetPaginatedList());
+        return Result<PaggedListViewModel<ContestViewModel>>.Ok(contests.GetView());
     }
 }

@@ -1,12 +1,11 @@
-﻿@using Steps.Client.Features.Organizer.Services
-@using Steps.Shared.Contracts.Contests.ViewModels
+﻿@using Steps.Shared.Contracts.Contests.ViewModels
 
-@implements IDisposable
+@inherits ManageBaseComponent<ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard>
-    <RadzenDataGrid TItem="ContestViewModel" Data="ContestsManagement.Contests" AllowPaging="true"
-                    PageSize="ContestsManagement.PageSize" EmptyText="Мероприятия еще не созданы"
-                    IsLoading=@ContestsManagement.IsLoading Count="@ContestsManagement.TotalCount"
+    <RadzenDataGrid TItem="ContestViewModel" Data="Manager.Data" AllowPaging="true"
+                    PageSize="Manager.PageSize" EmptyText="Мероприятия еще не созданы"
+                    IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
                     LoadData="@OnChangePage">
 
         <HeaderTemplate>
@@ -35,45 +34,3 @@
         </Columns>
     </RadzenDataGrid>
 </RadzenCard>
-
-
-@code {
-    [Inject] private ContestsManagement ContestsManagement { get; set; } = null!;
-    [Inject] private DialogService DialogService { get; set; } = null!;
-    [Inject] private ContestDialogManager ContestDialogManager { get; set; } = null!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await ContestsManagement.Initialize();
-        ContestsManagement.ContestsChanged += StateHasChanged;
-    }
-
-    private async Task OnCreate()
-    {
-        var result = await ContestDialogManager.ShowCreateDialog();
-    }
-
-    private async Task OnUpdate(ContestViewModel contest)
-    {
-        var result = await ContestDialogManager.ShowUpdateDialog(contest);
-    }
-
-    private async Task OnDelete(ContestViewModel contest)
-    {
-        var result = await ContestDialogManager.ShowDeleteDialog(contest);
-    }
-
-    private Task OnChangePage(LoadDataArgs arg)
-    {
-        var skip = arg.Skip;
-        var take = arg.Top;
-
-        return ContestsManagement.ChangePage(skip, take);
-    }
-
-    public void Dispose()
-    {
-        ContestsManagement.ContestsChanged -= StateHasChanged;
-    }
-
-}

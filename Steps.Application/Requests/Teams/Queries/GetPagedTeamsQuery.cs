@@ -1,25 +1,22 @@
 ﻿using AutoMapper;
-using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
-using Steps.Application.Requests.Clubs.Queries;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
-using Steps.Shared.Contracts.Clubs.ViewModels;
 using Steps.Shared.Contracts.Teams.ViewModels;
 using Steps.Shared.Exceptions;
+using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Teams.Queries;
 
 
-public record GetPagedTeamsQuery(Page Page) : IRequest<Result<IPagedList<TeamViewModel>>>;
+public record GetPagedTeamsQuery(Page Page) : IRequest<Result<PaggedListViewModel<TeamViewModel>>>;
 
 public class GetPagedTeamsQueryHandler
     : IRequestHandler<GetPagedTeamsQuery,
-        Result<IPagedList<TeamViewModel>>>
+        Result<PaggedListViewModel<TeamViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -32,7 +29,7 @@ public class GetPagedTeamsQueryHandler
         _securityService = securityService;
     }
 
-    public async Task<Result<IPagedList<TeamViewModel>>> Handle(GetPagedTeamsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaggedListViewModel<TeamViewModel>>> Handle(GetPagedTeamsQuery request, CancellationToken cancellationToken)
     {
         var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
         
@@ -45,7 +42,7 @@ public class GetPagedTeamsQueryHandler
                 cancellationToken: cancellationToken,
                 trackingType: TrackingType.NoTracking);
         
-        var result = Result<IPagedList<TeamViewModel>>.Ok(views);
+        var result = Result<PaggedListViewModel<TeamViewModel>>.Ok(views.GetView());
 
         return result;
     }

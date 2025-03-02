@@ -1,16 +1,14 @@
 ﻿@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.Organizer.Components
+@using Steps.Client.Features.Organizer.Components.Contest
 
 @inherits BaseModal
 
 
-<RadzenText Text="Вы уверены, что хотите удалить это мероприятие?"/>
-
-<ContestCard Contest="@Contest"/>
+<ContestCard Model="@Model"/>
 
 <RadzenButton Text="Закрыть" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
               Style="margin-left: 10px;"/>
 
 @code {
-    [Parameter] public ContestViewModel Contest { get; set; } = null!;
+    [Parameter] public ContestViewModel Model { get; set; } = null!;
 }

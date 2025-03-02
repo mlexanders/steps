@@ -3,7 +3,7 @@ using Calabonga.PagedListCore;
 
 namespace Steps.Shared.Utils;
 
-public static class EnumExtensions
+public static class Extensions
 {
     public static string GetDisplayName(this Enum value)
     {
@@ -15,7 +15,7 @@ public static class EnumExtensions
         return value.ToString();
     }
 
-    public static PaggedListViewModel<T> GetPaginatedList<T>(this IPagedList<T> list)
+    public static PaggedListViewModel<T> GetView<T>(this IPagedList<T> list)
     {
         return new PaggedListViewModel<T>
         {

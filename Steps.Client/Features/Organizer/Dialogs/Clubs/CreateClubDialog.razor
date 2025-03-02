@@ -1,0 +1,33 @@
+﻿@using Steps.Client.Features.Organizer.Forms
+@using Steps.Client.Features.Organizer.Services.Club
+@using Steps.Shared.Contracts.Clubs.ViewModels
+
+@inherits BaseModal
+@inject ClubsManager Manager
+
+
+<RadzenTemplateForm TItem="ClubViewModel" Submit="Create" Data="_creatingClub">
+    <RadzenCard>
+        <ClubForm Model="@_creatingClub" Title="Новый клуб"/>
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly ClubViewModel _creatingClub = new();
+
+    private async Task Create()
+    {
+        var result = await Manager.Create(new()
+        {
+            Name = _creatingClub.Name,
+            OwnerId = _creatingClub.OwnerId
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

@@ -21,7 +21,6 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        await Task.Delay(1200);
         try
         {
             var user = await _securityService.GetCurrentUser();

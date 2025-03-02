@@ -1,6 +1,8 @@
-﻿namespace Steps.Shared.Contracts.Clubs.ViewModels;
+﻿using Steps.Domain.Base;
 
-public class ClubViewModel
+namespace Steps.Shared.Contracts.Clubs.ViewModels;
+
+public class ClubViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

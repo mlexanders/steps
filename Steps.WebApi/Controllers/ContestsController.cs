@@ -1,8 +1,9 @@
-﻿using Calabonga.PagedListCore;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
@@ -10,9 +11,10 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
-public class ContestsController : ControllerBase, IContestService
+public class ContestsController : ControllerBase, IContestsService
 {
     private readonly IMediator _mediator;
 
@@ -22,7 +24,7 @@ public class ContestsController : ControllerBase, IContestService
     }
     
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateContestViewModel createContestViewModel)
+    public async Task<Result<ContestViewModel>> Create([FromBody] CreateContestViewModel createContestViewModel)
     {
         return await _mediator.Send(new CreateContestCommand(createContestViewModel));
     }
@@ -31,6 +33,11 @@ public class ContestsController : ControllerBase, IContestService
     public async Task<Result<ContestViewModel>> GetById(Guid contestId)
     {
         return await _mediator.Send(new GetContestByIdQuery(contestId));
+    }
+
+    public Task<Result<List<ContestViewModel>>> GetBy(FilterGroup filter)
+    {
+        throw new NotImplementedException();
     }
 
     [HttpGet]

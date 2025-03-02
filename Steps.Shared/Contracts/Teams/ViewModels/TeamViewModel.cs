@@ -1,8 +1,9 @@
-﻿using Steps.Domain.Entities;
+﻿using Steps.Domain.Base;
+using Steps.Domain.Entities;
 
 namespace Steps.Shared.Contracts.Teams.ViewModels;
 
-public class TeamViewModel
+public class TeamViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;

@@ -2,9 +2,8 @@
 
 namespace Steps.Domain.Base;
 
-public interface IUser
+public interface IUser : IHaveId
 {
-    public Guid Id { get; set; }
     string Login { get; set; }
     Role Role { get; set; }
 }

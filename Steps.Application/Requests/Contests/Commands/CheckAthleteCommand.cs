@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record CheckAthleteCommand(Guid AthleteId, Guid ContestId, bool? isAppeared) : IRequest<Result>;
-    
+public record CheckAthleteCommand(Guid AthleteId, Guid ContestId, bool isAppeared) : IRequest<Result>;
+
 public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +30,10 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
         {
             var athleteRepository = _unitOfWork.GetRepository<Athlete>();
             var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
+            var generatedListRepository = _unitOfWork.GetRepository<GeneratedAthletesList>();
+            var lateAthletesListRepository = _unitOfWork.GetRepository<LateAthletesList>();
 
+            // Получаем спортсмена по идентификатору
             var athlete = await athleteRepository.GetFirstOrDefaultAsync(
                 a => a.Id == request.AthleteId,
                 null,
@@ -42,10 +45,11 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
             if (athlete == null)
                 return Result.Fail("Спортсмен не найден.");
 
+            // Получаем групповой блок, в котором состоит спортсмен
             var groupBlock = await groupBlockRepository.GetFirstOrDefaultAsync(
                 gb => gb.Athletes.Any(a => a.Id == athlete.Id),
                 null,
-                gb => gb.Include(a => a.Athletes),
+                gb => gb.Include(g => g.Athletes),
                 TrackingType.Tracking,
                 false,
                 false);
@@ -53,46 +57,166 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
             if (groupBlock == null)
                 return Result.Fail("Блок спортсмена не найден.");
 
-            athlete.IsAppeared = request.isAppeared;
-            var blockAthletes = groupBlock.Athletes.OrderBy(a => a.ExitTime).ToList();
-            int athleteIndex = blockAthletes.FindIndex(a => a.Id == athlete.Id);
-
-            if (athleteIndex > 0)
+            if (request.isAppeared)
             {
-                var previousAthlete = blockAthletes[athleteIndex - 1];
+                athlete.IsAppeared = request.isAppeared;
 
-                if (previousAthlete.IsAppeared.HasValue && previousAthlete.IsAppeared == false && request.isAppeared == true)
+                var contestId = groupBlock.ContestId;
+
+                var generatedList = await generatedListRepository.GetFirstOrDefaultAsync(
+                    gl => gl.ContestId == contestId,
+                    null,
+                    gl => gl.Include(gl => gl.GroupBlocks)
+                        .ThenInclude(gb => gb.Athletes),
+                    TrackingType.Tracking,
+                    false,
+                    false);
+
+                if (generatedList == null)
                 {
-                    int shiftedIndex = blockAthletes.FindIndex(a => a.ExitTime == previousAthlete.ExitTime);
-
-                    if (shiftedIndex > athleteIndex) 
+                    generatedList = new GeneratedAthletesList
                     {
-                        var originalTime = previousAthlete.ExitTime ?? (athlete.ExitTime?.AddMinutes(-2) ?? DateTime.UtcNow);
-                        for (int i = shiftedIndex; i > athleteIndex; i--)
-                        {
-                            blockAthletes[i].ExitTime = blockAthletes[i - 1].ExitTime;
-                            athleteRepository.Update(blockAthletes[i]);
-                        }
-                        previousAthlete.ExitTime = originalTime;
-                        
-                        athleteRepository.Update(previousAthlete);
+                        ContestId = contestId,
+                        GroupBlocks = new List<GroupBlock>()
+                    };
+
+                    var allGroupBlocks = await groupBlockRepository.GetAllAsync(
+                        predicate: gb => gb.ContestId == contestId,
+                        orderBy: null,
+                        include: null,
+                        disableTracking: false,
+                        ignoreQueryFilters: false);
+                    if (allGroupBlocks != null && allGroupBlocks.Any())
+                    {
+                        generatedList.GroupBlocks.AddRange(allGroupBlocks);
                     }
-                }
 
-                if (previousAthlete.IsAppeared.HasValue && previousAthlete.IsAppeared == false)
+                    await generatedListRepository.InsertAsync(generatedList);
+                }
+                else if (generatedList.GroupBlocks == null || !generatedList.GroupBlocks.Any())
                 {
-                    athlete.ExitTime = previousAthlete.ExitTime;
+                    var allGroupBlocks = await groupBlockRepository.GetAllAsync(
+                        predicate: gb => gb.ContestId == contestId,
+                        orderBy: null,
+                        include: null,
+                        disableTracking: false,
+                        ignoreQueryFilters: false);
+                    if (allGroupBlocks != null && allGroupBlocks.Any())
+                    {
+                        generatedList.GroupBlocks.AddRange(allGroupBlocks);
+                    }
+
+                    generatedListRepository.Update(generatedList);
+                }
+
+                var orderedBlocks = generatedList.GroupBlocks.OrderBy(gb => gb.ExitTime).ToList();
+
+                if (!orderedBlocks.Any())
+                {
+                    return Result.Fail("Групповые блоки не сформированы.");
                 }
             }
-
-            for (int i = athleteIndex + 1; i < blockAthletes.Count; i++)
+            else
             {
-                blockAthletes[i].ExitTime = (blockAthletes[i - 1].ExitTime ?? DateTime.UtcNow).AddMinutes(2);
+                // Помечаем спортсмена как неявившегося
+                athlete.IsAppeared = request.isAppeared; // false
+                athleteRepository.Update(athlete);
+
+                // Получаем идентификатор конкурса из блока спортсмена
+                var contestId = groupBlock.ContestId;
+
+                // Получаем сформированный список спортсменов для конкурса
+                var generatedList = await generatedListRepository.GetFirstOrDefaultAsync(
+                    gl => gl.ContestId == contestId,
+                    null,
+                    gl => gl.Include(gl => gl.GroupBlocks)
+                        .ThenInclude(gb => gb.Athletes),
+                    TrackingType.Tracking,
+                    false,
+                    false);
+
+                // Если список не существует или не содержит блоков, заполняем его
+                if (generatedList == null)
+                {
+                    generatedList = new GeneratedAthletesList
+                    {
+                        ContestId = contestId,
+                        GroupBlocks = new List<GroupBlock>()
+                    };
+
+                    var allGroupBlocks = await groupBlockRepository.GetAllAsync(
+                        predicate: gb => gb.ContestId == contestId,
+                        orderBy: null,
+                        include: null,
+                        disableTracking: false,
+                        ignoreQueryFilters: false);
+
+                    if (allGroupBlocks != null && allGroupBlocks.Any())
+                    {
+                        generatedList.GroupBlocks.AddRange(allGroupBlocks);
+                    }
+
+                    await generatedListRepository.InsertAsync(generatedList);
+                }
+                else if (generatedList.GroupBlocks == null || !generatedList.GroupBlocks.Any())
+                {
+                    var allGroupBlocks = await groupBlockRepository.GetAllAsync(
+                        predicate: gb => gb.ContestId == contestId,
+                        orderBy: null,
+                        include: null,
+                        disableTracking: false,
+                        ignoreQueryFilters: false);
+
+                    if (allGroupBlocks != null && allGroupBlocks.Any())
+                    {
+                        generatedList.GroupBlocks.AddRange(allGroupBlocks);
+                    }
+
+                    generatedListRepository.Update(generatedList);
+                }
+
+                // Сортируем групповые блоки по времени выступления
+                var orderedBlocks = generatedList.GroupBlocks.OrderBy(gb => gb.ExitTime).ToList();
+
+                if (!orderedBlocks.Any())
+                {
+                    return Result.Fail("Групповые блоки не сформированы.");
+                }
+
+                // Находим индекс блока, в котором состоит неявившийся спортсмен
+                var absentBlockIndex = orderedBlocks.FindIndex(gb => gb.Athletes.Any(a => a.Id == athlete.Id));
+                if (absentBlockIndex < 0)
+                {
+                    return Result.Fail("Групповой блок для спортсмена не найден в списке.");
+                }
+
+                // Удаляем неявившегося спортсмена из найденного блока
+                var targetGroupBlock = orderedBlocks[absentBlockIndex];
+                targetGroupBlock.Athletes.RemoveAll(a => a.Id == athlete.Id);
+                groupBlockRepository.Update(targetGroupBlock);
+
+                // Для всех блоков, следующих за блоком с неявившимся спортсменом,
+                // смещаем время выступления на 2 минуты раньше
+                for (int i = absentBlockIndex + 1; i < orderedBlocks.Count; i++)
+                {
+                    orderedBlocks[i].ExitTime = orderedBlocks[i].ExitTime.AddMinutes(-2);
+                    groupBlockRepository.Update(orderedBlocks[i]);
+                }
+
+                // Добавляем спортсмена в список неявившихся
+                var lateAthleteEntry = new LateAthletesList
+                {
+                    ContestId = contestId
+                };
+                
+                lateAthleteEntry.Athletes.Add(athlete);
+                
+                await lateAthletesListRepository.InsertAsync(lateAthleteEntry);
             }
-            
+
             await _unitOfWork.SaveChangesAsync();
 
-            return Result.Ok().SetMessage("Спортсмен отмечен как прибывший, расписание обновлено.");
+            return Result.Ok().SetMessage("Спортсмен отмечен, расписание обновлено.");
         }
         catch (Exception ex)
         {

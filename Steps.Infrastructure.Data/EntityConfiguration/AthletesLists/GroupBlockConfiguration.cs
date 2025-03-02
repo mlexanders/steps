@@ -10,9 +10,6 @@ public class GroupBlockConfiguration : IEntityTypeConfiguration<GroupBlock>
     {
         builder.HasMany(eal => eal.Athletes)
             .WithMany(a => a.GroupBlocks);
-
-        builder.HasOne(x => x.LateAthletesList)
-            .WithMany(a => a.GroupBlocks);
         
         builder.HasOne(x => x.GeneratedAthletesList)
             .WithMany(a => a.GroupBlocks);

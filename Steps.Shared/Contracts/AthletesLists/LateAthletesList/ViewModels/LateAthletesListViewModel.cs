@@ -8,7 +8,7 @@ public class LateAthletesListViewModel
 {
     public Guid Id { get; set; }
     
-    public List<Domain.Entities.AthletesLists.GroupBlock> GroupBlocks { get; set; }
+    public List<Athlete> Athletes { get; set; }
     
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }

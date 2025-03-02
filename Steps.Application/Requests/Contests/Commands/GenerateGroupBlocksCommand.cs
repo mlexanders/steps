@@ -78,7 +78,6 @@ namespace Steps.Application.Requests.Contests.Commands
                         ExitTime = DateTime.SpecifyKind(currentExitTime, DateTimeKind.Utc)
                     };
 
-                    // Распределяем спортсменов внутри блока с интервалами
                     for (int i = 0; i < blockAthletes.Count; i++)
                     {
                         if (i > 0 && i % judgesCount == 0)
@@ -93,10 +92,9 @@ namespace Steps.Application.Requests.Contests.Commands
                     }
 
                     blocks.Add(groupBlock);
-                    currentExitTime = currentExitTime.AddMinutes(2); // Следующий блок начинается через 2 минуты
+                    currentExitTime = currentExitTime.AddMinutes(2);
                 }
 
-                // Сохраняем блоки
                 foreach (var block in blocks)
                 {
                     await groupBlockRepository.InsertAsync(block);

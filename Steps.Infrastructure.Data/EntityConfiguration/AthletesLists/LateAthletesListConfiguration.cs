@@ -8,5 +8,7 @@ public class LateAthletesListConfiguration : IEntityTypeConfiguration<LateAthlet
 {
     public void Configure(EntityTypeBuilder<LateAthletesList> builder)
     {
+        builder.HasMany(eal => eal.Athletes)
+            .WithMany(a => a.LateAthletesLists);
     }
 }

@@ -54,6 +54,21 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.ToTable("AthleteGroupBlock");
                 });
 
+            modelBuilder.Entity("AthleteLateAthletesList", b =>
+                {
+                    b.Property<Guid>("AthletesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LateAthletesListsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AthletesId", "LateAthletesListsId");
+
+                    b.HasIndex("LateAthletesListsId");
+
+                    b.ToTable("AthleteLateAthletesList");
+                });
+
             modelBuilder.Entity("AthletePreAthletesList", b =>
                 {
                     b.Property<Guid>("AthletesId")
@@ -398,6 +413,21 @@ namespace Steps.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AthleteLateAthletesList", b =>
+                {
+                    b.HasOne("Steps.Domain.Entities.Athlete", null)
+                        .WithMany()
+                        .HasForeignKey("AthletesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.AthletesLists.LateAthletesList", null)
+                        .WithMany()
+                        .HasForeignKey("LateAthletesListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AthletePreAthletesList", b =>
                 {
                     b.HasOne("Steps.Domain.Entities.Athlete", null)
@@ -476,7 +506,7 @@ namespace Steps.Infrastructure.Data.Migrations
                         .HasForeignKey("GeneratedAthletesListId");
 
                     b.HasOne("Steps.Domain.Entities.AthletesLists.LateAthletesList", "LateAthletesList")
-                        .WithMany("GroupBlocks")
+                        .WithMany()
                         .HasForeignKey("LateAthletesListId");
 
                     b.Navigation("Contest");
@@ -558,11 +588,6 @@ namespace Steps.Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.GeneratedAthletesList", b =>
-                {
-                    b.Navigation("GroupBlocks");
-                });
-
-            modelBuilder.Entity("Steps.Domain.Entities.AthletesLists.LateAthletesList", b =>
                 {
                     b.Navigation("GroupBlocks");
                 });

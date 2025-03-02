@@ -13,5 +13,6 @@ public class Athlete : Entity
 
     public List<Entry> Entries { get; set; } = new List<Entry>();
     public List<PreAthletesList>? PreAthletesLists { get; set; } = new List<PreAthletesList>();
+    public List<LateAthletesList> LateAthletesLists { get; set; } = new List<LateAthletesList>();
     public List<GroupBlock>? GroupBlocks { get; set; } = new List<GroupBlock>();
 }

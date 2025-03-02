@@ -44,8 +44,10 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
             
             preAthletesList.ContestId = contest.Id;
             preAthletesList.Contest = contest;
+            
+            var acceptedEntries = contest.Entries.Where(c => c.IsSuccess);
 
-            foreach (var entry in contest.Entries)
+            foreach (var entry in acceptedEntries)
             {
                 foreach (var athlete in entry.Athletes)
                 {

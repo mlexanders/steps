@@ -7,7 +7,7 @@ namespace Steps.Domain.Entities.AthletesLists;
 /// </summary>
 public class LateAthletesList : Entity
 {
-    public List<GroupBlock> GroupBlocks { get; set; } = new List<GroupBlock>();
+    public List<Athlete> Athletes { get; set; } = new List<Athlete>();
     
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }

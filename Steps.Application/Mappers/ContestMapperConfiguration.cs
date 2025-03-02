@@ -24,7 +24,8 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.LateAthletesList, o => o.Ignore())
             .ForMember(x => x.PreAthletesListId, o => o.Ignore())
             .ForMember(x => x.PreAthletesList, o => o.Ignore())
-            .ForMember(x => x.GroupBlocks, o => o.Ignore());
+            .ForMember(x => x.GroupBlocks, o => o.Ignore())
+            .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
 
         CreateMap<Contest, CreateContestViewModel>()
@@ -33,7 +34,8 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
             .ForMember(x => x.Description, o => o.MapFrom(m => m.Description))
             .ForMember(x => x.Judjes, o => o.MapFrom(m => m.Judjes))
-            .ForMember(x => x.Counters, o => o.MapFrom(m => m.Counters));
+            .ForMember(x => x.Counters, o => o.MapFrom(m => m.Counters))
+            .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
         //UpdateContestViewModel
         CreateMap<UpdateContestViewModel, Contest>()

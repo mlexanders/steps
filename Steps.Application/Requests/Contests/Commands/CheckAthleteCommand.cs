@@ -195,12 +195,38 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
                 targetGroupBlock.Athletes.RemoveAll(a => a.Id == athlete.Id);
                 groupBlockRepository.Update(targetGroupBlock);
 
-                // Для всех блоков, следующих за блоком с неявившимся спортсменом,
-                // смещаем время выступления на 2 минуты раньше
+                // Новая логика смещения:
+                // Сохраняем опорное время – время блока, из которого удалили спортсмен
+                DateTime referenceTime = orderedBlocks[absentBlockIndex].ExitTime;
+                // Для отслеживания, для какой группы (по исходному времени) уже произведён сдвиг
+                DateTime? lastShiftedGroupOriginalTime = null;
+
+                // Обходим блоки после блока с неявившимся спортсменом
                 for (int i = absentBlockIndex + 1; i < orderedBlocks.Count; i++)
                 {
-                    orderedBlocks[i].ExitTime = orderedBlocks[i].ExitTime.AddMinutes(-2);
-                    groupBlockRepository.Update(orderedBlocks[i]);
+                    var currentBlock = orderedBlocks[i];
+
+                    // Если время текущего блока совпадает с опорным, смещение не требуется
+                    if (currentBlock.ExitTime == referenceTime)
+                    {
+                        continue;
+                    }
+
+                    // Если уже смещали блок с данным исходным временем, пропускаем остальные из этой группы
+                    if (lastShiftedGroupOriginalTime.HasValue &&
+                        currentBlock.ExitTime == lastShiftedGroupOriginalTime.Value)
+                    {
+                        continue;
+                    }
+
+                    // Сохраняем исходное время текущего блока для отслеживания группы
+                    lastShiftedGroupOriginalTime = currentBlock.ExitTime;
+                    // Смещаем время текущего блока на 2 минуты назад
+                    currentBlock.ExitTime = currentBlock.ExitTime.AddMinutes(-2);
+                    groupBlockRepository.Update(currentBlock);
+
+                    // Обновляем опорное время для последующих проверок
+                    referenceTime = currentBlock.ExitTime;
                 }
 
                 // Добавляем спортсмена в список неявившихся
@@ -208,11 +234,10 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
                 {
                     ContestId = contestId
                 };
-                
                 lateAthleteEntry.Athletes.Add(athlete);
-                
                 await lateAthletesListRepository.InsertAsync(lateAthleteEntry);
             }
+
 
             await _unitOfWork.SaveChangesAsync();
 

@@ -15,5 +15,6 @@ public class AthleteViewModel
     
     public List<Entry>? Entries { get; set; }
     public List<PreAthletesList>? PreAthletesLists { get; set; }
+    public List<LateAthletesList>? LateAthletesLists { get; set; }
     public List<GroupBlock>? GroupBlocks { get; set; }
 }

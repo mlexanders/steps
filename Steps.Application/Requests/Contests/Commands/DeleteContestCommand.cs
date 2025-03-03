@@ -8,7 +8,7 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record DeleteContestCommand (Guid ModelId) : IRequest<Result>;
+public record DeleteContestCommand(Guid ModelId) : IRequest<Result>;
 
 public class DeleteEventCommandHandler : IRequestHandler<DeleteContestCommand, Result>
 {
@@ -34,7 +34,7 @@ public class DeleteEventCommandHandler : IRequestHandler<DeleteContestCommand, R
 
         repository.Delete(contest);
         await _unitOfWork.SaveChangesAsync();
-        
+
         return Result.Ok().SetMessage("Мероприятие удалено!");
     }
 }

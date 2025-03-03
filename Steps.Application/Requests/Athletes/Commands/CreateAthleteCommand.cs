@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using Steps.Application.Interfaces;
-using Steps.Application.Requests.Contests.Commands;
 using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Contests.ViewModels;
 using Steps.Shared;
 using Steps.Shared.Contracts.Athletes.ViewModels;
 using Calabonga.UnitOfWork;

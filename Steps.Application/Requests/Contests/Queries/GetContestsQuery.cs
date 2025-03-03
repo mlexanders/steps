@@ -10,7 +10,7 @@ using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-public record GetContestsQuery (Page Page, Specification<Contest>? Specification) 
+public record GetContestsQuery(Page Page, Specification<Contest>? Specification)
     : SpecificationRequest<Contest>(Specification), IRequest<Result<PaggedListViewModel<ContestViewModel>>>;
 
 public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<PaggedListViewModel<ContestViewModel>>>
@@ -24,10 +24,11 @@ public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<
         _mapper = mapper;
     }
 
-    public async Task<Result<PaggedListViewModel<ContestViewModel>>> Handle(GetContestsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> Handle(GetContestsQuery request,
+        CancellationToken cancellationToken)
     {
         var page = request.Page;
-        
+
         var repository = _unitOfWork.GetRepository<Contest>();
 
         var contests = await repository.GetPagedListAsync(

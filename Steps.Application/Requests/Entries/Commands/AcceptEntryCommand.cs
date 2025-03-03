@@ -7,7 +7,7 @@ using Steps.Shared;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record AcceptEntryCommand (Guid ModelId) : IRequest<Result>;
+public record AcceptEntryCommand(Guid ModelId) : IRequest<Result>;
 
 public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>
 {
@@ -23,9 +23,9 @@ public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Res
     public async Task<Result> Handle(AcceptEntryCommand request, CancellationToken cancellationToken)
     {
         var modelId = request.ModelId;
-    
+
         var entryRepository = _unitOfWork.GetRepository<Entry>();
-    
+
         try
         {
             var entry = await entryRepository.GetFirstOrDefaultAsync(e => e.Id == modelId,
@@ -34,11 +34,11 @@ public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Res
                 TrackingType.Tracking,
                 false,
                 false);
-            
+
             entry.IsSuccess = true;
-            
+
             entryRepository.Update(entry);
-            
+
             await _unitOfWork.SaveChangesAsync();
 
             return Result<Guid>.Ok(entry.Id).SetMessage("Заявка успешно создана!");

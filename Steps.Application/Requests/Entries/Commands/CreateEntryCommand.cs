@@ -9,7 +9,7 @@ using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record CreateEntryCommand (CreateEntryViewModel Model) : IRequest<Result<Guid>>;
+public record CreateEntryCommand(CreateEntryViewModel Model) : IRequest<Result<Guid>>;
 
 public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Result<Guid>>
 {
@@ -26,28 +26,28 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
     {
         var model = request.Model;
         var entry = _mapper.Map<Entry>(model);
-        
+
         List<Athlete> athletes = new List<Athlete>();
-    
+
         var entryRepository = _unitOfWork.GetRepository<Entry>();
         var contestRepository = _unitOfWork.GetRepository<Contest>();
         var userRepository = _unitOfWork.GetRepository<User>();
         var athleteRepository = _unitOfWork.GetRepository<Athlete>();
-    
+
         try
         {
             entryRepository.Insert(entry);
             await _unitOfWork.SaveChangesAsync();
-        
+
             var contest = await contestRepository.GetFirstOrDefaultAsync(
                 c => c.Id == entry.ContestId,
                 null,
                 q => q.Include(c => c.Entries),
-                TrackingType.Tracking, 
+                TrackingType.Tracking,
                 false,
                 false
             );
-        
+
             if (contest == null)
             {
                 return Result<Guid>.Fail("Соревнование не найдено.");
@@ -55,16 +55,16 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
 
             contest.Entries = contest.Entries ?? new List<Entry>();
             contest.Entries.Add(entry);
-            
+
             var user = await userRepository.GetFirstOrDefaultAsync(
                 c => c.Id == entry.UserId,
                 null,
-                q => q.Include(u => u.Entries), 
-                TrackingType.Tracking, 
-                false, 
-                false   
+                q => q.Include(u => u.Entries),
+                TrackingType.Tracking,
+                false,
+                false
             );
-        
+
             if (user == null)
             {
                 return Result<Guid>.Fail("Пользователь не найден.");
@@ -72,7 +72,7 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
 
             user.Entries = user.Entries ?? new List<Entry>();
             user.Entries.Add(entry);
-            
+
             contestRepository.Update(contest);
             userRepository.Update(user);
 
@@ -84,14 +84,14 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
                     TrackingType.Tracking,
                     false,
                     false);
-                
+
                 athletes.Add(athlete);
             }
-            
+
             entry.Athletes = (athletes);
-            
+
             entryRepository.Update(entry);
-            
+
             await _unitOfWork.SaveChangesAsync();
 
             return Result<Guid>.Ok(entry.Id).SetMessage("Заявка успешно создана!");

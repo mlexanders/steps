@@ -36,7 +36,7 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateContestCommand, R
         {
             throw new KeyNotFoundException($"Событие с ID {model.Id} не найдено.");
         }
-        
+
         var updatedModel = _mapper.Map(model, existingContest);
 
         repository.Update(updatedModel);

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Calabonga.UnitOfWork;
+﻿using Calabonga.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Entities;

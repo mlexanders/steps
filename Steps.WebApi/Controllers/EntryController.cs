@@ -20,13 +20,13 @@ public class EntryController : ControllerBase, IEntryService
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost]
     public async Task<Result<Guid>> Create([FromBody] CreateEntryViewModel entryViewModel)
     {
         return await _mediator.Send(new CreateEntryCommand(entryViewModel));
     }
-    
+
     [HttpPost("Accept-entry")]
     public async Task<Result> AcceptEntry(Guid entryId)
     {

@@ -28,7 +28,7 @@ public class ClubsController : ControllerBase, IClubsService
     {
         return _mediator.Send(new CreateClubCommand(model));
     }
-    
+
     [HttpGet("{clubId:guid}")]
     public Task<Result<ClubViewModel>> GetById(Guid clubId)
     {
@@ -36,7 +36,8 @@ public class ClubsController : ControllerBase, IClubsService
     }
 
     [HttpPost("[action]")]
-    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery]Page page, [FromBody] Specification<Club>? specification)
+    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery] Page page,
+        [FromBody] Specification<Club>? specification)
     {
         return _mediator.Send(new GetPagedClubsQuery(page, specification));
     }

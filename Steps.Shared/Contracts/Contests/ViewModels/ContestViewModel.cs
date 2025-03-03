@@ -1,4 +1,5 @@
 ﻿using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 
 namespace Steps.Shared.Contracts.Contests.ViewModels;
@@ -13,4 +14,5 @@ public class ContestViewModel : IHaveId
 
     public List<User> Judjes { get; set; }
     public List<User> Counters { get; set; }
+    public ContestType Type { get; set; }
 }

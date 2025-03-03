@@ -1,11 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Athletes.Commands;
-using Steps.Application.Requests.Contests.Commands;
 using Steps.Shared;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Athletes.ViewModels;
-using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers
 {

@@ -1,8 +1,6 @@
 ﻿using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.AthletesLists;
-using Steps.Shared.Contracts.AthletesLists.GroupBlock.ViewModels;
-using Steps.Shared.Contracts.AthletesLists.PreAthletesList.ViewModels;
 
 namespace Steps.Shared.Contracts.Athletes.ViewModels;
 

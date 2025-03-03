@@ -35,24 +35,17 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
 
             // Получаем спортсмена по идентификатору
             var athlete = await athleteRepository.GetFirstOrDefaultAsync(
-                a => a.Id == request.AthleteId,
-                null,
-                null,
-                TrackingType.Tracking,
-                false,
-                false);
+                predicate: a => a.Id == request.AthleteId,
+                trackingType: TrackingType.Tracking);
 
             if (athlete == null)
                 return Result.Fail("Спортсмен не найден.");
 
             // Получаем групповой блок, в котором состоит спортсмен
             var groupBlock = await groupBlockRepository.GetFirstOrDefaultAsync(
-                gb => gb.Athletes.Any(a => a.Id == athlete.Id),
-                null,
-                gb => gb.Include(g => g.Athletes),
-                TrackingType.Tracking,
-                false,
-                false);
+                predicate: gb => gb.Athletes.Any(a => a.Id == athlete.Id),
+                include: gb => gb.Include(g => g.Athletes),
+                trackingType: TrackingType.Tracking);
 
             if (groupBlock == null)
                 return Result.Fail("Блок спортсмена не найден.");
@@ -64,13 +57,10 @@ public class CheckAthleteCommandHandler : IRequestHandler<CheckAthleteCommand, R
                 var contestId = groupBlock.ContestId;
 
                 var generatedList = await generatedListRepository.GetFirstOrDefaultAsync(
-                    gl => gl.ContestId == contestId,
-                    null,
-                    gl => gl.Include(gl => gl.GroupBlocks)
+                    predicate: gl => gl.ContestId == contestId,
+                    include: gl => gl.Include(gl => gl.GroupBlocks)
                         .ThenInclude(gb => gb.Athletes),
-                    TrackingType.Tracking,
-                    false,
-                    false);
+                    trackingType: TrackingType.Tracking);
 
                 if (generatedList == null)
                 {

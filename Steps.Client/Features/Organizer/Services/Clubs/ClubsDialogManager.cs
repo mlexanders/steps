@@ -2,7 +2,7 @@
 using Steps.Client.Features.Organizer.Dialogs.Clubs;
 using Steps.Shared.Contracts.Clubs.ViewModels;
 
-namespace Steps.Client.Features.Organizer.Services.Club;
+namespace Steps.Client.Features.Organizer.Services.Clubs;
 
 public class ClubsDialogManager : IDialogManager<ClubViewModel>
 {

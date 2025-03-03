@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Teams.Commands;
 using Steps.Application.Requests.Teams.Queries;
-using Steps.Filters.Filters;
+using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Teams;
@@ -29,11 +29,6 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new CreateTeamCommand(model));
     }
 
-    public Task<Result<List<TeamViewModel>>> GetBy(FilterGroup filter)
-    {
-        throw new NotImplementedException();
-    }
-
     [HttpPatch]
     public async Task<Result<Guid>> Update([FromBody] UpdateTeamViewModel model)
     {
@@ -46,10 +41,10 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }
 
-    [HttpGet]
-    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page)
+    [HttpPost("[action]")]
+    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Team>? specification = null)
     {
-        return await _mediator.Send(new GetPagedTeamsQuery(page));
+        return await _mediator.Send(new GetPagedTeamsQuery(page, specification));
     }
 
     [HttpDelete("{teamId:guid}")]

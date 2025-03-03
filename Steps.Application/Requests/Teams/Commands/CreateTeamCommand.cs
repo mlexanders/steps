@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Definitions;
 using Steps.Shared.Contracts.Teams.ViewModels;
@@ -11,9 +10,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Teams.Commands;
 
-public record CreateTeamCommand(CreateTeamViewModel Model) : IRequest<Result<Guid>>;
+public record CreateTeamCommand(CreateTeamViewModel Model) : IRequest<Result<TeamViewModel>>;
 
-public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Result<Guid>>
+public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Result<TeamViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -27,7 +26,7 @@ public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Resul
         _securityService = securityService;
     }
 
-    public async Task<Result<Guid>> Handle(CreateTeamCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TeamViewModel>> Handle(CreateTeamCommand request, CancellationToken cancellationToken)
     {
         var team = _mapper.Map<Team>(request.Model);
 
@@ -38,9 +37,11 @@ public class CreateTeamCommandHandler : IRequestHandler<CreateTeamCommand, Resul
             throw new AppAccessDeniedException();
         }
 
-        var entity = _unitOfWork.GetRepository<Team>().Insert(team);
+        var entry = await _unitOfWork.GetRepository<Team>().InsertAsync(team, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        return Result<Guid>.Ok(entity.Id).SetMessage("Команда создана");
+        var viewModel = _mapper.Map<TeamViewModel>(entry.Entity);
+        
+        return Result<TeamViewModel>.Ok(viewModel).SetMessage("Команда создана");
     }
 }

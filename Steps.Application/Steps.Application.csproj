@@ -24,6 +24,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
+      <ProjectReference Include="..\Steps.Filters\Steps.Filters.csproj" />
+      <ProjectReference Include="..\Steps.Filters\Steps.Filters.csproj" />
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
       <ProjectReference Include="..\Steps.Utils\Steps.Utils.csproj" />
     </ItemGroup>
@@ -31,10 +33,18 @@
     <ItemGroup>
       <Folder Include="Definitions\" />
       <Folder Include="Requests\Accounts\Queries\" />
-      <Folder Include="Requests\Accounts\Validators\" />
       <Folder Include="Requests\Contests\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
       <Folder Include="Requests\Entries\Validators\" />
+      <Folder Include="Requests\Users\Commands\" />
+      <Folder Include="Requests\Users\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
+      <Folder Include="Requests\Clubs\Queries\" />
+      <Folder Include="Requests\Entries\Validators\" />
+
+      <Folder Include="Requests\Users\Commands\" />
+      <Folder Include="Requests\Users\Validators\" />
+
     </ItemGroup>
 
 </Project>

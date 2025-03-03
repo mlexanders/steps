@@ -1,0 +1,8 @@
+﻿@using Steps.Shared.Contracts.Accounts.ViewModels
+
+<h3>@this</h3>
+@Model.Login
+
+@code {
+    [Parameter] public UserViewModel Model { get; set; } = null!;
+}

@@ -1,0 +1,18 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Contracts.Clubs.ViewModels
+<RadzenFieldset Text="@Title">
+    <RadzenStack Gap="2rem">
+
+        <RadzenTextBox @bind-Value="@Model.Login" Name="@nameof(Model.Login)" Placeholder="Введите Логин"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.Login)" Text="Обязательно" Style="position: absolute"/>
+        
+    </RadzenStack>
+
+</RadzenFieldset>
+
+@code {
+    [Parameter] [Required] public string Title { get; set; } = null!;
+    [Parameter] [Required] public UserViewModel Model { get; set; } = null!;
+}

@@ -1,15 +1,10 @@
-﻿using Calabonga.PagedListCore;
+﻿using System.Linq.Expressions;
+using System.Web;
 using Steps.Shared.Contracts.Teams.ViewModels;
 
 namespace Steps.Shared.Contracts.Teams;
 
-public interface ITeamsService
+public interface ITeamsService : ICrudService<TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
 {
-    Task<Result<Guid>> Create(CreateTeamViewModel model);
-    Task<Result> Update(UpdateTeamViewModel model);
-
-    Task<Result<TeamViewModel>> GetById(Guid teamId);
-    Task<Result<IPagedList<TeamViewModel>>> GetPaged(Page page);
-    Task<Result> Delete(Guid teamId);
-
+    // Task<Result<TeamViewModel>> GetBy();
 }

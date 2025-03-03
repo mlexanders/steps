@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Steps.Domain.Base;
 
-namespace Steps.Client.Services;
+namespace Steps.Client.Services.Authentication;
 
 public class ApplicationAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {
@@ -24,7 +21,6 @@ public class ApplicationAuthenticationStateProvider : AuthenticationStateProvide
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        await Task.Delay(1200);
         try
         {
             var user = await _securityService.GetCurrentUser();

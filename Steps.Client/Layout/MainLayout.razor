@@ -20,13 +20,7 @@
             <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary"
                           Click="@(() => _sidebarExpanded = false)"/>
         </RadzenStack>
-        <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home"/>
-            <RadzenPanelMenuItem Text="Users" Icon="account_box"/>
-        </RadzenPanelMenu>
-        <div class="rz-p-4">
-            Sidebar
-        </div>
+        <NavMenu/>
     </RadzenSidebar>
     <RadzenBody>
         <div class="rz-p-4">

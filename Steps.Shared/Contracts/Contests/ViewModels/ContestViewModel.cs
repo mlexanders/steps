@@ -1,9 +1,6 @@
-﻿using Steps.Domain.Entities;
-using Steps.Shared.Contracts.Accounts.ViewModels;
+﻿namespace Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Shared.Contracts.Contests.ViewModels;
-
-public class ContestViewModel
+public class ContestViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

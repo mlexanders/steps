@@ -1,0 +1,31 @@
+﻿@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Shared.Contracts.Accounts.ViewModels
+
+@inherits BaseModal
+@inject UsersManager Manager
+
+
+<RadzenTemplateForm TItem="UserViewModel" Submit="Create" Data="_creatingUser">
+    <RadzenCard>
+        @* <ClubForm Club="@_creatingUser" Title="Новый клуб"/> *@
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly UserViewModel _creatingUser = new();
+
+    private async Task Create()
+    {
+        var result = await Manager.Create(new()
+        {
+            Login = _creatingUser.Login,
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Steps.Client.Services.Api;
+﻿using Steps.Client.Services.Api;
 using Steps.Domain.Base;
 using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
-namespace Steps.Client.Services;
+namespace Steps.Client.Services.Authentication;
 
 public class SecurityService
 {

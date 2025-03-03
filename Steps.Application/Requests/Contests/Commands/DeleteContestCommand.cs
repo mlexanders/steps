@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Domain.Entities;
 using Steps.Shared;
+using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
@@ -9,20 +12,28 @@ public record DeleteContestCommand (Guid ModelId) : IRequest<Result>;
 
 public class DeleteEventCommandHandler : IRequestHandler<DeleteContestCommand, Result>
 {
-    private readonly IContestManager _contestManager;
-    private readonly IMapper _mapper;
+    private IUnitOfWork _unitOfWork;
 
-    public DeleteEventCommandHandler(IContestManager contestManager, IMapper mapper)
+    public DeleteEventCommandHandler(IUnitOfWork unitOfWork)
     {
-        _contestManager = contestManager;
-        _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(DeleteContestCommand request, CancellationToken cancellationToken)
     {
         var modelId = request.ModelId;
 
-        await _contestManager.Delete(modelId);
+        var repository = _unitOfWork.GetRepository<Contest>();
+
+        var contest = await repository.GetFirstOrDefaultAsync(
+            predicate: x => x.Id.Equals(modelId),
+            trackingType: TrackingType.Tracking
+        );
+
+        if (contest is null) throw new AppNotFoundException($"Мероприятие с ID {modelId} не найдено.");
+
+        repository.Delete(contest);
+        await _unitOfWork.SaveChangesAsync();
         
         return Result.Ok().SetMessage("Мероприятие удалено!");
     }

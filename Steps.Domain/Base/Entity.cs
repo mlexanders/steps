@@ -1,6 +1,6 @@
 ﻿namespace Steps.Domain.Base;
 
-public class Entity
+public class Entity : IHaveId
 {
     public Guid Id { get; set; }
 }

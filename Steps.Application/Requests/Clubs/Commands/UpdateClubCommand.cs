@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
@@ -11,9 +10,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Clubs.Commands;
 
-public record UpdateClubCommand(UpdateClubViewModel Model) : IRequest<Result>;
+public record UpdateClubCommand(UpdateClubViewModel Model) : IRequest<Result<Guid>>;
 
-public class UpdateClubCommandHandler : IRequestHandler<UpdateClubCommand, Result>
+public class UpdateClubCommandHandler : IRequestHandler<UpdateClubCommand, Result<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISecurityService _securityService;
@@ -26,7 +25,7 @@ public class UpdateClubCommandHandler : IRequestHandler<UpdateClubCommand, Resul
         _mapper = mapper;
     }
 
-    public async Task<Result> Handle(UpdateClubCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(UpdateClubCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
 
@@ -47,6 +46,6 @@ public class UpdateClubCommandHandler : IRequestHandler<UpdateClubCommand, Resul
         repository.Update(updatedClub);
         await _unitOfWork.SaveChangesAsync();
 
-        return Result.Ok().SetMessage("Клуб успешно обновлен");
+        return Result<Guid>.Ok(updatedClub.Id).SetMessage("Клуб успешно обновлен");
     }
 }

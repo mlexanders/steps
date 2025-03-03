@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Steps.Client.Services;
+using Steps.Client.Services.Authentication;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 
 namespace Steps.Client.Pages;

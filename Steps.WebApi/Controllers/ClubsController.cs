@@ -1,9 +1,9 @@
-﻿using Calabonga.PagedListCore;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Clubs.Commands;
 using Steps.Application.Requests.Clubs.Queries;
+using Steps.Filters.Filters;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs;
@@ -36,13 +36,13 @@ public class ClubsController : ControllerBase, IClubsService
     }
 
     [HttpGet]
-    public Task<Result<IPagedList<ClubViewModel>>> GetPaged([FromQuery] Page page)
+    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery] Page page)
     {
         return _mediator.Send(new GetPagedClubsQuery(page));
     }
 
     [HttpPatch]
-    public Task<Result> Update([FromBody] UpdateClubViewModel model)
+    public Task<Result<Guid>> Update([FromBody] UpdateClubViewModel model)
     {
         return _mediator.Send(new UpdateClubCommand(model));
     }
@@ -51,5 +51,11 @@ public class ClubsController : ControllerBase, IClubsService
     public Task<Result> Delete(Guid clubId)
     {
         return _mediator.Send(new DeleteClubCommand(clubId));
+    }
+
+    [HttpPost("by")]
+    public Task<Result<List<ClubViewModel>>> GetBy([FromBody] FilterGroup filter)
+    {
+        return _mediator.Send(new GetByFilterQuery(filter));
     }
 }

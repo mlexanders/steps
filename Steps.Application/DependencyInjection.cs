@@ -13,7 +13,6 @@ public static class DependencyInjection
     {
         builder.Services.AddTransient<CommonExceptionHandler>();
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
-        builder.Services.AddTransient<IContestManager, ContestManager>();
 
         return builder;
     }

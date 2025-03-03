@@ -1,5 +1,6 @@
 using Steps.Utils.AppDefinition;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDefinitions(builder, typeof(Program));

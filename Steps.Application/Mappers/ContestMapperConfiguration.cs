@@ -8,6 +8,21 @@ public class ContestMapperConfiguration : Profile
 {
     public ContestMapperConfiguration()
     {
+        //ContestViewModel
+        CreateMap<ContestViewModel, Contest>()
+            .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
+            .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
+            .ForMember(x => x.Description, o => o.MapFrom(m => m.Description))
+            .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
+            .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate));
+
+        CreateMap<Contest, ContestViewModel>()
+            .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
+            .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
+            .ForMember(x => x.Description, o => o.MapFrom(m => m.Description))
+            .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
+            .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate));
+
         //CreateContestViewModel
         CreateMap<CreateContestViewModel, Contest>()
             .ForMember(x => x.Id, o => o.Ignore())

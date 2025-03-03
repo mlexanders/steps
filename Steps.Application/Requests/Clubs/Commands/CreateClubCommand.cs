@@ -3,6 +3,7 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Behaviors;
 using Steps.Application.Interfaces;
+using Steps.Domain.Base;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -13,7 +14,7 @@ namespace Steps.Application.Requests.Clubs.Commands;
 
 public record CreateClubCommand(CreateClubViewModel Model) : IRequest<Result<ClubViewModel>>, IRequireAuthorization
 {
-    public async Task<bool> CanAccess(User user)
+    public async Task<bool> CanAccess(IUser user)
     {
         return user.Role is Role.Organizer || Model.OwnerId.Equals(user.Id);
     }
@@ -43,10 +44,10 @@ public class CreateClubCommandHandler : IRequestHandler<CreateClubCommand, Resul
 
         var club = _mapper.Map<Club>(model);
 
-        var entity = repository.Insert(club);
+        var entry = await repository.InsertAsync(club, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
 
-        var viewModel = _mapper.Map<ClubViewModel>(entity);
+        var viewModel = _mapper.Map<ClubViewModel>(entry.Entity);
 
         return Result<ClubViewModel>.Ok(viewModel).SetMessage("Клуб успешно создан");
     }

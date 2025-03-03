@@ -1,17 +1,29 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Steps.Shared.Contracts;
+﻿using System.Text.Json.Serialization;
 
 namespace Steps.Shared;
 
-public class Result : IResult
+public class Result
 {
-    public bool Success { get; }
+    public bool IsSuccess { get; }
     public string? Message { get; protected set; }
     public List<Error> Errors { get; }
 
-    protected Result(bool success, List<Error>? errors = null)
+    protected Result(bool isSuccess, List<Error>? errors = null)
     {
-        Success = success;
+        IsSuccess = isSuccess;
+        Errors = errors ?? [];
+    }
+
+    public Result()
+    {
+        IsSuccess = false;
+    }
+    
+    [JsonConstructor]
+    public Result(string? message, bool isSuccess, List<Error>? errors = null)
+    {
+        Message = message;
+        IsSuccess = isSuccess;
         Errors = errors ?? [];
     }
 
@@ -34,9 +46,6 @@ public class Result : IResult
     }
 }
 
-public interface IResult
-{
-}
 
 public class Result<T> : Result 
 {
@@ -50,6 +59,17 @@ public class Result<T> : Result
     private Result(List<Error> errors) : base(false, errors)
     {
         Value = default;
+    }
+    
+    [JsonConstructor]
+    public Result(T value, string? message, bool isSuccess, List<Error>? errors = null) : base(message, isSuccess,
+        errors)
+    {
+        Value = value;
+    }
+
+    public Result() : base()
+    {
     }
 
     public static Result<T> Ok(T value) => new(value);

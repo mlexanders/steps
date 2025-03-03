@@ -1,9 +1,9 @@
-﻿using Calabonga.PagedListCore;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Teams.Commands;
 using Steps.Application.Requests.Teams.Queries;
+using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Teams;
@@ -24,13 +24,13 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateTeamViewModel model)
+    public async Task<Result<TeamViewModel>> Create([FromBody] CreateTeamViewModel model)
     {
         return await _mediator.Send(new CreateTeamCommand(model));
     }
 
     [HttpPatch]
-    public async Task<Result> Update([FromBody] UpdateTeamViewModel model)
+    public async Task<Result<Guid>> Update([FromBody] UpdateTeamViewModel model)
     {
         return await _mediator.Send(new UpdateTeamCommand(model));
     }
@@ -41,10 +41,10 @@ public class TeamsController : ControllerBase, ITeamsService
         return await _mediator.Send(new GetTeamByIdQuery(teamId));
     }
 
-    [HttpGet]
-    public async Task<Result<IPagedList<TeamViewModel>>> GetPaged([FromQuery] Page page)
+    [HttpPost("[action]")]
+    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Team>? specification = null)
     {
-        return await _mediator.Send(new GetPagedTeamsQuery(page));
+        return await _mediator.Send(new GetPagedTeamsQuery(page, specification));
     }
 
     [HttpDelete("{teamId:guid}")]

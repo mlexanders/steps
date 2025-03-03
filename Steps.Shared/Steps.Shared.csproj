@@ -8,10 +8,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ Steps.Domain\Steps.Domain.csproj" />
+      <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Calabonga.PagedListCore" Version="1.0.4" />
+      <PackageReference Include="Serialize.Linq" Version="4.0.167" />
     </ItemGroup>
 
 </Project>

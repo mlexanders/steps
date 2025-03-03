@@ -1,0 +1,8 @@
+﻿@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.Organizer.TeamsFeature.Components
+
+<TeamCard Model="@Model"></TeamCard>
+
+@code {
+    [Parameter] public TeamViewModel Model { get; set; } = null!;
+}

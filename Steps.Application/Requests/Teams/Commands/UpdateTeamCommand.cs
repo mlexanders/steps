@@ -11,9 +11,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Teams.Commands;
 
-public record UpdateTeamCommand(UpdateTeamViewModel Model) : IRequest<Result>;
+public record UpdateTeamCommand(UpdateTeamViewModel Model) : IRequest<Result<Guid>>;
 
-public class UpdateTeamCommandHandler : IRequestHandler<UpdateTeamCommand, Result>
+public class UpdateTeamCommandHandler : IRequestHandler<UpdateTeamCommand, Result<Guid>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISecurityService _securityService;
@@ -26,7 +26,7 @@ public class UpdateTeamCommandHandler : IRequestHandler<UpdateTeamCommand, Resul
         _mapper = mapper;
     }
 
-    public async Task<Result> Handle(UpdateTeamCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(UpdateTeamCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
 
@@ -47,6 +47,6 @@ public class UpdateTeamCommandHandler : IRequestHandler<UpdateTeamCommand, Resul
         repository.Update(updatedTeam);
         await _unitOfWork.SaveChangesAsync();
 
-        return Result.Ok().SetMessage("Клуб успешно обновлен");
+        return Result<Guid>.Ok(updatedTeam.Id).SetMessage("Клуб успешно обновлен");
     }
 }

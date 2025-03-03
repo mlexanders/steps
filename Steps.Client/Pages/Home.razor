@@ -1,0 +1,43 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Steps.Domain.Base
+@using Steps.Domain.Definitions
+@using Steps.Client.Features.Undefined.Pages
+@using Steps.Client.Features.Organizer.Pages
+@using Steps.Client.Features.Counter.Pages
+@using Steps.Client.Features.Judje.Pages
+@using Steps.Client.Features.UserFeature.Pages
+@attribute [Authorize]
+
+
+
+@if (UserRole is Role.Undefined)
+{
+    <UndefinedHome/>
+}
+else if (UserRole is Role.Organizer)
+{
+    <OrganizerHome/>
+}
+
+else if (UserRole is Role.Counter)
+{
+    <CounterHome/>
+}
+
+else if (UserRole is Role.Judje)
+{
+    <JudjeHome/>
+}
+
+else if (UserRole is Role.User)
+{
+    <UserHome/>
+}
+
+
+@code
+{
+    [CascadingParameter] public IUser? User { get; set; }
+    private Role? UserRole => User?.Role;
+}

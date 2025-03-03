@@ -1,0 +1,11 @@
+﻿@page "/Logout"
+@using Steps.Client.Services.Authentication
+@inject SecurityService SecurityService
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await SecurityService.Logout();
+    }
+}

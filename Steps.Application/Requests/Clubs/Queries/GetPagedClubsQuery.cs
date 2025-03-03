@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
-using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
+using Steps.Application.Helpers;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs.ViewModels;
 using Steps.Shared.Exceptions;
+using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Clubs.Queries;
 
-public record GetPagedClubsQuery(Page Page) : IRequest<Result<IPagedList<ClubViewModel>>>;
+public record GetPagedClubsQuery(Page Page, Specification<Club>? Specification)
+    : SpecificationRequest<Club>(Specification), IRequest<Result<PaggedListViewModel<ClubViewModel>>>;
 
 public class GetPagedClubsQueryHandler
     : IRequestHandler<GetPagedClubsQuery,
-        Result<IPagedList<ClubViewModel>>>
+        Result<PaggedListViewModel<ClubViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -29,21 +30,20 @@ public class GetPagedClubsQueryHandler
         _securityService = securityService;
     }
 
-    public async Task<Result<IPagedList<ClubViewModel>>> Handle(GetPagedClubsQuery request,
+    public async Task<Result<PaggedListViewModel<ClubViewModel>>> Handle(GetPagedClubsQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
-        
         var views = await _unitOfWork.GetRepository<Club>()
             .GetPagedListAsync(
                 selector: (club) => _mapper.Map<ClubViewModel>(club),
-                predicate: c => c.OwnerId.Equals(user.Id), // TODO: сча получение только своих клубов
+                predicate: request.Predicate,
+                include: request.Includes,
                 pageIndex: request.Page.PageIndex,
                 pageSize: request.Page.PageSize,
                 cancellationToken: cancellationToken,
                 trackingType: TrackingType.NoTracking);
         
-        var result = Result<IPagedList<ClubViewModel>>.Ok(views);
+        var result = Result<PaggedListViewModel<ClubViewModel>>.Ok(views.GetView());
 
         return result;
     }

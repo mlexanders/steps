@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Steps.Domain.Base
+@using Steps.Domain.Definitions
+@using Steps.Client.Features.Undefined
+@using Steps.Client.Features.Organizer
+@using Steps.Client.Features.Counter
+@using Steps.Client.Features.Judje
+@attribute [Authorize]
+
+
+
+@if (UserRole is Role.Undefined)
+{
+    <UndefinedNavMenu/>
+}
+else if (UserRole is Role.Organizer)
+{
+    <OrganizerNavMenu/>
+}
+
+else if (UserRole is Role.Counter)
+{
+    <CounterNavMenu/>
+}
+
+else if (UserRole is Role.Judje)
+{
+    <JudjeNavMenu/>
+}
+
+else if (UserRole is Role.User)
+{
+    <UserNavMenu/>
+}
+
+
+@code
+{
+    [CascadingParameter] public IUser? User { get; set; }
+    private Role? UserRole => User?.Role;
+}

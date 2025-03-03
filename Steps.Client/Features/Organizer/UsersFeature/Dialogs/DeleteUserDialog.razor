@@ -1,0 +1,32 @@
+﻿@using Steps.Shared.Contracts.Contests.ViewModels
+@using Steps.Client.Features.Organizer.UsersFeature.Services
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Client.Features.Organizer.UsersFeature.Components
+
+@inherits BaseModal
+@inject UsersManager Manager
+
+<RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
+
+    <RadzenText Text="Вы уверены, что хотите удалить этого пользователя?"/>
+
+    <UserCard Model="@Model"/>
+
+    <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
+    <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
+                  Style="margin-left: 10px;"/>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public UserViewModel Model { get; set; } = null!;
+
+    private async Task Create()
+    {
+        var result = await Manager.Delete(Model);
+
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

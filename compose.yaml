@@ -12,7 +12,7 @@
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  
+
   api:
     image: steps.webapi
     container_name: api

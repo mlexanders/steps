@@ -41,14 +41,13 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.IsSuccess, x => x.Ignore())
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
-            .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
+            .ForMember(x => x.UserId, x => x.Ignore())
             .ForMember(x => x.Athletes, x => x.Ignore());
         
         // Из Entry в CreateEntryViewModel
         CreateMap<Entry, CreateEntryViewModel>()
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
-            .ForMember(x => x.UserId, x => x.MapFrom(m => m.UserId))
             .ForMember(x => x.AthletesIds, x => x.Ignore());
     }
 }

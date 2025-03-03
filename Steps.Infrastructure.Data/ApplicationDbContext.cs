@@ -17,6 +17,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> User { get; set; }
     public DbSet<Entry> Entries { get; set; }
     
+    public DbSet<TestResult> TestResults { get; set; }
+    
     public DbSet<GeneratedAthletesList> GeneratedAthletesLists { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
     public DbSet<LateAthletesList> LateAtheletesLists { get; set; }

@@ -1,51 +1,41 @@
-﻿using AutoMapper;
-using Calabonga.UnitOfWork;
+﻿using Calabonga.UnitOfWork;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Steps.Application.Interfaces;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
+using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
 public record AcceptEntryCommand(Guid ModelId) : IRequest<Result>;
 
-public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>
+public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>, IRequireAuthorization
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public AcceptEntryCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public AcceptEntryCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<Result> Handle(AcceptEntryCommand request, CancellationToken cancellationToken)
     {
-        var modelId = request.ModelId;
+        var repository = _unitOfWork.GetRepository<Entry>();
 
-        var entryRepository = _unitOfWork.GetRepository<Entry>();
+        var entry = await repository.GetFirstOrDefaultAsync(
+            predicate: e => e.Id.Equals(request.ModelId),
+            trackingType: TrackingType.Tracking) ?? throw new StepsBusinessException("Заявка не найдена");
 
-        try
-        {
-            var entry = await entryRepository.GetFirstOrDefaultAsync(e => e.Id == modelId,
-                null,
-                null,
-                TrackingType.Tracking,
-                false,
-                false);
+        entry.IsSuccess = true;
+        await _unitOfWork.SaveChangesAsync();
 
-            entry.IsSuccess = true;
+        return Result.Ok().SetMessage("Заявка одобрена");
+    }
 
-            entryRepository.Update(entry);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Result<Guid>.Ok(entry.Id).SetMessage("Заявка успешно создана!");
-        }
-        catch (Exception ex)
-        {
-            return Result<Guid>.Fail($"Ошибка при создании заявки: {ex.Message}");
-        }
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
     }
 }

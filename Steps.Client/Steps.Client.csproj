@@ -30,11 +30,44 @@
         <AdditionalFiles Include="Components\ProfileMenu.razor"/>
         <AdditionalFiles Include="Components\ProgressBar.razor"/>
         <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
+        <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\ClubCardDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\CreateClubDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\DeleteClubDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\UpdateClubDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamCard.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamsManageByClub.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\CreateTeamDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\DeleteTeamDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\TeamCardDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\UpdateTeamDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Forms\TeamForm.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Teams.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Components\SelectUserDropdown.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Components\UserCard.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Components\UsersManage.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Dialogs\CreateUserDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Dialogs\DeleteUserDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Dialogs\UpdateUserDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Dialogs\UserCardDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Forms\UserForm.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\UsersFeature\UsersPage.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Counter\CounterNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Counter\Pages\CounterHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Judje\JudjeNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Judje\Pages\JudjeHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Undefined\Pages\UndefinedHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\Undefined\UndefinedNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\UserFeature\Pages\UserHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\UserFeature\UserNavMenu.razor" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 
 </Project>

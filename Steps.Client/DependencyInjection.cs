@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Steps.Client.Features.Organizer.Services.Clubs;
-using Steps.Client.Features.Organizer.Services.Contests;
-using Steps.Client.Features.Organizer.TeamsFeature.Services;
-using Steps.Client.Features.Organizer.UsersFeature.Services;
+using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
+using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
+using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
+using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Authentication;

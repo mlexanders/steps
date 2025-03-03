@@ -1,0 +1,24 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.EntityFeature.UsersFeature.Components
+
+<RadzenFieldset Text="@Title">
+    <RadzenStack Gap="2rem">
+
+        <RadzenTextBox @bind-Value="@Model.Name" Name="@nameof(Model.Name)" Placeholder="Введите название"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.Name)" Text="Обязательно" Style="position: absolute"/>
+
+        <RadzenTextBox @bind-Value="@Model.Address" Name="@nameof(Model.Address)" Placeholder="Введите Адрес"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.Address)" Text="Обязательно" Style="position: absolute"/>
+
+        <SelectUserDropdown @bind-UserId="@Model.OwnerId"/>
+
+    </RadzenStack>
+</RadzenFieldset>
+
+@code {
+    [Parameter] [Required] public string Title { get; set; } = null!;
+    [Parameter] [Required] public TeamViewModel Model { get; set; } = null!;
+}

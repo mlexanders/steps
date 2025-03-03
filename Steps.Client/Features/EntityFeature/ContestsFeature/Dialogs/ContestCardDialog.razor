@@ -1,0 +1,13 @@
+﻿@using Steps.Shared.Contracts.Contests.ViewModels
+
+@inherits BaseModal
+
+
+<ContestCard Model="@Model"/>
+
+<RadzenButton Text="Закрыть" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
+              Style="margin-left: 10px;"/>
+
+@code {
+    [Parameter] public ContestViewModel Model { get; set; } = null!;
+}

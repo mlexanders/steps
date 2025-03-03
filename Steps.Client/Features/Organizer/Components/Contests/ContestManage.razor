@@ -1,6 +1,6 @@
 ﻿@using Steps.Shared.Contracts.Contests.ViewModels
 
-@inherits ManageBaseComponent<ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
+@inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="ContestViewModel" Data="Manager.Data" AllowPaging="true"

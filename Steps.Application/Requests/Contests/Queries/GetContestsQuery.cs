@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Helpers;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
@@ -10,7 +10,8 @@ using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Contests.Queries;
 
-public record GetContestsQuery (Page Page) : IRequest<Result<PaggedListViewModel<ContestViewModel>>>;
+public record GetContestsQuery (Page Page, Specification<Contest>? Specification) 
+    : SpecificationRequest<Contest>(Specification), IRequest<Result<PaggedListViewModel<ContestViewModel>>>;
 
 public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<PaggedListViewModel<ContestViewModel>>>
 {
@@ -32,6 +33,8 @@ public class GetContestsQueryHandler : IRequestHandler<GetContestsQuery, Result<
         var contests = await repository.GetPagedListAsync(
             selector: contest => _mapper.Map<ContestViewModel>(contest),
             orderBy: contest => contest.OrderBy(c => c.StartDate),
+            predicate: request.Predicate,
+            include: request.Includes,
             pageIndex: page.PageIndex,
             pageSize: page.PageSize,
             cancellationToken: cancellationToken,

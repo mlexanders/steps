@@ -24,8 +24,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
-      <ProjectReference Include="..\Steps.Filters\Steps.Filters.csproj" />
-      <ProjectReference Include="..\Steps.Filters\Steps.Filters.csproj" />
       <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
       <ProjectReference Include="..\Steps.Utils\Steps.Utils.csproj" />
     </ItemGroup>
@@ -44,7 +42,6 @@
 
       <Folder Include="Requests\Users\Commands\" />
       <Folder Include="Requests\Users\Validators\" />
-
     </ItemGroup>
 
 </Project>

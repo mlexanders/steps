@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Helpers;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -11,7 +12,8 @@ using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Clubs.Queries;
 
-public record GetPagedClubsQuery(Page Page) : IRequest<Result<PaggedListViewModel<ClubViewModel>>>;
+public record GetPagedClubsQuery(Page Page, Specification<Club>? Specification)
+    : SpecificationRequest<Club>(Specification), IRequest<Result<PaggedListViewModel<ClubViewModel>>>;
 
 public class GetPagedClubsQueryHandler
     : IRequestHandler<GetPagedClubsQuery,
@@ -31,12 +33,11 @@ public class GetPagedClubsQueryHandler
     public async Task<Result<PaggedListViewModel<ClubViewModel>>> Handle(GetPagedClubsQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
-        
         var views = await _unitOfWork.GetRepository<Club>()
             .GetPagedListAsync(
                 selector: (club) => _mapper.Map<ClubViewModel>(club),
-                predicate: c => c.OwnerId.Equals(user.Id), // TODO: сча получение только своих клубов
+                predicate: request.Predicate,
+                include: request.Includes,
                 pageIndex: request.Page.PageIndex,
                 pageSize: request.Page.PageSize,
                 cancellationToken: cancellationToken,

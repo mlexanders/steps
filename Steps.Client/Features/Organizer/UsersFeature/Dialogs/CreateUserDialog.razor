@@ -1,5 +1,7 @@
 ﻿@using Steps.Client.Features.Organizer.UsersFeature.Services
 @using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Client.Features.Organizer.UsersFeature.Forms
+@using Steps.Shared.Contracts.Users.ViewModels
 
 @inherits BaseModal
 @inject UsersManager Manager
@@ -7,7 +9,7 @@
 
 <RadzenTemplateForm TItem="UserViewModel" Submit="Create" Data="_creatingUser">
     <RadzenCard>
-        @* <ClubForm Club="@_creatingUser" Title="Новый клуб"/> *@
+        <UserForm Model="@_creatingUser" Title="Новый пользователь"/>
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -19,7 +21,7 @@
 
     private async Task Create()
     {
-        var result = await Manager.Create(new()
+        var result = await Manager.Create(new CreateUserViewModel
         {
             Login = _creatingUser.Login,
         });

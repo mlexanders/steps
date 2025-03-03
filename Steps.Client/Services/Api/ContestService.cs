@@ -1,6 +1,6 @@
 ﻿using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
-using Steps.Shared;
+using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Contests.ViewModels;
 

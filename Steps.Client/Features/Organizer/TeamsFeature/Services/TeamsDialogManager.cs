@@ -1,11 +1,7 @@
 ﻿using Radzen;
 using Steps.Client.Features.Organizer.TeamsFeature.Dialogs;
-using Steps.Shared.Contracts.Accounts.ViewModels;
+using Steps.Shared.Contracts.Clubs.ViewModels;
 using Steps.Shared.Contracts.Teams.ViewModels;
-using Steps.Shared.Contracts.Users.ViewModels;
-using DeleteUserDialog = Steps.Client.Features.Organizer.UsersFeature.Dialogs.DeleteUserDialog;
-using UpdateUserDialog = Steps.Client.Features.Organizer.UsersFeature.Dialogs.UpdateUserDialog;
-using UserCardDialog = Steps.Client.Features.Organizer.UsersFeature.Dialogs.UserCardDialog;
 
 namespace Steps.Client.Features.Organizer.TeamsFeature.Services;
 
@@ -28,6 +24,13 @@ public class TeamsDialogManager : IDialogManager<TeamViewModel>
     public async Task<bool> ShowCreateDialog()
     {
         var result = await _dialogService.OpenAsync<CreateTeamDialog>("Создание команды");
+        return result ?? false;
+    }
+
+    public async Task<bool> ShowCreateDialog(ClubViewModel club)
+    {
+        var options = new Dictionary<string, object> { { "Model", club } };
+        var result = await _dialogService.OpenAsync<CreateTeamDialog>("Создание команды", options);
         return result ?? false;
     }
 

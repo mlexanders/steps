@@ -1,8 +1,8 @@
 ﻿using Radzen;
-using Steps.Client.Features.Organizer.Dialogs.Contest;
+using Steps.Client.Features.Organizer.Dialogs.Contests;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
-namespace Steps.Client.Features.Organizer.Services.Contest;
+namespace Steps.Client.Features.Organizer.Services.Contests;
 
 public class ContestDialogManager : IDialogManager<ContestViewModel>
 {

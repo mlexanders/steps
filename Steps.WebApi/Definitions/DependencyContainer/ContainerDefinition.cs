@@ -18,6 +18,5 @@ public class ContainerDefinition : AppDefinition
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IUserManager<User>, UserManager>();
         services.AddTransient<ISignInManager, SignInManager>();
-        services.AddTransient<IContestManager, ContestManager>();
     }
 }

@@ -57,4 +57,22 @@ public class ContestsController : ControllerBase, IContestsService
     {
         return await _mediator.Send(new DeleteContestCommand(contestId));
     }
+    
+    [HttpPost("Generate-group-blocks")]
+    public async Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount)
+    {
+        return await _mediator.Send(new GenerateGroupBlocksCommand(contestId, athletesCount));
+    }
+    
+    [HttpPost("Check-athlete-appeared")]
+    public async Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared)
+    {
+        return await _mediator.Send(new CheckAthleteCommand(athleteId, contestId, isAppeared));
+    }
+
+    [HttpPost("Close-collecting")]
+    public async Task<Result> CloseCollectingEntries(Guid contestId)
+    {
+        return await _mediator.Send(new CloseCollectingContestCommand(contestId));
+    }
 }

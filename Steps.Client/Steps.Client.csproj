@@ -51,12 +51,15 @@
         <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Dialogs\UserCardDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\UsersFeature\Forms\UserForm.razor" />
         <AdditionalFiles Include="Features\EntityFeature\UsersFeature\UsersPage.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Counter\CounterNavMenu.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Counter\Pages\CounterHome.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Judje\JudjeNavMenu.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Judje\Pages\JudjeHome.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Undefined\Pages\UndefinedHome.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\Undefined\UndefinedNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\CounterFeature\CounterNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\CounterFeature\Pages\CounterHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\JudjeNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\Pages\JudjeHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\OrganizerNavMenu.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\Pages\OrganizerClubs.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\Pages\OrganizerHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\UndefinedFeature\Pages\UndefinedHome.razor" />
+        <AdditionalFiles Include="Features\RoleFeature\UndefinedFeature\UndefinedNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\UserFeature\Pages\UserHome.razor" />
         <AdditionalFiles Include="Features\RoleFeature\UserFeature\UserNavMenu.razor" />
     </ItemGroup>

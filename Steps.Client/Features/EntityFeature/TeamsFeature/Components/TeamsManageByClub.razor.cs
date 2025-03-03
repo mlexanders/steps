@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
-using Steps.Client.Features.Organizer;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Clubs.ViewModels;

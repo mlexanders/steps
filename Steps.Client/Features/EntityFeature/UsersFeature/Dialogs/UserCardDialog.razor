@@ -1,5 +1,6 @@
-﻿<h3>UserCardDialog</h3>
+﻿@using Steps.Shared.Contracts.Accounts.ViewModels
+<UserCardDialog Model="@Model"/>
 
-@code {
-
+@code{
+    [Parameter] public UserViewModel Model { get; set; } = null!;
 }

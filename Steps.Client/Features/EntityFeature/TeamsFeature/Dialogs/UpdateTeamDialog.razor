@@ -22,11 +22,11 @@
     {
         var result = await Manager.Update(new UpdateTeamViewModel
         {
-            Id = Model.ClubId,
+            Id = Model.Id,
             Name = Model.Name,
             Address = Model.Address,
             OwnerId = Model.OwnerId,
-            ClubId = Model.ClubId
+            ClubId = Model.ClubId,
         });
         ShowResultMessage(result);
 

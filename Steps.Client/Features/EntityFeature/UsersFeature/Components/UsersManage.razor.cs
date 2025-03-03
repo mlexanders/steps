@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
-using Steps.Client.Features.Organizer;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Shared.Contracts.Users.ViewModels;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Users.Queries;
-using Steps.Filters.Filters;
+using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Accounts.ViewModels;
@@ -29,25 +29,20 @@ public class UsersController : IUsersService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<UserViewModel>>> GetBy(FilterGroup filter)
-    {
-        throw new NotImplementedException();
-    }
-
     [HttpPatch]
     public Task<Result<Guid>> Update([FromBody] UpdateUserViewModel model)
     {
         throw new NotImplementedException();
     }
-
+    
     [HttpGet("{id:guid}")]
     public Task<Result<UserViewModel>> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
     
-    [HttpGet]
-    public Task<Result<PaggedListViewModel<UserViewModel>>> GetPaged([FromQuery] Page page)
+    [HttpPost("[action]")]
+    public Task<Result<PaggedListViewModel<UserViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<User>? specification = null)
     {
         return _mediator.Send(new GetPagedUsersQuery(page));
     }

@@ -5,12 +5,14 @@ using Steps.Domain.Base;
 
 namespace Steps.Client.Features.Organizer;
 
-public class ManageBaseComponent<TViewModel, TCreateViewModel, TUpdateViewModel> : ComponentBase, IDisposable
+public class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> : ComponentBase, IDisposable
     where TViewModel : IHaveId
     where TCreateViewModel : class
     where TUpdateViewModel : IHaveId
+    where TEntity : class, IHaveId
+
 {
-    [Parameter] public BaseEntityManager<TViewModel, TCreateViewModel, TUpdateViewModel> Manager { get; set; } = null!;
+    [Parameter] public BaseEntityManager<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> Manager { get; set; } = null!;
     [Parameter] public IDialogManager<TViewModel> DialogManager { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
@@ -19,19 +21,19 @@ public class ManageBaseComponent<TViewModel, TCreateViewModel, TUpdateViewModel>
         Manager.ChangedList += StateHasChanged;
     }
 
-    protected async Task OnCreate()
+    protected virtual async Task OnCreate()
     {
         var result = await DialogManager.ShowCreateDialog();
         if (result) await Manager.LoadPage();
     }
 
-    protected async Task OnUpdate(TViewModel model)
+    protected virtual async Task OnUpdate(TViewModel model)
     {
         var result = await DialogManager.ShowUpdateDialog(model);
         if (result) await Manager.LoadPage();
     }
 
-    protected async Task OnDelete(TViewModel model)
+    protected virtual async Task OnDelete(TViewModel model)
     {
         var result = await DialogManager.ShowDeleteDialog(model);
         if (result) await Manager.LoadPage();

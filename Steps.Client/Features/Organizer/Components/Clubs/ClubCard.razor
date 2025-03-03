@@ -1,12 +1,7 @@
-﻿@using Steps.Client.Features.Organizer.UsersFeature.Components
-@using Steps.Shared.Contracts.Accounts.ViewModels
+﻿@using Steps.Shared.Contracts.Accounts.ViewModels
 @using Steps.Shared.Contracts.Clubs.ViewModels
 @using Steps.Client.Features.Organizer.TeamsFeature.Components
 @using Steps.Client.Features.Organizer.UsersFeature.Services
-@using Steps.Client.Services.Api
-@using Steps.Domain.Entities
-@using Steps.Filters.Filters
-@using Steps.Shared.Contracts.Clubs
 
 
 <RadzenPanel AllowCollapse="true" class="rz-my-10 rz-mx-auto" Style="width: 700px;">
@@ -39,7 +34,7 @@
 
     </HeaderTemplate>
     <ChildContent>
-        <TeamsManage/>
+        <TeamsManageByClub Club="@Model"/>
     </ChildContent>
     <SummaryTemplate>
         <RadzenCard class="rz-mt-4">

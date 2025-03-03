@@ -1,10 +1,7 @@
 ﻿@using Steps.Client.Features.Organizer.TeamsFeature.Services
-@using Steps.Client.Features.Organizer.UsersFeature.Components
-@using Steps.Client.Features.Organizer.UsersFeature.Services
-@using Steps.Shared.Contracts.Accounts.ViewModels
 @using Steps.Shared.Contracts.Teams.ViewModels
-@using TeamsManage = Steps.Client.Features.Organizer.TeamsFeature.Components.TeamsManage
 @using Steps.Client.Features.Organizer.TeamsFeature.Forms
+@using Steps.Shared.Contracts.Clubs.ViewModels
 
 @inherits BaseModal
 @inject TeamsManager Manager
@@ -14,6 +11,16 @@
     <RadzenCard>
         
         <TeamForm Model="@_creatingTeam" Title="Команда"/>
+        
+        @if (Model is null)
+        {
+            <p>Выберите клуб</p>
+        }
+        else
+        {
+            <p>Команда будет добавлена в клуб @Model.Name</p>
+        }
+        
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -22,14 +29,15 @@
 
 @code {
     private readonly TeamViewModel _creatingTeam = new();
-
+    [Parameter] public ClubViewModel? Model { get; set; }  
+    
     private async Task Create()
     {
         var result = await Manager.Create(new()
         {
             Name = _creatingTeam.Name,
             Address = _creatingTeam.Address,
-            ClubId = _creatingTeam.ClubId,
+            ClubId = Model?.Id ?? Guid.Empty,
             OwnerId = _creatingTeam.OwnerId
         });
         ShowResultMessage(result);

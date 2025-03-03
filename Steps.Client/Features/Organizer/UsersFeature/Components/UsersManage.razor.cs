@@ -2,10 +2,11 @@
 using Steps.Client.Features.Organizer.UsersFeature.Services;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Shared.Contracts.Users.ViewModels;
+using Steps.Domain.Entities;
 
 namespace Steps.Client.Features.Organizer.UsersFeature.Components;
 
-public partial class UsersManage : ManageBaseComponent<UserViewModel, CreateUserViewModel, UpdateUserViewModel>
+public partial class UsersManage : ManageBaseComponent<User, UserViewModel, CreateUserViewModel, UpdateUserViewModel>
 {
     [Inject] protected UsersManager UsersManager { get; set; } = null!;
     [Inject] protected UsersDialogManager UsersDialogManager { get; set; } = null!;

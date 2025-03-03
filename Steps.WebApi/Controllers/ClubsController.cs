@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Clubs.Commands;
 using Steps.Application.Requests.Clubs.Queries;
-using Steps.Filters.Filters;
+using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Clubs;
@@ -35,10 +35,10 @@ public class ClubsController : ControllerBase, IClubsService
         return _mediator.Send(new GetClubByIdQuery(clubId));
     }
 
-    [HttpGet]
-    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery] Page page)
+    [HttpPost("[action]")]
+    public Task<Result<PaggedListViewModel<ClubViewModel>>> GetPaged([FromQuery]Page page, [FromBody] Specification<Club>? specification)
     {
-        return _mediator.Send(new GetPagedClubsQuery(page));
+        return _mediator.Send(new GetPagedClubsQuery(page, specification));
     }
 
     [HttpPatch]
@@ -46,16 +46,10 @@ public class ClubsController : ControllerBase, IClubsService
     {
         return _mediator.Send(new UpdateClubCommand(model));
     }
-    
+
     [HttpDelete("{clubId:guid}")]
     public Task<Result> Delete(Guid clubId)
     {
         return _mediator.Send(new DeleteClubCommand(clubId));
-    }
-
-    [HttpPost("by")]
-    public Task<Result<List<ClubViewModel>>> GetBy([FromBody] FilterGroup filter)
-    {
-        return _mediator.Send(new GetByFilterQuery(filter));
     }
 }

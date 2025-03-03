@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Helpers;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -12,7 +13,8 @@ using Steps.Shared.Utils;
 namespace Steps.Application.Requests.Teams.Queries;
 
 
-public record GetPagedTeamsQuery(Page Page) : IRequest<Result<PaggedListViewModel<TeamViewModel>>>;
+public record GetPagedTeamsQuery(Page Page, Specification<Team>? Specification)
+    : SpecificationRequest<Team>(Specification), IRequest<Result<PaggedListViewModel<TeamViewModel>>>;
 
 public class GetPagedTeamsQueryHandler
     : IRequestHandler<GetPagedTeamsQuery,
@@ -32,11 +34,14 @@ public class GetPagedTeamsQueryHandler
     public async Task<Result<PaggedListViewModel<TeamViewModel>>> Handle(GetPagedTeamsQuery request, CancellationToken cancellationToken)
     {
         var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
+
+        request.AddPredicate(t => t.OwnerId.Equals(user.Id)); // Только команды пользователя
         
         var views = await _unitOfWork.GetRepository<Team>()
             .GetPagedListAsync(
                 selector: (team) => _mapper.Map<TeamViewModel>(team),
-                predicate: t => t.OwnerId.Equals(user.Id), // TODO: сча получение только своих команд
+                predicate: request.Predicate,
+                include: request.Includes,
                 pageIndex: request.Page.PageIndex,
                 pageSize: request.Page.PageSize,
                 cancellationToken: cancellationToken,

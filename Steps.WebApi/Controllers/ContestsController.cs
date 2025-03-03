@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Contests.Commands;
 using Steps.Application.Requests.Contests.Queries;
-using Steps.Filters.Filters;
+using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
@@ -35,15 +35,10 @@ public class ContestsController : ControllerBase, IContestsService
         return await _mediator.Send(new GetContestByIdQuery(contestId));
     }
 
-    public Task<Result<List<ContestViewModel>>> GetBy(FilterGroup filter)
+    [HttpPost("[action]")]
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Contest>? specification)
     {
-        throw new NotImplementedException();
-    }
-
-    [HttpGet]
-    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page)
-    {
-        return (await _mediator.Send(new GetContestsQuery(page)));
+        return (await _mediator.Send(new GetContestsQuery(page, specification)));
     }
     
     [HttpPatch]

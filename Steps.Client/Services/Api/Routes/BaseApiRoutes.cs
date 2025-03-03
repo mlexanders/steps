@@ -10,9 +10,11 @@ public class BaseApiRoutes(string basePath) : IApiRoutes
 
     public string GetById(Guid id) => $"{BasePath}/{id}";
 
-    public string GetPaged(Page page)=> $"{BasePath}/{page.GetQuery()}";
+    public string GetPaged(Page page) => $"{BasePath}/GetPaged/{page.GetQuery()}";
+    
     public string GetBy() => $"{BasePath}/by";
 
     public string Update() => $"{BasePath}/";
+    
     public string Delete(Guid id) => $"{BasePath}/{id}"; 
 }

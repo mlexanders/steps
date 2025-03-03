@@ -4,15 +4,17 @@ using Steps.Shared.Contracts;
 
 namespace Steps.Client.Features.Organizer.Services;
 
-public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateViewModel>
+public abstract class BaseEntityManager<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel>
     where TViewModel : IHaveId
     where TCreateViewModel : class
     where TUpdateViewModel : IHaveId
+    where TEntity : class
 {
-    private readonly ICrudService<TViewModel, TCreateViewModel, TUpdateViewModel> _service;
+    private readonly ICrudService<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> _service;
     private Page _currentPage;
+    private Specification<TEntity>? _specification;
 
-    protected BaseEntityManager(ICrudService<TViewModel, TCreateViewModel, TUpdateViewModel> service)
+    protected BaseEntityManager(ICrudService<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> service)
     {
         _service = service;
         PageSize = Page.DefaultPageSize;
@@ -22,6 +24,7 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
     }
 
     public event Action? ChangedList;
+    
     public bool IsLoading { get; private set; }
 
     public int TotalCount { get; private set; }
@@ -34,6 +37,11 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
     public virtual async Task Initialize()
     {
         await LoadPage();
+    }
+
+    public virtual void UseSpecification(Specification<TEntity> specification)
+    {
+        _specification = specification;
     }
 
     public async Task ChangePage(int? skip, int? take)
@@ -69,6 +77,18 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
         catch (Exception e)
         {
             return Result<TViewModel>.Fail(e.Message);
+        }
+    }
+
+    public virtual async Task<Result<PaggedListViewModel<TViewModel>>> Read(Specification<TEntity> specification)
+    {
+        try
+        {
+            return await _service.GetPaged(_currentPage, specification);
+        }
+        catch (Exception e)
+        {
+            return Result<PaggedListViewModel<TViewModel>>.Fail(e.Message);
         }
     }
 
@@ -119,7 +139,7 @@ public abstract class BaseEntityManager<TViewModel, TCreateViewModel, TUpdateVie
 
     private async Task GetPage()
     {
-        var result = await _service.GetPaged(_currentPage);
+        var result = await _service.GetPaged(_currentPage, _specification);
 
         if (result?.IsSuccess != true) return;
 

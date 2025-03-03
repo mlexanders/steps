@@ -2,7 +2,7 @@
 @using Steps.Shared.Contracts.Users.ViewModels
 @using Steps.Shared.Utils
 
-@inherits ManageBaseComponent<UserViewModel, CreateUserViewModel, UpdateUserViewModel>
+@inherits ManageBaseComponent<User, UserViewModel, CreateUserViewModel, UpdateUserViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="UserViewModel" Data="Manager.Data" AllowPaging="true"

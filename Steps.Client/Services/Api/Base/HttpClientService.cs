@@ -21,7 +21,7 @@ public class HttpClientService
         return await SendRequest<TResponse, object>(HttpMethod.Get, resource);
     }
 
-    public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest data)
+    public async Task<TResponse> PostAsync<TResponse, TRequest>(string resource, TRequest? data)
         where TRequest : class, new()
         where TResponse : Result, new()
     {

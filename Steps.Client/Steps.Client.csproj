@@ -27,19 +27,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj"/>
-        <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <AdditionalFiles Include="Components\ProfileMenu.razor"/>
         <AdditionalFiles Include="Components\ProgressBar.razor"/>
         <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
-        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\CreateUserDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\DeleteUserDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\UpdateUserDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Dialogs\UserCardDialog.razor" />
-        <AdditionalFiles Include="Features\Organizer\TeamsFeature\Forms\UserForm.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
+      <ProjectReference Include="..\Steps.Shared\Steps.Shared.csproj" />
     </ItemGroup>
 
 </Project>

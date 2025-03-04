@@ -22,7 +22,7 @@ public class UsersController : IUsersService
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost]
     public Task<Result<UserViewModel>> Create([FromBody] CreateUserViewModel model)
     {
@@ -34,15 +34,16 @@ public class UsersController : IUsersService
     {
         throw new NotImplementedException();
     }
-    
+
     [HttpGet("{id:guid}")]
     public Task<Result<UserViewModel>> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
-    
+
     [HttpPost("[action]")]
-    public Task<Result<PaggedListViewModel<UserViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<User>? specification = null)
+    public Task<Result<PaggedListViewModel<UserViewModel>>> GetPaged([FromQuery] Page page,
+        [FromBody] Specification<User>? specification = null)
     {
         return _mediator.Send(new GetPagedUsersQuery(page));
     }

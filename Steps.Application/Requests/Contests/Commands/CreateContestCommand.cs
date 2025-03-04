@@ -7,7 +7,7 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record CreateContestCommand (CreateContestViewModel Model) : IRequest<Result<ContestViewModel>>;
+public record CreateContestCommand(CreateContestViewModel Model) : IRequest<Result<ContestViewModel>>;
 
 public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, Result<ContestViewModel>>
 {
@@ -20,7 +20,8 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
         _mapper = mapper;
     }
 
-    public async Task<Result<ContestViewModel>> Handle(CreateContestCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ContestViewModel>> Handle(CreateContestCommand request,
+        CancellationToken cancellationToken)
     {
         var model = request.Model;
         var contest = _mapper.Map<Contest>(model);
@@ -29,9 +30,9 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
 
         var entry = await repository.InsertAsync(contest, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
-        
+
         var viewModel = _mapper.Map<ContestViewModel>(entry.Entity);
-        
+
         return Result<ContestViewModel>.Ok(viewModel).SetMessage("Мероприятие успешно создано!");
     }
 }

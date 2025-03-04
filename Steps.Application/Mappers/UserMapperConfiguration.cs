@@ -12,7 +12,10 @@ public class UserMapperConfiguration : Profile
             .ForMember(x => x.Id, o => o.Ignore())
             .ForMember(x => x.PasswordHash, o => o.Ignore())
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
-            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role));
+            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role))
+            .ForMember(x => x.Entries, o => o.Ignore())
+            .ForMember(x => x.JudgingContests, o => o.Ignore())
+            .ForMember(x => x.CountingContests, o => o.Ignore());
 
         CreateMap<User, RegistrationViewModel>()
             .ForMember(x => x.Password, o => o.Ignore())
@@ -25,7 +28,10 @@ public class UserMapperConfiguration : Profile
             .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
             .ForMember(x => x.PasswordHash, o => o.Ignore())
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
-            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role));
+            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role))
+            .ForMember(x => x.Entries, o => o.Ignore())
+            .ForMember(x => x.JudgingContests, o => o.Ignore())
+            .ForMember(x => x.CountingContests, o => o.Ignore());
 
         CreateMap<User, UserViewModel>()
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))

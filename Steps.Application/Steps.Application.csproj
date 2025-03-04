@@ -15,7 +15,7 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
         <PackageReference Include="MediatR" Version="12.4.1" />
         <PackageReference Include="Npgsql" Version="9.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,7 +31,15 @@
     <ItemGroup>
       <Folder Include="Definitions\" />
       <Folder Include="Requests\Accounts\Queries\" />
-      <Folder Include="Requests\Accounts\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
+      <Folder Include="Requests\Clubs\Queries\" />
+      <Folder Include="Requests\Entries\Validators\" />
+      <Folder Include="Requests\Users\Commands\" />
+      <Folder Include="Requests\Users\Validators\" />
+      <Folder Include="Requests\Contests\Validators\" />
+      <Folder Include="Requests\Clubs\Queries\" />
+      <Folder Include="Requests\Entries\Validators\" />
+
       <Folder Include="Requests\Users\Commands\" />
       <Folder Include="Requests\Users\Validators\" />
     </ItemGroup>

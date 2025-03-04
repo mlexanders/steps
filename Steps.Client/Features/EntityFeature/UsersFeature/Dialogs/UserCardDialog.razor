@@ -1,0 +1,6 @@
+﻿@using Steps.Shared.Contracts.Accounts.ViewModels
+<UserCardDialog Model="@Model"/>
+
+@code{
+    [Parameter] public UserViewModel Model { get; set; } = null!;
+}

@@ -1,0 +1,13 @@
+﻿@using Steps.Shared.Contracts.Clubs.ViewModels
+@using Steps.Client.Features.EntityFeature.ClubsFeature.Components
+
+@inherits BaseModal
+
+<ClubCard Model="@Model"/>
+
+<RadzenButton Text="Закрыть" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
+              Style="margin-left: 10px;"/>
+
+@code {
+    [Parameter] public ClubViewModel Model { get; set; } = null!;
+}

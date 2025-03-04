@@ -2,11 +2,11 @@
 @using Microsoft.AspNetCore.Authorization
 @using Steps.Domain.Base
 @using Steps.Domain.Definitions
-@using Steps.Client.Features.Undefined.Pages
-@using Steps.Client.Features.Organizer.Pages
-@using Steps.Client.Features.Counter.Pages
-@using Steps.Client.Features.Judje.Pages
-@using Steps.Client.Features.UserFeature.Pages
+@using Steps.Client.Features.RoleFeature.UserFeature.Pages
+@using Steps.Client.Features.RoleFeature.UndefinedFeature.Pages
+@using Steps.Client.Features.RoleFeature.OrganizerFeature.Pages
+@using Steps.Client.Features.RoleFeature.CounterFeature.Pages
+@using Steps.Client.Features.RoleFeature.JudjeFeature.Pages
 @attribute [Authorize]
 
 
@@ -25,7 +25,7 @@ else if (UserRole is Role.Counter)
     <CounterHome/>
 }
 
-else if (UserRole is Role.Judje)
+else if (UserRole is Role.Judge)
 {
     <JudjeHome/>
 }

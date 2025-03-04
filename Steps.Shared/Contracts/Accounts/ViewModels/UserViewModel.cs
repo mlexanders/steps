@@ -1,5 +1,6 @@
 ﻿using Steps.Domain.Base;
 using Steps.Domain.Definitions;
+using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Shared.Contracts.Accounts.ViewModels;
 

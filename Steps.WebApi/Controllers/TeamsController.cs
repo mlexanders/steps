@@ -42,7 +42,8 @@ public class TeamsController : ControllerBase, ITeamsService
     }
 
     [HttpPost("[action]")]
-    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Team>? specification = null)
+    public async Task<Result<PaggedListViewModel<TeamViewModel>>> GetPaged([FromQuery] Page page,
+        [FromBody] Specification<Team>? specification = null)
     {
         return await _mediator.Send(new GetPagedTeamsQuery(page, specification));
     }

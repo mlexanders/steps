@@ -1,0 +1,32 @@
+﻿@using Steps.Client.Features.EntityFeature.ClubsFeature.Services
+@using Steps.Shared.Contracts.Contests.ViewModels
+@using Steps.Shared.Contracts.Clubs.ViewModels
+@using Steps.Client.Features.EntityFeature.ClubsFeature.Components
+
+@inherits BaseModal
+@inject ClubsManager Manager
+
+<RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
+
+    <RadzenText Text="Вы уверены, что хотите удалить этот клуб?"/>
+
+    <ClubCard Model="@Model"/>
+
+    <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
+    <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
+                  Style="margin-left: 10px;"/>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public ClubViewModel Model { get; set; } = null!;
+
+    private async Task Create()
+    {
+        var result = await Manager.Delete(Model);
+
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

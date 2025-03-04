@@ -22,7 +22,7 @@ public class ContestsController : ControllerBase, IContestsService
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost]
     public async Task<Result<ContestViewModel>> Create([FromBody] CreateContestViewModel createContestViewModel)
     {
@@ -36,11 +36,12 @@ public class ContestsController : ControllerBase, IContestsService
     }
 
     [HttpPost("[action]")]
-    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Contest>? specification)
+    public async Task<Result<PaggedListViewModel<ContestViewModel>>> GetPaged([FromQuery] Page page,
+        [FromBody] Specification<Contest>? specification)
     {
         return (await _mediator.Send(new GetContestsQuery(page, specification)));
     }
-    
+
     [HttpPatch]
     public async Task<Result<Guid>> Update([FromBody] UpdateContestViewModel updateContestViewModel)
     {
@@ -51,5 +52,23 @@ public class ContestsController : ControllerBase, IContestsService
     public async Task<Result> Delete(Guid contestId)
     {
         return await _mediator.Send(new DeleteContestCommand(contestId));
+    }
+
+    [HttpPost("Generate-group-blocks")]
+    public async Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount)
+    {
+        return await _mediator.Send(new GenerateGroupBlocksCommand(contestId, athletesCount));
+    }
+
+    [HttpPost("Check-athlete-appeared")]
+    public async Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared)
+    {
+        return await _mediator.Send(new CheckAthleteCommand(athleteId, contestId, isAppeared));
+    }
+
+    [HttpPost("Close-collecting")]
+    public async Task<Result> CloseCollectingEntries(Guid contestId)
+    {
+        return await _mediator.Send(new CloseCollectingContestCommand(contestId));
     }
 }

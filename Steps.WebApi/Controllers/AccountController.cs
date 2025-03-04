@@ -44,7 +44,7 @@ public class AccountController : Controller, IAccountService
     [HttpPost]
     public async Task<Result> Logout()
     {
-       return await _mediator.Send(new LogoutUserCommand());
+        return await _mediator.Send(new LogoutUserCommand());
     }
 
     [HttpPost]

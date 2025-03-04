@@ -1,0 +1,41 @@
+﻿@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
+@using Steps.Shared.Contracts.Athletes.ViewModels
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Forms
+@inherits BaseModal
+@inject AthleteManager Manager
+
+
+<RadzenTemplateForm TItem="CreateAthleteViewModel" Submit="Create" Data="_athleteViewModel">
+    <RadzenCard>
+        <CreateAthleteForm Model="@_athleteViewModel" Title="Новый клуб"/>
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly CreateAthleteViewModel _athleteViewModel = new();
+    
+    [Parameter] public Guid TeamId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _athleteViewModel.TeamId = TeamId;
+    }
+    
+    private async Task Create()
+    {
+        var result = await Manager.Create(new()
+        {
+            FullName = _athleteViewModel.FullName,
+            BirthDate = _athleteViewModel.BirthDate,
+            AthleteType = _athleteViewModel.AthleteType,
+            Degree = _athleteViewModel.Degree
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

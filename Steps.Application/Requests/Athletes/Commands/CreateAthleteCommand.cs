@@ -26,9 +26,17 @@ namespace Steps.Application.Requests.Athletes.Commands
             var athlete = _mapper.Map<Athlete>(model);
 
             var athleteRepository = _unitOfWork.GetRepository<Athlete>();
+            var teamRepository = _unitOfWork.GetRepository<Team>();
 
             athleteRepository.Insert(athlete);
-
+            
+            var team = await teamRepository.GetFirstOrDefaultAsync(t => t.Id == model.TeamId,
+                null, null, false);
+            
+            team.Athletes.Add(athlete);
+            
+            teamRepository.Update(team);
+            
             await _unitOfWork.SaveChangesAsync();
 
             return Result<Guid>.Ok(athlete.Id).SetMessage("Спортсмен добавлен!");

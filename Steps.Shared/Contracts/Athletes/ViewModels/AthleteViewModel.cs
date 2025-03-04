@@ -1,10 +1,11 @@
-﻿using Steps.Domain.Definitions;
+﻿using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.AthletesLists;
 
 namespace Steps.Shared.Contracts.Athletes.ViewModels;
 
-public class AthleteViewModel
+public class AthleteViewModel : IHaveId
 {
     public Guid Id { get; set; }
     

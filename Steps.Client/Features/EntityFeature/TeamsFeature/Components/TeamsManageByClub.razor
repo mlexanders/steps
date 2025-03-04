@@ -6,7 +6,8 @@
     <RadzenDataGrid TItem="TeamViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Команды еще не созданы"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage"
+                    RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
             @if (!IsReadonly)

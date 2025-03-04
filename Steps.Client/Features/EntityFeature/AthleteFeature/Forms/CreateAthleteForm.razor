@@ -1,0 +1,37 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Athletes.ViewModels
+
+
+<RadzenFieldset Text="@Title">
+    <RadzenStack Gap="2rem">
+
+        <RadzenTextBox @bind-Value="@Model.FullName" Name="@nameof(Model.FullName)" Placeholder="Введите ФИО"
+                       Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.FullName)" Text="ФИО обязательно"
+                                 Style="position: absolute"/>
+
+        <RadzenDatePicker @bind-Value="Model.BirthDate" Name="@nameof(Model.BirthDate)" Placeholder="Выберите дату рождения"
+                          Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.BirthDate)" Text="Дата рождения обязательна"
+                                 Style="position: absolute"/>
+
+        <RadzenDropDown @bind-Value="Model.AthleteType" Name="@nameof(Model.AthleteType)"
+                        Data="@Enum.GetValues(typeof(AthleteType)).Cast<AthleteType>()"
+                        Placeholder="Выберите тип спортсмена" Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.AthleteType)" Text="Тип спортсмена обязателен"
+                                 Style="position: absolute"/>
+
+        <RadzenDropDown @bind-Value="Model.Degree" Name="@nameof(Model.Degree)"
+                        Data="@Enum.GetValues(typeof(Degree)).Cast<Degree>()"
+                        Placeholder="Выберите разряд" Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.Degree)" Text="Разряд обязателен"
+                                 Style="position: absolute"/>
+        
+    </RadzenStack>
+</RadzenFieldset>
+
+@code {
+    [Parameter] [Required] public string Title { get; set; } = null!;
+    [Parameter] [Required] public CreateAthleteViewModel Model { get; set; } = null!;
+}

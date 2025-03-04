@@ -39,7 +39,7 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
 
         var entity = _mapper.Map<Entry>(entry);
         entity.Athletes = athletes.ToList();
-        entity.UserId = creator.Id;
+        entity.CreatorId = creator.Id;
 
         var entityEntry = await _unitOfWork.GetRepository<Entry>().InsertAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync();

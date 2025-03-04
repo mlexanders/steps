@@ -1,5 +1,4 @@
 ﻿using Steps.Domain.Base;
-using Steps.Domain.Entities.AthletesLists;
 
 namespace Steps.Domain.Entities;
 
@@ -10,9 +9,9 @@ public class Entry : Entity
     public DateTime SubmissionDate { get; set; }
     
     public Guid ContestId { get; set; }
-    public Contest Contest { get; set; }
+    public Contest Contest { get; set; } = null!;
     
-    public Guid UserId { get; set; } //TODO:название
-    public User User { get; set; }
-    public List<Athlete>? Athletes { get; set; }
+    public Guid CreatorId { get; set; } 
+    public User Creator { get; set; } = null!;
+    public List<Athlete> Athletes { get; set; } = null!;
 }

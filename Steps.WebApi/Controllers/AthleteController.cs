@@ -25,27 +25,32 @@ namespace Steps.Services.WebApi.Controllers
         {
             return await _mediator.Send(new CreateAthleteCommand(createAthleteViewModel));
         }
-
+        
+        [HttpGet("{id}")]
         public Task<Result<AthleteViewModel>> GetById(Guid id)
         {
             throw new NotImplementedException();
         }
-
+        
+        [HttpPatch]
         public Task<Result<Guid>> Update(UpdateAthleteViewModel model)
         {
             throw new NotImplementedException();
         }
-
+        
+        [HttpGet("paged")]
         public Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, Specification<Athlete>? specification = null)
         {
             throw new NotImplementedException();
         }
-
+        
+        [HttpDelete]
         public Task<Result> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
-
+        
+        [HttpPost]
         Task<Result<AthleteViewModel>> ICrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>.Create(CreateAthleteViewModel model)
         {
             throw new NotImplementedException();

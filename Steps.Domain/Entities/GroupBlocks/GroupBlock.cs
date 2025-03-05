@@ -10,7 +10,4 @@ public class GroupBlock : Entity
 
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-
-    public List<PreSubGroup> PreSubGroups { get; set; } = [];
-    public List<FinalSubGroup> FinalSubGroups { get; set; } = [];
 }

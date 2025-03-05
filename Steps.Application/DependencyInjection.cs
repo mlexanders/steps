@@ -12,7 +12,7 @@ public static class DependencyInjection
     public static WebApplicationBuilder AddApplication(this WebApplicationBuilder builder)
     {
         builder.Services.AddTransient<CommonExceptionHandler>();
-        builder.Services.AddTransient<GroupBlockService>();
+        // builder.Services.AddTransient<GroupBlockService>();
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
 
         return builder;

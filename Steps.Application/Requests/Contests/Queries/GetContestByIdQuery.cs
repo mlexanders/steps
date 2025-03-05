@@ -24,6 +24,14 @@ public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, R
     
     public async Task<Result<ContestViewModel>> Handle(GetContestByIdQuery request, CancellationToken cancellationToken)
     {
+        var contest1 = await _unitOfWork.GetRepository<Contest>()
+            .GetFirstOrDefaultAsync(
+                predicate: c => c.Id.Equals(request.ContestId),
+                include: x => x.Include(a => a.Judges).Include(a => a.Counters),
+                orderBy: c => c.OrderByDescending(o => o.StartDate),
+                trackingType: TrackingType.NoTracking);
+
+        
         var contest = await _unitOfWork.GetRepository<Contest>()
             .GetFirstOrDefaultAsync(
                 predicate: c => c.Id.Equals(request.ContestId),

@@ -30,7 +30,7 @@
 
         var user = await SecurityService.GetCurrentUser();
 
-        _entryViewModel.UserId = user.Id;
+        _entryViewModel.CreatorId = user.Id;
     }
     
     private async Task Create()
@@ -39,7 +39,7 @@
         {
             SubmissionDate = DateTime.SpecifyKind(_entryViewModel.SubmissionDate, DateTimeKind.Utc),
             ContestId = _entryViewModel.ContestId,
-            UserId = _entryViewModel.UserId,
+            CreatorId = _entryViewModel.CreatorId,
             AthletesIds = _entryViewModel.AthletesIds
         });
         ShowResultMessage(result);

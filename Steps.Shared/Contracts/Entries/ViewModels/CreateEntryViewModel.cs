@@ -5,4 +5,5 @@ public class CreateEntryViewModel
     public DateTime SubmissionDate { get; set; }
     public Guid ContestId { get; set; }
     public List<Guid>? AthletesIds { get; set; }
+    public Guid CreatorId { get; set; }
 }

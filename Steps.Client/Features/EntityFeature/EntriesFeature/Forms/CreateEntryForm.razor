@@ -10,7 +10,7 @@
 
 @inject AthleteManager AthleteManager
 @inject TeamsManager TeamsManager
-
+@inherits BaseNotificate
 <RadzenFieldset Text="Создание заявки">
     <RadzenStack Gap="2rem">
 
@@ -43,23 +43,23 @@
             var teamSpecification = new Specification<Team>()
                 .Include(t => t.Include(a => a.Athletes));
 
-            var result = await TeamsManager.Read(teamSpecification);
-
-            if (result != null)
+            var result = await TeamsManager.Read(teamSpecification);    
+            base.ShowResultMessage(result);
+            
+            if (result?.Value == null) return;
+            
+            foreach (var team in result.Value.Items)
             {
-                foreach (var team in result.Value.Items)
+                var athleteViewModels = team.Athletes.Select(a => new AthleteViewModel
                 {
-                    var athleteViewModels = team.Athletes.Select(a => new AthleteViewModel
-                    {
-                        Id = a.Id,
-                        FullName = a.FullName,
-                        BirthDate = a.BirthDate,
-                        AthleteType = a.AthleteType ?? AthleteType.Cheer,
-                        Degree = a.Degree ?? Degree.Baby
-                    }).ToList();
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    BirthDate = a.BirthDate,
+                    AthleteType = AthleteType.Cheer,
+                    Degree = Degree.Baby
+                }).ToList();
 
-                    Athletes.AddRange(athleteViewModels);
-                }
+                Athletes.AddRange(athleteViewModels);
             }
 
             await base.OnInitializedAsync();

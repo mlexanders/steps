@@ -3,12 +3,10 @@
 @inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard Style="width: 100%; max-width: 600px;">
-    <ChildContent>
         <p><strong>Адрес:</strong> @Model.Name</p>
 
         <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
                       Click="() => OnCreate()" Style="margin-bottom: 10px;" />
-    </ChildContent>
 </RadzenCard>
 
 @code {

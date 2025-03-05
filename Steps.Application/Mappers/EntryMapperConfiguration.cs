@@ -41,7 +41,7 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.IsSuccess, x => x.Ignore())
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
-            .ForMember(x => x.CreatorId, x => x.Ignore())
+            .ForMember(x => x.CreatorId, x => x.MapFrom(m => m.CreatorId))
             .ForMember(x => x.Athletes, x => x.Ignore());
         
         // Из Entry в CreateEntryViewModel

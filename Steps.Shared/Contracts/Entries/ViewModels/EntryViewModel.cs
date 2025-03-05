@@ -14,7 +14,7 @@ public class EntryViewModel : IHaveId
     public Contest Contest { get; set; }
     
     public Guid UserId { get; set; }
-    public User User { get; set; }
+    public IUser User { get; set; }
     
     public List<Athlete> Athletes { get; set; }
 }

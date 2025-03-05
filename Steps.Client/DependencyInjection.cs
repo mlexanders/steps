@@ -2,6 +2,7 @@
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
+using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
@@ -10,6 +11,7 @@ using Steps.Client.Services.Authentication;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
+using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
 
@@ -38,6 +40,10 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<TeamsDialogManager>();
         services.AddTransient<TeamsManager>();
         services.AddTransient<ITeamsService, TeamsService>();
+        
+        services.AddTransient<EntriesDialogManager>();
+        services.AddTransient<EntriesManagement>();
+        services.AddTransient<IEntryService, EntryService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

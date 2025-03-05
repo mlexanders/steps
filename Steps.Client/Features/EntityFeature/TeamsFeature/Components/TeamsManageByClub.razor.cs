@@ -25,15 +25,12 @@ public partial class
             Manager = TeamsManager;
             DialogManager = TeamsDialogManager;
 
-            var specification = new Specification<Team>()
-                .Include(a => a.Include(a => a.Athletes)); // Включаем спортсменов
-
             if (Club != null)
             {
-                specification = specification.Where(t => t.ClubId == Club.Id); // Добавляем условие
+                var specification = new Specification<Team>().Where(t => t.ClubId == Club.Id);
+                TeamsManager.UseSpecification(specification);
             }
 
-            TeamsManager.UseSpecification(specification);
 
             base.OnInitialized();
         }

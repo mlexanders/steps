@@ -1,0 +1,50 @@
+﻿@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
+@using Steps.Shared.Contracts.Athletes.ViewModels
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Forms
+@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
+@using Steps.Client.Services.Authentication
+@using Steps.Shared.Contracts.Entries.ViewModels
+@using Steps.Client.Features.EntityFeature.EntriesFeature.Forms
+@inherits BaseModal
+@inject EntriesManagement Manager
+@inject SecurityService SecurityService
+
+
+<RadzenTemplateForm TItem="CreateEntryViewModel" Submit="Create" Data="_entryViewModel">
+    <RadzenCard>
+        <CreateEntryForm Model="@_entryViewModel" />
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly CreateEntryViewModel _entryViewModel = new();
+    
+    [Parameter] public Guid ContestId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _entryViewModel.ContestId = ContestId;
+
+        var user = await SecurityService.GetCurrentUser();
+
+        _entryViewModel.UserId = user.Id;
+    }
+    
+    private async Task Create()
+    {
+        var result = await Manager.Create(new()
+        {
+            SubmissionDate = DateTime.SpecifyKind(_entryViewModel.SubmissionDate, DateTimeKind.Utc),
+            ContestId = _entryViewModel.ContestId,
+            UserId = _entryViewModel.UserId,
+            AthletesIds = _entryViewModel.AthletesIds
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+
+}

@@ -53,7 +53,6 @@
         <AdditionalFiles Include="Features\EntityFeature\UsersFeature\UsersPage.razor" />
         <AdditionalFiles Include="Features\RoleFeature\CounterFeature\CounterNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\CounterFeature\Pages\CounterHome.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\JudjeNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\Pages\JudjeHome.razor" />
         <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\OrganizerNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\Pages\OrganizerClubs.razor" />

@@ -1,5 +1,5 @@
-﻿using Steps.Domain.Entities.GroupBlocks.Base;
-using Steps.Domain.Entities.GroupBlocks.SubGroups;
+﻿using Steps.Domain.Entities.GroupBlocks.AthleteSubGroup;
+using Steps.Domain.Entities.GroupBlocks.Base;
 
 namespace Steps.Domain.Entities.GroupBlocks;
 

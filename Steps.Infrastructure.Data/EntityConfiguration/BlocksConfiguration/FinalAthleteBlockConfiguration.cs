@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
-using Steps.Domain.Entities.GroupBlocks.SubGroups;
+using Steps.Domain.Entities.GroupBlocks.AthleteSubGroup;
 
 namespace Steps.Infrastructure.Data.EntityConfiguration.BlocksConfiguration;
 

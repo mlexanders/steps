@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
-using Steps.Domain.Entities.GroupBlocks.SubGroups;
+using Steps.Domain.Entities.GroupBlocks.AthleteSubGroup;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;
@@ -80,6 +80,7 @@ public class GroupBlockService
         if (athleteSubGroups is null || athleteSubGroups.Count == 0)
             throw new StepsBusinessException("Предварительный групповой блок пуст");
 
+        // создание подгруппы
         for (var index = 0; index < athleteSubGroups.Count; index++)
         {
             var preSubGroup = athleteSubGroups[index];
@@ -156,6 +157,7 @@ public class GroupBlockService
 
             var athleteSubGroups = SplitIntoBatches(athleteBatch, judgeCount);
 
+            // создание подгруппы
             for (var index = 0; index < athleteSubGroups.Count; index++)
             {
                 var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
@@ -188,7 +190,7 @@ public class GroupBlockService
         await groupBlockRepository.InsertAsync(groupBlocks);
         await _unitOfWork.SaveChangesAsync();
     }
-    
+
     /// <summary>
     /// Валидация состояния соревнования.
     /// </summary>

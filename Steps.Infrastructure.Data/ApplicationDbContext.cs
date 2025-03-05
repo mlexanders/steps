@@ -12,7 +12,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Team> Teams { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<Athlete> Athletes { get; set; }
-    public DbSet<User> User { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Entry> Entries { get; set; }
     
     public DbSet<TestResult> TestResults { get; set; }

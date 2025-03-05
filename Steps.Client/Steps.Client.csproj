@@ -70,6 +70,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\EntityFeature\EntriesFeature\Components\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
       <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 

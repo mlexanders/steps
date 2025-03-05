@@ -11,4 +11,6 @@ public class TeamViewModel : IHaveId
     public User? Owner { get; set; }
     public Guid ClubId { get; set; }
     public Guid OwnerId { get; set; }
+    
+    public List<Athlete> Athletes { get; set; }
 }

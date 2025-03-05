@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -17,18 +18,26 @@ public partial class
     [Parameter] public bool IsReadonly { get; set; }
     [Parameter] [Required] public ClubViewModel Club { get; set; } = null!;
 
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
-        Manager = TeamsManager;
-        DialogManager = TeamsDialogManager;
-
-        if (Club != null)
+        try
         {
-            var specification = new Specification<Team>().Where(t => t.ClubId == Club.Id);
-            TeamsManager.UseSpecification(specification);
-        }
+            Manager = TeamsManager;
+            DialogManager = TeamsDialogManager;
 
-        base.OnInitialized();
+            var specification = new Specification<Team>()
+                .Include(a => a.Include(a => a.Athletes)); // Включаем спортсменов
+
+            if (Club != null)
+            {
+                specification = specification.Where(t => t.ClubId == Club.Id); // Добавляем условие
+            }
+
+            TeamsManager.UseSpecification(specification);
+
+            base.OnInitialized();
+        }
+        catch (Exception ex) { }
     }
 
     protected override async Task OnCreate()

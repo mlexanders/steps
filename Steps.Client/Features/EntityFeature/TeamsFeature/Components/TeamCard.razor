@@ -1,7 +1,24 @@
 ﻿@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs
 
-<h3>@this</h3>
-@Model.Name
+@inherits ManageBaseComponent<Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
+
+<RadzenCard Style="width: 100%; max-width: 600px;">
+    <ChildContent>
+        <p><strong>Адрес:</strong> @Model.Address</p>
+        <p><strong>Владелец:</strong> @(Model.Owner?.Login ?? "Не указан")</p>
+
+        <RadzenButton Text="Создать спортсмена" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                      Click="() => OpenCreateAthleteDialog()" Style="margin-bottom: 10px;" />
+
+        <RadzenDataGrid TItem="Athlete" Data="@Model.Athletes" PageSize="5">
+            <Columns>
+                <RadzenDataGridColumn TItem="Athlete" Property="FullName" Title="Имя" />
+                <RadzenDataGridColumn TItem="Athlete" Property="BirthDate" Title="Возраст" />
+            </Columns>
+        </RadzenDataGrid>
+    </ChildContent>
+</RadzenCard>
 
 @code {
     [Parameter] public TeamViewModel Model { get; set; } = null!;

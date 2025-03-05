@@ -48,7 +48,7 @@ public class GroupBlockService
 
         var athleteBlock = await athleteBlockRepository.GetFirstOrDefaultAsync(
                                predicate: b => b.SubGroupId.Equals(groupBlock.Id) && b.AthleteId.Equals(athleteId),
-                               trackingType: TrackingType.NoTracking)
+                               trackingType: TrackingType.Tracking)
                            ?? throw new StepsBusinessException("Спортсмен в этом предварительном блоке не найден.");
 
         athleteBlock.IsConfirmed = true;
@@ -67,10 +67,7 @@ public class GroupBlockService
                              trackingType: TrackingType.Tracking)
                          ?? throw new StepsBusinessException("Предварительный блок не найден");
 
-        if (groupBlock.Contest.Status is ContestStatus.Open)
-            throw new StepsBusinessException("Сбор заявок не закрыт.");
-        if (groupBlock.Contest.Status is ContestStatus.Finished)
-            throw new StepsBusinessException("Мероприятие уже завершено.");
+        ValidateContestStatus(groupBlock.Contest);
         
         var isExistFinalGroups = groupBlock.PreSubGroups.Any(s => s.FinalSubGroupId != null);
         if (isExistFinalGroups)
@@ -112,7 +109,7 @@ public class GroupBlockService
         }
 
         groupBlockRepository.Update(groupBlock);
-        var i = await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
 
@@ -121,12 +118,8 @@ public class GroupBlockService
     /// </summary>
     public async Task GeneratePreGroupBlocks(Contest contest, int athletesPerGroup)
     {
-        if (contest.Status is ContestStatus.Open)
-            throw new StepsBusinessException("Сбор заявок не закрыт.");
-        if (contest.Status is ContestStatus.Finished)
-            throw new StepsBusinessException("Мероприятие уже завершено.");
+        ValidateContestStatus(contest);
 
-        
         var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
         var entryRepository = _unitOfWork.GetRepository<Entry>();
 
@@ -195,6 +188,20 @@ public class GroupBlockService
         await groupBlockRepository.InsertAsync(groupBlocks);
         await _unitOfWork.SaveChangesAsync();
     }
+    
+    /// <summary>
+    /// Валидация состояния соревнования.
+    /// </summary>
+    /// <param name="contest"></param>
+    /// <exception cref="StepsBusinessException"></exception>
+    private static void ValidateContestStatus(Contest contest)
+    {
+        if (contest.Status is ContestStatus.Open)
+            throw new StepsBusinessException("Сбор заявок не закрыт.");
+        if (contest.Status is ContestStatus.Finished)
+            throw new StepsBusinessException("Мероприятие уже завершено.");
+    }
+
 
     /// <summary>
     /// Разделяет список на подгруппы заданного размера.

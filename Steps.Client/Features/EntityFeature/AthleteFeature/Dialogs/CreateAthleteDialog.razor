@@ -7,6 +7,7 @@
 
 <RadzenTemplateForm TItem="CreateAthleteViewModel" Submit="Create" Data="_athleteViewModel">
     <RadzenCard>
+        <CreateAthleteForm Model="@_athleteViewModel" Title="Новый спортсмен" />
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>

@@ -14,7 +14,7 @@ public record SpecificationRequest<T> where T : class
     protected SpecificationRequest(Specification<T>? specification)
     {
         Specification = specification;
-        var expressions = Specification?.GetExpresions();
+        var expressions = Specification?.GetExpressions();
         Predicate = expressions?.Predicate;
         Includes = expressions?.Includes?.Compile();
     }

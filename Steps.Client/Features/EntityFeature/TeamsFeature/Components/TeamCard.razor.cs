@@ -14,6 +14,7 @@ namespace Steps.Client.Features.EntityFeature.TeamsFeature.Components;
 public partial class TeamCard: ManageBaseComponent<Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
 {
     [Inject] protected TeamsManager TeamsManager { get; set; } = null!;
+    [Inject] protected AthleteManager AthleteManager { get; set; } = null!;
     [Inject] protected TeamsDialogManager TeamsDialogManager { get; set; } = null!;
     [Inject] protected AthleteDialogManager AthleteDialogManager { get; set; } = null!;
 
@@ -22,19 +23,22 @@ public partial class TeamCard: ManageBaseComponent<Team, TeamViewModel, CreateTe
     
     private CreateAthleteDialog _createAthleteDialog;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Manager = TeamsManager;
         DialogManager = TeamsDialogManager;
 
+        var specification = new Specification<Team>()
+            .Include(a => a.Include(a => a.Athletes)); // Включаем спортсменов
+
         if (Club != null)
         {
-            var specification = new Specification<Team>().Where(t => t.ClubId == Club.Id)
-                .Include(a => a.Include(a => a.Athletes));
-            TeamsManager.UseSpecification(specification);
+            specification = specification.Where(t => t.ClubId == Club.Id); // Добавляем условие
         }
 
-        base.OnInitialized();
+        TeamsManager.UseSpecification(specification);
+
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnCreate()

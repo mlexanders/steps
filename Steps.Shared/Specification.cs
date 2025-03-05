@@ -26,17 +26,37 @@ public class Specification<T> where T : class
         return this;
     }
 
-    public SpecificationContainer<Expression<Func<T, bool>>, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>> 
-        GetExpresions()
+    public SpecificationContainer<Expression<Func<T, bool>>?, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>?>>
+    GetExpressions()
     {
-        var a = ExpressionSerializer.DeserializeText(Predicate);
-        return new SpecificationContainer<Expression<Func<T, bool>>, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>>
+        Expression<Func<T, bool>>? predicate = null;
+        Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>?>? includes = null;
+
+        if (!string.IsNullOrEmpty(Predicate))
         {
-            Predicate = (Expression<Func<T, bool>>)ExpressionSerializer.DeserializeText(Predicate),
-            Includes = Includes == null ? null : (Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>>)ExpressionSerializer.DeserializeText(Includes)
+            var predicateObj = ExpressionSerializer.DeserializeText(Predicate);
+            if (predicateObj is Expression<Func<T, bool>> predicateExpr)
+            {
+                predicate = predicateExpr;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(Includes))
+        {
+            var includesObj = ExpressionSerializer.DeserializeText(Includes);
+            if (includesObj is Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>> includesExpr)
+            {
+                includes = includesExpr;
+            }
+        }
+
+        return new SpecificationContainer<Expression<Func<T, bool>>?, Expression<Func<IQueryable<T>, IIncludableQueryable<T, object>>?>>
+        {
+            Predicate = predicate,
+            Includes = includes
         };
     }
-    
+
     public class SpecificationContainer<TPredicate, TIncludes>
     {
         public TPredicate?  Predicate { get; set; }

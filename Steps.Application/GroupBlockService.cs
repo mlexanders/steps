@@ -1,6 +1,9 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
+using Steps.Domain.Entities.GroupBlocks;
+using Steps.Domain.Entities.GroupBlocks.SubGroups;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;
@@ -29,7 +32,7 @@ public class GroupBlockService
 
         var groupBlocks = await groupBlockRepository.GetAllAsync(
             predicate: gb => gb.ContestId.Equals(contest.Id),
-            include: gb => gb.Include(gb => gb.PreBlocks)
+            include: gb => gb.Include(a => a.PreSubGroups)
                 .ThenInclude(pb => pb.AthleteBlocks),
             trackingType: TrackingType.NoTracking);
 
@@ -41,33 +44,98 @@ public class GroupBlockService
     /// </summary>
     public async Task MarkAthlete(GroupBlock groupBlock, Guid athleteId)
     {
-        var athleteBlockRepository = _unitOfWork.GetRepository<ConfirmationAthleteBlock>();
+        var athleteBlockRepository = _unitOfWork.GetRepository<ConfirmationAthleteSubGroup>();
 
         var athleteBlock = await athleteBlockRepository.GetFirstOrDefaultAsync(
-                               predicate: b => b.BlockId.Equals(groupBlock.Id) && b.AthleteId.Equals(athleteId),
+                               predicate: b => b.SubGroupId.Equals(groupBlock.Id) && b.AthleteId.Equals(athleteId),
                                trackingType: TrackingType.NoTracking)
-                           ?? throw new StepsBusinessException("Спортсмен в заданном блоке не найден.");
+                           ?? throw new StepsBusinessException("Спортсмен в этом предварительном блоке не найден.");
 
         athleteBlock.IsConfirmed = true;
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task GenerateFinalGroupBlocks(Guid groupBlockId)
+    {
+        var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
+        var groupBlock = await groupBlockRepository.GetFirstOrDefaultAsync(
+                             predicate: gb => gb.Id.Equals(groupBlockId),
+                             include: gb => gb
+                                 .Include(a => a.Contest)
+                                 .Include(a => a.PreSubGroups)
+                                 .ThenInclude(ah => ah.AthleteBlocks),
+                             trackingType: TrackingType.Tracking)
+                         ?? throw new StepsBusinessException("Предварительный блок не найден");
+
+        if (groupBlock.Contest.Status is ContestStatus.Open)
+            throw new StepsBusinessException("Сбор заявок не закрыт.");
+        if (groupBlock.Contest.Status is ContestStatus.Finished)
+            throw new StepsBusinessException("Мероприятие уже завершено.");
+        
+        var isExistFinalGroups = groupBlock.PreSubGroups.Any(s => s.FinalSubGroupId != null);
+        if (isExistFinalGroups)
+            throw new StepsBusinessException("Финальный блок для выбранного предварительного блока уже сформирован");
+
+        var athleteSubGroups = groupBlock.PreSubGroups
+            .Where(p => p.AthleteBlocks.Any(b => b.IsConfirmed))
+            .Select(p => p).ToList();
+
+        if (athleteSubGroups is null || athleteSubGroups.Count == 0)
+            throw new StepsBusinessException("Предварительный групповой блок пуст");
+
+        for (var index = 0; index < athleteSubGroups.Count; index++)
+        {
+            var preSubGroup = athleteSubGroups[index];
+            var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
+
+            var finalSubGroup = new FinalSubGroup()
+            {
+                GroupBlock = groupBlock,
+                ExitTime = exitTime.ToUniversalTime(),
+                AthleteBlocks = []
+            };
+
+            preSubGroup.FinalSubGroup = finalSubGroup;
+            groupBlock.FinalSubGroups.Add(finalSubGroup);
+
+            var sequenceNumber = 1;
+            foreach (var athleteId in preSubGroup.AthleteBlocks)
+            {
+                finalSubGroup.AthleteBlocks.Add(new FinalAthleteSubGroup()
+                {
+                    SequenceNumber = sequenceNumber,
+                    AthleteId = athleteId.AthleteId,
+                    SubGroup = finalSubGroup,
+                });
+                sequenceNumber++;
+            }
+        }
+
+        groupBlockRepository.Update(groupBlock);
+        var i = await _unitOfWork.SaveChangesAsync();
     }
 
 
     /// <summary>
-    /// Генерирует групповые блоки для соревнования.
+    /// Генерирует ПРЕДВАРИТЕЛЬНЫЕ групповые блоки для соревнования.
     /// </summary>
-    public async Task GenerateGroupBlocks(Contest contest, int athletesPerGroup)
+    public async Task GeneratePreGroupBlocks(Contest contest, int athletesPerGroup)
     {
+        if (contest.Status is ContestStatus.Open)
+            throw new StepsBusinessException("Сбор заявок не закрыт.");
+        if (contest.Status is ContestStatus.Finished)
+            throw new StepsBusinessException("Мероприятие уже завершено.");
+
+        
         var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
         var entryRepository = _unitOfWork.GetRepository<Entry>();
 
-        var groupBlocksExist = await groupBlockRepository.ExistsAsync(gb => gb.ContestId == contest.Id);
+        var groupBlocksExist = await groupBlockRepository.ExistsAsync(gb => gb.ContestId.Equals(contest.Id));
         if (groupBlocksExist)
-        {
             throw new StepsBusinessException("Список уже сформирован.");
-        }
 
         var athleteEntries = await entryRepository.GetAllAsync(
-            predicate: entry => entry.ContestId == contest.Id && entry.IsSuccess,
+            predicate: entry => entry.ContestId.Equals(contest.Id) && entry.IsSuccess,
             selector: entry => entry.Athletes.Select(a => a.Id).Distinct(),
             trackingType: TrackingType.NoTracking);
 
@@ -99,29 +167,29 @@ public class GroupBlockService
             {
                 var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
 
-                var preBlock = new PreBlock
+                var preSubGroup = new PreSubGroup
                 {
                     GroupBlock = groupBlock,
                     ExitTime = exitTime.ToUniversalTime(),
                     AthleteBlocks = []
                 };
-                groupBlock.PreBlocks.Add(preBlock);
+                groupBlock.PreSubGroups.Add(preSubGroup);
 
                 var sequenceNumber = 1;
                 foreach (var athleteId in athleteSubGroups[index])
                 {
-                    preBlock.AthleteBlocks.Add(new ConfirmationAthleteBlock
+                    preSubGroup.AthleteBlocks.Add(new ConfirmationAthleteSubGroup
                     {
                         SequenceNumber = sequenceNumber,
                         AthleteId = athleteId,
-                        Block = preBlock,
+                        SubGroup = preSubGroup,
                         IsConfirmed = false
                     });
                     sequenceNumber++;
                 }
             }
 
-            groupBlock.EndTime = groupBlock.PreBlocks.Last().ExitTime;
+            groupBlock.EndTime = groupBlock.PreSubGroups.Last().ExitTime;
         }
 
         await groupBlockRepository.InsertAsync(groupBlocks);

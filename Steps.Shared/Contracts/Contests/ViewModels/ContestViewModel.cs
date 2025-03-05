@@ -10,6 +10,7 @@ public class ContestViewModel : IHaveId
     public string? Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public ContestStatus Status { get; set; }
 
     public List<Guid> JudjesIds { get; set; }
     public List<Guid> CountersIds { get; set; }

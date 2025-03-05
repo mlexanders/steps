@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Entities;
+using Steps.Domain.Entities.GroupBlocks;
 using Steps.Infrastructure.Data.EntityConfiguration;
 
 namespace Steps.Infrastructure.Data;
@@ -16,7 +17,7 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<TestResult> TestResults { get; set; }
     public DbSet<Contest> Contests { get; set; }
-    public DbSet<GroupBlock> ContestGroupBlocks { get; set; }
+    public DbSet<GroupBlock> GroupBlocks { get; set; }
     
   
     

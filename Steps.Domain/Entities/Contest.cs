@@ -10,9 +10,10 @@ public class Contest : Entity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public ContestType Type { get; set; }
+    public ContestStatus Status { get; set; }
 
-    public List<User>? Judjes { get; set; } = new List<User>();
-    public List<User>? Counters { get; set; } = new List<User>();
+    public List<User>? Judjes { get; set; } = [];
+    public List<User>? Counters { get; set; } = [];
     
-    public List<Entry>? Entries { get; set; } = new List<Entry>();
+    public List<Entry>? Entries { get; set; } = [];
 }

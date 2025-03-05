@@ -18,6 +18,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Counters, o => o.Ignore())
             .ForMember(x => x.Entries, o => o.Ignore())
             .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate))
+            .ForMember(x => x.Status, o => o.MapFrom(m => m.Status))
             .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
 
@@ -28,6 +29,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
             .ForMember(x => x.JudjesIds, o => o.MapFrom(src => src.Judjes != null ? src.Judjes.Select(j => j.Id).ToList() : new List<Guid>()))
             .ForMember(x => x.CountersIds, o => o.MapFrom(src => src.Counters != null ? src.Counters.Select(c => c.Id).ToList() : new List<Guid>()))
+            .ForMember(x => x.Status, o => o.MapFrom(m => m.Status))
             .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate));
 
         //CreateContestViewModel
@@ -60,6 +62,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Judjes, o => o.Ignore())
             .ForMember(x => x.Counters, o => o.Ignore())
             .ForMember(x => x.Type, o => o.Ignore())
+            .ForMember(x => x.Status, o => o.MapFrom(m => m.Status))
             .ForMember(x => x.Entries, o => o.Ignore());
 
         CreateMap<Contest, UpdateContestViewModel>()
@@ -69,6 +72,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
             .ForMember(x => x.JudjesIds, o => o.Ignore())
             .ForMember(x => x.CountersIds, o => o.Ignore())
+            .ForMember(x => x.Status, o => o.MapFrom(m => m.Status))
             .ForMember(x => x.Description, o => o.MapFrom(m => m.Description));
     }
 }

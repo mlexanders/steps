@@ -1,6 +1,8 @@
-﻿namespace Steps.Shared.Contracts.Entries.ViewModels;
+﻿using Steps.Domain.Base;
 
-public class UpdateEntryViewModel
+namespace Steps.Shared.Contracts.Entries.ViewModels;
+
+public class UpdateEntryViewModel : IHaveId
 {
-    
+    public Guid Id { get; }
 }

@@ -1,9 +1,9 @@
-﻿using Steps.Shared.Contracts.Entries.ViewModels;
+﻿using Steps.Domain.Entities;
+using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Shared.Contracts.Entries;
 
-public interface IEntryService
+public interface IEntryService : ICrudService<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>
 {
-    Task<Result<Guid>> Create(CreateEntryViewModel createEntryViewModel);
     Task<Result> AcceptEntry(Guid entryId);
 } 

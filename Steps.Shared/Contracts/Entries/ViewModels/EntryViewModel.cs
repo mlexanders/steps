@@ -1,8 +1,9 @@
-﻿using Steps.Domain.Entities;
+using Steps.Domain.Base;
+using Steps.Domain.Entities;
 
 namespace Steps.Shared.Contracts.Entries.ViewModels;
 
-public class EntryViewModel
+public class EntryViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public int Number { get; set; }

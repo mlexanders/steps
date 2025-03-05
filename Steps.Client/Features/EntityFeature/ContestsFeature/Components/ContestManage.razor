@@ -6,7 +6,8 @@
     <RadzenDataGrid TItem="ContestViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Мероприятия еще не созданы"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage"
+                    RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
             <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать мероприятие"

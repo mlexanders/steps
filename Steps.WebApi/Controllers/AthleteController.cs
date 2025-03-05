@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Athletes.Commands;
+using Steps.Application.Requests.Athletes.Queries;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
@@ -39,9 +40,9 @@ namespace Steps.Services.WebApi.Controllers
         }
         
         [HttpGet("paged")]
-        public Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, Specification<Athlete>? specification = null)
+        public async Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, Specification<Athlete>? specification = null)
         {
-            throw new NotImplementedException();
+            return await _mediator.Send(new GetPagedAthletesQuery(page, specification));
         }
         
         [HttpDelete]

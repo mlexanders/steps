@@ -1,0 +1,69 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
+@using Steps.Client.Features.EntityFeature.TeamsFeature.Services
+@using Steps.Client.Services.Authentication
+@using Steps.Domain.Definitions
+@using Steps.Shared
+@using Steps.Shared.Contracts.Athletes.ViewModels
+@using Steps.Shared.Contracts.Entries.ViewModels
+
+@inject AthleteManager AthleteManager
+@inject TeamsManager TeamsManager
+
+<RadzenFieldset Text="Создание заявки">
+    <RadzenStack Gap="2rem">
+
+        <RadzenDatePicker @bind-Value="Model.SubmissionDate" Name="@nameof(Model.SubmissionDate)" Placeholder="Выберите дату подачи"
+                          Style="width: 100%"/>
+        <RadzenRequiredValidator Component="@nameof(Model.SubmissionDate)" Text="Дата подачи обязательна"
+                                 Style="position: absolute"/>
+
+        <RadzenListBox @bind-Value="Model.AthletesIds"
+                       Name="@nameof(Model.AthletesIds)"
+                       Data="@Athletes"
+                       Multiple="true"
+                       Placeholder="Выберите спортсменов"
+                       Style="width: 100%"
+                       TextProperty="FullName"
+                       ValueProperty="Id" />
+
+    </RadzenStack>
+</RadzenFieldset>
+
+@code {
+    [Parameter] [Required] public CreateEntryViewModel Model { get; set; } = null!;
+    
+    protected List<AthleteViewModel> Athletes { get; set; } = new List<AthleteViewModel>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var teamSpecification = new Specification<Team>()
+                .Include(t => t.Include(a => a.Athletes));
+
+            var result = await TeamsManager.Read(teamSpecification);
+
+            if (result != null)
+            {
+                foreach (var team in result.Value.Items)
+                {
+                    var athleteViewModels = team.Athletes.Select(a => new AthleteViewModel
+                    {
+                        Id = a.Id,
+                        FullName = a.FullName,
+                        BirthDate = a.BirthDate,
+                        AthleteType = a.AthleteType ?? AthleteType.Cheer,
+                        Degree = a.Degree ?? Degree.Baby
+                    }).ToList();
+
+                    Athletes.AddRange(athleteViewModels);
+                }
+            }
+
+            await base.OnInitializedAsync();
+        }
+        catch (Exception ex) { }
+    }
+}

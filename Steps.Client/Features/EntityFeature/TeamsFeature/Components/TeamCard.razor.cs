@@ -29,11 +29,11 @@ public partial class TeamCard: ManageBaseComponent<Team, TeamViewModel, CreateTe
         DialogManager = TeamsDialogManager;
 
         var specification = new Specification<Team>()
-            .Include(a => a.Include(a => a.Athletes)); // Включаем спортсменов
+            .Include(a => a.Include(a => a.Athletes));
 
         if (Club != null)
         {
-            specification = specification.Where(t => t.ClubId == Club.Id); // Добавляем условие
+            specification = specification.Where(t => t.ClubId == Club.Id);
         }
 
         TeamsManager.UseSpecification(specification);

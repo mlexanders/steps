@@ -14,6 +14,6 @@ public static class ApiRoutes
     public class ContestsRoute() : BaseApiRoutes("Contests");
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
-    public class AthletesRoute() : BaseApiRoutes("Athletes");
+    public class AthletesRoute() : BaseApiRoutes("Athlete");
     public class UsersRoute() : BaseApiRoutes("Users");
 }

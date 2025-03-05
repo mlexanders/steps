@@ -33,8 +33,6 @@ namespace Steps.Application.Requests.Athletes.Commands
             var team = await teamRepository.GetFirstOrDefaultAsync(t => t.Id == model.TeamId,
                 null, null, false);
             
-            team.Athletes.Add(athlete);
-            
             teamRepository.Update(team);
             
             await _unitOfWork.SaveChangesAsync();

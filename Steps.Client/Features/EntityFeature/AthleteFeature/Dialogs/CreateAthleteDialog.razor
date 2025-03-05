@@ -7,7 +7,6 @@
 
 <RadzenTemplateForm TItem="CreateAthleteViewModel" Submit="Create" Data="_athleteViewModel">
     <RadzenCard>
-        <CreateAthleteForm Model="@_athleteViewModel" Title="Новый спортсмен"/>
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -29,9 +28,10 @@
         var result = await Manager.Create(new()
         {
             FullName = _athleteViewModel.FullName,
-            BirthDate = _athleteViewModel.BirthDate,
+            BirthDate = DateTime.SpecifyKind(_athleteViewModel.BirthDate, DateTimeKind.Utc),
             AthleteType = _athleteViewModel.AthleteType,
-            Degree = _athleteViewModel.Degree
+            Degree = _athleteViewModel.Degree,
+            TeamId = TeamId
         });
         ShowResultMessage(result);
 

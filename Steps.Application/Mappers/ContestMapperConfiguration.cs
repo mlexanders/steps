@@ -42,6 +42,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Judges, o => o.Ignore())
             .ForMember(x => x.Counters, o => o.Ignore())
             .ForMember(x => x.Entries, o => o.Ignore())
+            .ForMember(x => x.Status, o => o.Ignore())
             .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
 

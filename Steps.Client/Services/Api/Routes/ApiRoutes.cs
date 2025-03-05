@@ -16,4 +16,6 @@ public static class ApiRoutes
     public class TeamsRoute() : BaseApiRoutes("Teams");
     public class AthletesRoute() : BaseApiRoutes("Athlete");
     public class UsersRoute() : BaseApiRoutes("Users");
+
+    public class GroupBlockRoute() : BaseApiRoutes("GroupBlocks");
 }

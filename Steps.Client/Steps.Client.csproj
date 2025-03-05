@@ -73,6 +73,8 @@
       <Folder Include="Features\EntityFeature\EntriesFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\EntriesFeature\Forms\" />
       <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
       <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 

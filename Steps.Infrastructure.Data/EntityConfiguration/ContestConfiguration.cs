@@ -21,5 +21,29 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
             .WithOne(e => e.Contest)
             .HasForeignKey(e => e.ContestId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(c => c.Judges)
+            .WithMany()
+            .UsingEntity<JudgeContest>(
+                l => l.HasOne<User>().WithMany().HasForeignKey(e => e.JudgeId),
+                r => r.HasOne<Contest>().WithMany().HasForeignKey(e => e.ContestId));
+
+        builder.HasMany(c => c.Counters)
+            .WithMany()
+            .UsingEntity<CounterContest>(
+                l => l.HasOne<User>().WithMany().HasForeignKey(e => e.CounterId),
+                r => r.HasOne<Contest>().WithMany().HasForeignKey(e => e.ContestId));
+    }
+
+    public class CounterContest
+    {
+        public Guid CounterId { get; set; }
+        public Guid ContestId { get; set; }
+    }
+
+    public class JudgeContest
+    {
+        public Guid JudgeId { get; set; }
+        public Guid ContestId { get; set; }
     }
 }

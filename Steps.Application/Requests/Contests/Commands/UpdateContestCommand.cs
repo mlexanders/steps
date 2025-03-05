@@ -56,7 +56,7 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateContestCommand, R
             throw new StepsBusinessException("Неверно выбраны счетчики или судьи");
         }
         
-        updatedModel.Judjes?.AddRange(judges);
+        updatedModel.Judges?.AddRange(judges);
         updatedModel.Counters?.AddRange(counters);
         
         repository.Update(updatedModel);

@@ -142,7 +142,7 @@ public class GroupBlockService
         var athleteIds = athleteEntries.SelectMany(a => a).Distinct().ToList();
         var sortedAthleteIds = GetSortedAthletes(athleteIds).ToList();
 
-        var judgeCount = contest.Judjes?.Count ?? DefaultJudgesCount;
+        var judgeCount = contest.Judges?.Count ?? DefaultJudgesCount;
         if (judgeCount == 0) judgeCount = DefaultJudgesCount;
 
         var groupedAthletes = SplitIntoBatches(sortedAthleteIds, athletesPerGroup);

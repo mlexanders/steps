@@ -12,7 +12,7 @@ public class Contest : Entity
     public ContestType Type { get; set; }
     public ContestStatus Status { get; set; }
 
-    public List<User>? Judjes { get; set; } = [];
+    public List<User>? Judges { get; set; } = [];
     public List<User>? Counters { get; set; } = [];
     
     public List<Entry>? Entries { get; set; } = [];

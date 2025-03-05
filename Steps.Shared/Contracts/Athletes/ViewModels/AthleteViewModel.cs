@@ -1,8 +1,9 @@
-﻿using Steps.Domain.Definitions;
+﻿using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 
 namespace Steps.Shared.Contracts.Athletes.ViewModels;
 
-public class AthleteViewModel
+public class AthleteViewModel : IHaveId
 {
     public Guid Id { get; set; }
     

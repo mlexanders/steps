@@ -10,7 +10,8 @@
         <RadzenRequiredValidator Component="@nameof(Model.FullName)" Text="ФИО обязательно"
                                  Style="position: absolute"/>
 
-        <RadzenDatePicker @bind-Value="Model.BirthDate" Name="@nameof(Model.BirthDate)" Placeholder="Выберите дату рождения"
+        <RadzenDatePicker @bind-Value="Model.BirthDate" Name="@nameof(Model.BirthDate)"
+                          Placeholder="Выберите дату рождения"
                           Style="width: 100%"/>
         <RadzenRequiredValidator Component="@nameof(Model.BirthDate)" Text="Дата рождения обязательна"
                                  Style="position: absolute"/>

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
+using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Domain.Entities;
+using Steps.Shared;
 using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.EntriesFeature.Components;
@@ -18,6 +21,11 @@ public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, 
         {
             Manager = EntriesManagement;
             DialogManager = EntriesDialogManager;
+            
+            var specification = new Specification<Entry>()
+                .Include(a => a.Include(a => a.Contest));
+        
+            EntriesManagement.UseSpecification(specification);
 
 
             base.OnInitialized();

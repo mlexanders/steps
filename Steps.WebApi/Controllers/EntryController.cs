@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Entries.Commands;
+using Steps.Application.Requests.Entries.Queries;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
@@ -38,10 +39,10 @@ public class EntryController : ControllerBase, IEntryService
         throw new NotImplementedException();
     }
     
-    [HttpGet("paged")]
-    public Task<Result<PaggedListViewModel<EntryViewModel>>> GetPaged([FromQuery] Page page, Specification<Entry>? specification = null)
+    [HttpPost("[action]")]
+    public async Task<Result<PaggedListViewModel<EntryViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Entry>? specification = null)
     {
-        throw new NotImplementedException();
+        return await _mediator.Send(new GetPagedEntriesQuery(page, specification));
     }
     
     [HttpDelete]

@@ -1,7 +1,31 @@
-﻿@inherits ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
+﻿@using Microsoft.AspNetCore.Authorization
+@using Steps.Domain.Base
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Entries.ViewModels
+@inherits ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
 
-<h3>EntryCard</h3>
+@attribute [Authorize]
+
+<RadzenCard Style="width: 100%; max-width: 600px;">
+    <ChildContent>
+        <p><strong>Номер:</strong> @Model.Number</p>
+
+        <p><strong>Мероприятие:</strong> @Model.ContestName</p>
+        
+        <AuthorizeView Roles="@Role.Organizer.ToString()">
+            <RadzenButton Text="Принять заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                          Click="() => OnCreate()" Style="margin-bottom: 10px;" />
+        </AuthorizeView>
+
+        <AuthorizeView Roles="@Role.User.ToString()">
+            <RadzenButton Text="Изменить заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                          Click="() => OnCreate()" Style="margin-bottom: 10px;" />
+        </AuthorizeView>
+    </ChildContent>
+</RadzenCard>
 
 @code {
+    [Parameter] public EntryViewModel Model { get; set; } = null!;
     
+    [CascadingParameter] public IUser? User { get; set; }
 }

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Radzen;
-using Steps.Client.Features.EntityFeature.ContestsFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Contests.ViewModels;

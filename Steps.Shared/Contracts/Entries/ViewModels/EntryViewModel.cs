@@ -14,7 +14,7 @@ public class EntryViewModel : IHaveId
     public DateTime SubmissionDate { get; set; }
     
     public Guid ContestId { get; set; }
-    public Contest Contest { get; set; }
+    public string ContestName { get; set; }
     
     public Guid UserId { get; set; }
     public User User { get; set; }

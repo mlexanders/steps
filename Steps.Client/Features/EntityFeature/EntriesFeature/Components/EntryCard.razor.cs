@@ -27,7 +27,7 @@ public partial class EntryCard: ManageBaseComponent<Entry, EntryViewModel, Creat
         Manager = EntriesManagement;
         DialogManager = EntriesDialogManager;
 
-        base.OnInitializedAsync();
+        base.OnInitialized();
     }
 
     protected override async Task OnCreate()

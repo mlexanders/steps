@@ -1,4 +1,6 @@
-﻿@using Steps.Shared.Contracts.Entries.ViewModels
+﻿@page "/entries"
+
+@using Steps.Shared.Contracts.Entries.ViewModels
 @inherits ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
 
 <RadzenCard>
@@ -19,7 +21,7 @@
 
         <Columns>
             <RadzenDataGridColumn TItem="EntryViewModel" Property="@nameof(EntryViewModel.Number)" Title="Номер"/>
-            <RadzenDataGridColumn TItem="EntryViewModel" Property="@nameof(EntryViewModel.Contest.Name)" Title="Мероприятие"/>
+            <RadzenDataGridColumn TItem="EntryViewModel" Property="@nameof(EntryViewModel.ContestName)" Title="Мероприятие"/>
 
             @if (!IsReadonly)
             {

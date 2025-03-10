@@ -1,4 +1,4 @@
-﻿namespace Steps.Domain;
+﻿namespace Steps.Domain.Base;
 
 public interface ITestResult
 {

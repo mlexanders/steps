@@ -13,7 +13,7 @@ using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
 
@@ -48,7 +48,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IEntryService, EntryService>();
         
         services.AddTransient<GroupBlocksDialogManager>();
-        services.AddTransient<GroupBlocksManager>();
+        // services.AddTransient<GroupBlocksManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksesService>();
     }
 

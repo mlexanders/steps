@@ -2,6 +2,7 @@
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
+using Steps.Shared.Contracts.Schedules;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;
@@ -18,7 +19,7 @@ public class GroupBlockService
     {
         _unitOfWork = unitOfWork;
     }
-  
+
     /// <summary>
     /// Помечает спортсмена как подтвержденного в заданном блоке.
     /// </summary>
@@ -60,7 +61,8 @@ public class GroupBlockService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Guid>> athleteByGroupBlock, int judgeCount)
+    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Guid>> athleteByGroupBlock,
+        int judgeCount)
     {
         var groupBlocks = new List<GroupBlock>(athleteByGroupBlock.Count);
 
@@ -71,7 +73,7 @@ public class GroupBlockService
                 : contest.StartDate;
 
             var athletesByJudgeCount = SplitIntoBatches(athleteBatch, judgeCount);
-        
+
             var groupBlock = new GroupBlock
             {
                 ContestId = contest.Id,
@@ -79,16 +81,17 @@ public class GroupBlockService
             };
 
             var cells = CreateGroupBlockCells(athletesByJudgeCount, groupBlock).ToList();
-            groupBlock.GroupBlockCells.AddRange(cells);
+            groupBlock.Schedule.AddRange(cells);
             groupBlock.EndTime = cells.Last().ExitTime;
-            
+
             groupBlocks.Add(groupBlock);
         }
-        
+
         return groupBlocks;
     }
 
-    private static IEnumerable<GroupBlockCell> CreateGroupBlockCells(List<List<Guid>> athletesByJudgeCount, GroupBlock groupBlock)
+    private static IEnumerable<ScheduledCell> CreateGroupBlockCells(List<List<Guid>> athletesByJudgeCount,
+        GroupBlock groupBlock)
     {
         var sequenceNumber = 1;
         for (var index = 0; index < athletesByJudgeCount.Count; index++)
@@ -98,7 +101,7 @@ public class GroupBlockService
 
             foreach (var athleteId in athletesSubGroup)
             {
-                var cell = new GroupBlockCell
+                var cell = new ScheduledCell
                 {
                     SequenceNumber = sequenceNumber,
                     GroupBlock = groupBlock,
@@ -106,7 +109,7 @@ public class GroupBlockService
                     AthleteId = athleteId,
                 };
                 sequenceNumber++;
-                
+
                 yield return cell;
             }
         }
@@ -121,10 +124,10 @@ public class GroupBlockService
     {
         if (contest is null)
             throw new StepsBusinessException("Мероприятие не найдено");
-        
+
         if (contest.Status is ContestStatus.Open)
             throw new StepsBusinessException("Сбор заявок не закрыт.");
-        
+
         if (contest.Status is ContestStatus.Finished)
             throw new StepsBusinessException("Мероприятие уже завершено.");
     }
@@ -149,4 +152,53 @@ public class GroupBlockService
     {
         return athleteIds; // TODO: 
     }
+
+    public async Task ReorderGroupBlock(ReorderGroupBlockViewModel reorderGroupBlockViewModel)
+    {
+        var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
+        var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
+
+        var repository = _unitOfWork.GetRepository<ScheduledCell>();
+        
+        var orderedSchedule = await repository.GetAllAsync(
+                                  predicate: s => s.GroupBlockId.Equals(groupBlockId),
+                                  orderBy: o => o.OrderBy(c => c.SequenceNumber),
+                                  trackingType: TrackingType.Tracking)
+                              ?? throw new StepsBusinessException("Групповой блок не найден");
+
+        for (var i = 0; i < orderedSchedule.Count; i++)
+        {
+            orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
+        }
+
+        repository.Update(orderedSchedule);
+        await _unitOfWork.SaveChangesAsync();
+    }
 }
+
+
+
+// {
+// "sequenceNumber": 1,
+// "athleteId": "01956755-a3df-7d9c-a0e2-3339e3651c9e",
+// },
+// {
+//     "sequenceNumber": 2,
+//     "athleteId": "01956755-bad4-7a12-9492-dfabade663be",
+// },
+// {
+//     "sequenceNumber": 3,
+//     "athleteId": "01956755-c976-7bec-8f22-4ea250ac9916",
+// },
+// {
+//     "sequenceNumber": 6,
+//     "athleteId": "01956755-eeb6-7638-b208-293e010ca1a8",
+// },
+// {
+//     "sequenceNumber": 5,
+//     "athleteId": "01956755-d3e5-76bf-aa99-03025bfa5f3f",
+// },
+// {
+//     "sequenceNumber": 4,
+//     "athleteId": "01956755-dca4-791c-b846-df61f727a986",
+// }

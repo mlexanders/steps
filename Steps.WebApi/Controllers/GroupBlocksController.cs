@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.GroupBlocks.Commands;
 using Steps.Application.Requests.GroupBlocks.Queries;
-using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
-using Steps.Shared.Contracts;
-using Steps.Shared.Contracts.Schedules;
-using Steps.Shared.Contracts.Schedules.ViewModels;
+using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.GroupBlocks.ViewModels;
+using Steps.Shared.Contracts.Teams.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
@@ -23,34 +22,36 @@ public class GroupBlocksController : ControllerBase, IGroupBlocksService
         _mediator = mediator;
     }
 
-    [HttpPost]
-    public Task<Result<GroupBlockViewModel>> Create([FromBody] CreateGroupBlockViewModel model)
-    {
-        return _mediator.Send(new CreateGroupBlockCommand(model));
-    }
-
     [HttpGet("{id:guid}")]
     public Task<Result<GroupBlockViewModel>> GetById(Guid id)
     {
         return _mediator.Send(new GetGroupBlockByIdQuery(id));
     }
 
-    [HttpPatch]
-    public Task<Result<Guid>> Update([FromBody] UpdateGroupBlockViewModel model)
+    [HttpDelete("{contestId:guid}")]
+    public Task<Result> DeleteByContestId(Guid contestId)
     {
-        return _mediator.Send(new UpdateGroupBlock(model));
+        return _mediator.Send(new DeleteByContestId(contestId));
     }
 
-    [HttpPost("[action]")]
-    public Task<Result<PaggedListViewModel<GroupBlockViewModel>>> GetPaged([FromQuery] Page page,
-        [FromBody] Specification<GroupBlock>? specification = null)
+    [HttpGet("[action]/{contestId:guid}")]
+    public Task<Result<List<TeamViewModel>>> GetTeamsForCreateGroupBlocks(Guid contestId)
     {
-        return _mediator.Send(new GetPagedGroupBlocksQuery(page, specification));
+        return _mediator.Send(new GetTeamsForCreateGroupBlocksQuery(contestId));
     }
 
-    [HttpDelete("{id:guid}")]
-    public Task<Result> Delete(Guid id)
+    [HttpPost]
+    public Task CreateByTeams([FromBody] CreateGroupBlockViewModel model)
     {
-        return _mediator.Send(new DeleteGroupBlock(id));
+        return _mediator.Send(new CreateGroupBlocksByTeamsCommand(model));
+    }
+
+    [HttpGet("[action]/{contestId:guid}")]
+    public Task<Result<List<GroupBlockViewModel>>> GetByContestId(Guid contestId)
+    {
+        return _mediator.Send(new GetGroupBlocksByContestIdQuery(contestId));
     }
 }
+
+
+

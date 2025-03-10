@@ -1,5 +1,6 @@
 using Steps.Domain.Base;
 using Steps.Domain.Entities;
+using Steps.Shared.Contracts.Teams.ViewModels;
 
 namespace Steps.Shared.Contracts.Entries.ViewModels;
 
@@ -13,8 +14,8 @@ public class EntryViewModel : IHaveId
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }
     
-    public Guid UserId { get; set; }
-    public IUser User { get; set; }
+    public Guid TeamId { get; set; }
+    public TeamViewModel Team { get; set; } = null!;
     
     public List<Athlete> Athletes { get; set; }
 }

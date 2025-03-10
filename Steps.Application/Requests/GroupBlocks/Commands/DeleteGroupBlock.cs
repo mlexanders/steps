@@ -1,12 +1,32 @@
-﻿using MediatR;
+﻿using Calabonga.UnitOfWork;
+using MediatR;
+using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
+using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.GroupBlocks.Commands;
 
-public class DeleteGroupBlock : IRequest<Result>
+public record DeleteByContestId(Guid ContestId) : IRequest<Result>;
+
+public class DeleteByContestIdHandler : IRequestHandler<DeleteByContestId, Result>
 {
-    public DeleteGroupBlock(Guid id)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public DeleteByContestIdHandler(IUnitOfWork unitOfWork)
     {
-        throw new NotImplementedException();
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<Result> Handle(DeleteByContestId request, CancellationToken cancellationToken)
+    {
+        var blocks = await _unitOfWork.GetRepository<GroupBlock>().GetAllAsync(
+                        predicate: s => s.ContestId.Equals(request.ContestId),
+                        trackingType: TrackingType.NoTracking)
+                    ?? throw new StepsBusinessException("Блоки не найдены");
+
+        _unitOfWork.GetRepository<GroupBlock>().Delete(blocks);
+        await _unitOfWork.SaveChangesAsync();
+        
+        return Result.Ok();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Steps.Domain;
+using Steps.Domain.Base;
 
 namespace Steps.Shared.Contracts.TestResults.ViewModels;
 

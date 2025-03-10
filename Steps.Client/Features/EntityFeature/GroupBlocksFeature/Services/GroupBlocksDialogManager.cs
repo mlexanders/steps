@@ -1,5 +1,6 @@
 ﻿using Radzen;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Dialogs;
+using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.Schedules.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;

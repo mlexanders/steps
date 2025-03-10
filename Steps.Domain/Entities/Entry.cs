@@ -11,6 +11,9 @@ public class Entry : Entity
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; } = null!;
     
+    public Guid TeamId { get; set; }
+    public Team Team { get; set; } = null!;
+    
     public Guid CreatorId { get; set; } 
     public User Creator { get; set; } = null!;
     public List<Athlete> Athletes { get; set; } = null!;

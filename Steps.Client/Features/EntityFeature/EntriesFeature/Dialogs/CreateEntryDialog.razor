@@ -1,13 +1,8 @@
-﻿@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
-@using Steps.Shared.Contracts.Athletes.ViewModels
-@using Steps.Client.Features.EntityFeature.AthleteFeature.Forms
-@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
-@using Steps.Client.Services.Authentication
+﻿@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
 @using Steps.Shared.Contracts.Entries.ViewModels
 @using Steps.Client.Features.EntityFeature.EntriesFeature.Forms
 @inherits BaseModal
 @inject EntriesManagement Manager
-@inject SecurityService SecurityService
 
 
 <RadzenTemplateForm TItem="CreateEntryViewModel" Submit="Create" Data="_entryViewModel">
@@ -27,10 +22,6 @@
     protected override async Task OnParametersSetAsync()
     {
         _entryViewModel.ContestId = ContestId;
-
-        var user = await SecurityService.GetCurrentUser();
-
-        _entryViewModel.CreatorId = user.Id;
     }
     
     private async Task Create()
@@ -39,7 +30,6 @@
         {
             SubmissionDate = DateTime.SpecifyKind(_entryViewModel.SubmissionDate, DateTimeKind.Utc),
             ContestId = _entryViewModel.ContestId,
-            CreatorId = _entryViewModel.CreatorId,
             AthletesIds = _entryViewModel.AthletesIds
         });
         ShowResultMessage(result);

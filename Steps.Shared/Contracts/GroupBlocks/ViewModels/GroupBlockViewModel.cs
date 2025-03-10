@@ -1,6 +1,7 @@
 ﻿using Steps.Domain.Base;
+using Steps.Shared.Contracts.Schedules.ViewModels;
 
-namespace Steps.Shared.Contracts.Schedules.ViewModels;
+namespace Steps.Shared.Contracts.GroupBlocks.ViewModels;
 
 public class GroupBlockViewModel : IHaveId
 {
@@ -9,5 +10,5 @@ public class GroupBlockViewModel : IHaveId
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 
-    public List<GroupBlockCellViewModel> GroupBlockCells { get; set; } = [];
+    public List<ScheduledCellViewModel> ScheduledCells { get; set; } = [];
 }

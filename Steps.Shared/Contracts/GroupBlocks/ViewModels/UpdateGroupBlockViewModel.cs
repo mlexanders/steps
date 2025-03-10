@@ -1,6 +1,6 @@
 ﻿using Steps.Domain.Base;
 
-namespace Steps.Shared.Contracts.Schedules.ViewModels;
+namespace Steps.Shared.Contracts.GroupBlocks.ViewModels;
 
 public class UpdateGroupBlockViewModel : IHaveId
 {

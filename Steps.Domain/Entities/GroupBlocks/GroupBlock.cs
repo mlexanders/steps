@@ -6,23 +6,23 @@ namespace Steps.Domain.Entities.GroupBlocks;
 public class GroupBlock : Entity
 {
     public Guid ContestId { get; set; }
-    public Contest Contest { get; set; } = null!;
+    public virtual Contest Contest { get; set; } = null!;
 
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 
-    public List<GroupBlockCell> GroupBlockCells { get; set; } = [];
+    public virtual List<ScheduledCell> Schedule { get; set; } = [];
 }
 
 
-public class GroupBlockCell : Entity
+public class ScheduledCell : Entity
 {
     public DateTime ExitTime { get; set; }
     public int SequenceNumber { get; set; }
 
     public Guid AthleteId { get; set; }
-    public Athlete Athlete { get; set; } = null!;
+    public virtual Athlete Athlete { get; set; } = null!;
 
     public Guid GroupBlockId { get; set; }
-    public GroupBlock GroupBlock { get; set; } = null!;
+    public virtual GroupBlock GroupBlock { get; set; } = null!;
 }

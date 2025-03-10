@@ -1,7 +1,8 @@
 ﻿@using Steps.Domain.Entities.GroupBlocks;
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Shared.Contracts.Schedules.ViewModels;
 
-@inherits ManageBaseComponent<GroupBlock, GroupBlockViewModel,CreateGroupBlockViewModel, UpdateGroupBlockViewModel>
+@inherits ManageBaseComponent<GroupBlock, Steps.Shared.Contracts.GroupBlocks.ViewModels.GroupBlockViewModel,CreateGroupBlockViewModel, UpdateGroupBlockViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="GroupBlockViewModel" Data="Manager.Data" AllowPaging="true"

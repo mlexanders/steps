@@ -16,8 +16,8 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.Contest, x => x.MapFrom(m => m.Contest))
-            .ForMember(x => x.UserId, x => x.MapFrom(m => m.CreatorId))
-            .ForMember(x => x.User, x => x.MapFrom(m => m.Creator))
+            .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
+            .ForMember(x => x.Team, x => x.MapFrom(m => m.Team))
             .ForMember(x => x.Athletes, x => x.MapFrom(m => m.Athletes));
 
         // Из EntryViewModel в Entry
@@ -28,8 +28,10 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.Contest, x => x.Ignore())
-            .ForMember(x => x.CreatorId, x => x.MapFrom(m => m.UserId))
+            .ForMember(x => x.CreatorId, x => x.Ignore())
             .ForMember(x => x.Creator, x => x.Ignore())
+            .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
+            .ForMember(x => x.Team, x => x.MapFrom(m => m.Team))
             .ForMember(x => x.Athletes, x => x.MapFrom(m => m.Athletes));
 
         // Из CreateEntryViewModel в Entry
@@ -41,7 +43,9 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.IsSuccess, x => x.Ignore())
             .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
-            .ForMember(x => x.CreatorId, x => x.MapFrom(m => m.CreatorId))
+            .ForMember(x => x.CreatorId, x => x.Ignore())
+            .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
+            .ForMember(x => x.Team, x => x.Ignore())
             .ForMember(x => x.Athletes, x => x.Ignore());
         
         // Из Entry в CreateEntryViewModel

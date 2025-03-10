@@ -1,0 +1,49 @@
+﻿@using Steps.Client.Features.EntityFeature.TeamsFeature.Services
+@using Steps.Shared
+@using Steps.Shared.Contracts.Teams.ViewModels
+@implements IDisposable
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center"
+             Gap="0.5rem" class="rz-p-12">
+    <RadzenLabel Text="Выберите команду" Component="DropDownDataGridFilteringLoadData"/>
+
+    <RadzenDropDownDataGrid @bind-Value="@TeamId" Data="@TeamsManager.Data" Change="@((o) => OnChange(o))"
+                            TextProperty="@nameof(TeamViewModel.Name)" ValueProperty="@nameof(TeamViewModel.Id)"
+                            Name="DropDownDataGridTextValueProperties" IsLoading="@TeamsManager.IsLoading"/>
+</RadzenStack>
+
+@code
+{
+    [Inject] protected TeamsManager TeamsManager { get; set; } = null!;
+
+    [Parameter] public Guid TeamId { get; set; }
+
+    [Parameter] public EventCallback<Guid> TeamIdChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TeamsManager.ChangedList += StateHasChanged;
+        await TeamsManager.Initialize();
+    }
+
+    private async Task LoadData(LoadDataArgs arg)
+    {
+        if (!string.IsNullOrEmpty(arg.Filter))
+        {
+            var filter = arg.Filter.ToLower();
+            TeamsManager.UseSpecification(new Specification<Team>().Where(u => u.Name.Contains(filter)));
+        }
+
+        await TeamsManager.ChangePage(arg.Skip, arg.Top);
+    }
+
+    private async Task OnChange(object? teamId)
+    {
+        if (TeamIdChanged.HasDelegate)
+            await TeamIdChanged.InvokeAsync(TeamId);
+    }
+
+    public void Dispose()
+    {
+        TeamsManager.ChangedList -= StateHasChanged;
+    }
+}

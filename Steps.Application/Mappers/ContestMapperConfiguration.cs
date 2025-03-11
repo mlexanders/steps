@@ -42,6 +42,7 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Judges, o => o.Ignore())
             .ForMember(x => x.Counters, o => o.Ignore())
             .ForMember(x => x.Entries, o => o.Ignore()) 
+            .ForMember(x => x.Status, o => o.Ignore()) 
             .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
 
@@ -71,6 +72,8 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
             .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate))
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
-            .ForMember(x => x.Description, o => o.MapFrom(m => m.Description));
+            .ForMember(x => x.Description, o => o.MapFrom(m => m.Description))
+            .ForMember(x => x.JudjesIds, o => o.Ignore()) 
+            .ForMember(x => x.CountersIds, o => o.Ignore()) ;
     }
 }

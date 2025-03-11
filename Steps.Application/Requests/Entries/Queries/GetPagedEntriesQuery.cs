@@ -38,7 +38,7 @@ public class GetPagedEntriesQueryHandler
     {
         var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
         
-        if (user.Role != Role.Organizer) request.AddPredicate(t => t.UserId.Equals(user.Id)); // Только заявки пользователя
+        if (user.Role != Role.Organizer) request.AddPredicate(t => t.CreatorId.Equals(user.Id)); // Только заявки пользователя
         
         var views = await _unitOfWork.GetRepository<Entry>()
             .GetPagedListAsync(
@@ -47,11 +47,8 @@ public class GetPagedEntriesQueryHandler
                     Id = entry.Id,
                     Number = entry.Number,
                     IsSuccess = entry.IsSuccess,
-                    SubmissionDate = entry.SubmissionDate,
                     ContestId = entry.ContestId,
-                    ContestName = entry.Contest.Name, // Берем только имя
-                    UserId = entry.UserId,
-                    User = entry.User,
+                    ContestName = entry.Contest.Name,
                     Athletes = entry.Athletes.Select(a => new Athlete() 
                     { 
                         Id = a.Id, 

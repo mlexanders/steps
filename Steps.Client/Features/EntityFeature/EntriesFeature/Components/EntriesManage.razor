@@ -1,7 +1,7 @@
 ﻿@page "/entries"
 
 @using Steps.Shared.Contracts.Entries.ViewModels
-@inherits ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
+@inherits Steps.Client.Features.Common.ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="EntryViewModel" Data="Manager.Data" AllowPaging="true"

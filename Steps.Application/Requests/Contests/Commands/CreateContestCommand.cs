@@ -56,7 +56,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
             counters.Add(counter);
         }
 
-        contest.Judjes = judges;
+        contest.Judges = judges;
         contest.Counters = counters;
         
         var entry = await repository.InsertAsync(contest, cancellationToken);

@@ -37,7 +37,7 @@ namespace Steps.Application.Requests.Users.Queries
 
             var contests = await repository.GetPagedListAsync(
                 selector: contest => _mapper.Map<UserViewModel>(contest),
-                predicate: u => u.Role == Role.Judje,
+                predicate: u => u.Role == Role.Judge,
                 pageIndex: page.PageIndex,
                 pageSize: page.PageSize,
                 cancellationToken: cancellationToken,

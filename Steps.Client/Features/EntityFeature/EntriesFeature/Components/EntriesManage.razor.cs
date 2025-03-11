@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Domain.Entities;
@@ -10,7 +11,7 @@ namespace Steps.Client.Features.EntityFeature.EntriesFeature.Components;
 
 public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>
 {
-    [Inject] protected EntriesManagement EntriesManagement { get; set; } = null!;
+    [Inject] protected EntriesManager EntriesManagement { get; set; } = null!;
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
 
     [Parameter] public bool IsReadonly { get; set; }

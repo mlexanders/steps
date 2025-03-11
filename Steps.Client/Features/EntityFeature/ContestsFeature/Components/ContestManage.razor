@@ -4,7 +4,7 @@
 @using Steps.Shared.Contracts.Contests.ViewModels
 @attribute [Authorize]
 
-@inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
+@inherits Steps.Client.Features.Common.ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard>
     <RadzenScheduler @ref=@scheduler TItem="ContestViewModel" Data="Manager.Data"

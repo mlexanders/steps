@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
@@ -15,7 +16,7 @@ namespace Steps.Client.Features.EntityFeature.EntriesFeature.Components;
 
 public partial class EntryCard: ManageBaseComponent<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>
 {
-    [Inject] protected EntriesManagement EntriesManagement { get; set; } = null!;
+    [Inject] protected EntriesManager EntriesManagement { get; set; } = null!;
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
     
     [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;

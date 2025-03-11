@@ -3,6 +3,8 @@ using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
+using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
+using Steps.Client.Features.EntityFeature.Schedules.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
@@ -13,9 +15,12 @@ using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
+using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.Schedules;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;
+using SchedulesService = Steps.Client.Services.Api.SchedulesService;
 
 namespace Steps.Client;
 
@@ -25,7 +30,7 @@ public static class AddIdentityDependencyInjection
     {
         services.AddTransient<AthleteDialogManager>();
         services.AddTransient<AthleteManager>();
-        services.AddTransient<IAthleteService, AthleteService>();
+        services.AddTransient<IAthletesService, AthletesService>();
         
         services.AddTransient<ContestDialogManager>();
         services.AddTransient<ContestManager>();
@@ -44,10 +49,16 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<ITeamsService, TeamsService>();
         
         services.AddTransient<EntriesDialogManager>();
-        services.AddTransient<EntriesManagement>();
+        services.AddTransient<EntriesManager>();
         services.AddTransient<IEntryService, EntryService>();
 
         services.AddSingleton<IUserRoutes, UsersRoute>();
+        
+        services.AddTransient<GroupBlocksDialogManager>();
+        services.AddTransient<IGroupBlocksService, GroupBlocksService>();
+                
+        services.AddTransient<SchedulerManager>();
+        services.AddTransient<ISchedulesService, SchedulesService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

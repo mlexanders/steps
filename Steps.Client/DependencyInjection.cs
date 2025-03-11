@@ -7,6 +7,7 @@ using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
+using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Authentication;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
@@ -14,6 +15,7 @@ using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
+using static Steps.Client.Services.Api.Routes.ApiRoutes;
 
 namespace Steps.Client;
 
@@ -44,6 +46,8 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<EntriesDialogManager>();
         services.AddTransient<EntriesManagement>();
         services.AddTransient<IEntryService, EntryService>();
+
+        services.AddSingleton<IUserRoutes, UsersRoute>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

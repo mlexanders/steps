@@ -1,33 +1,81 @@
 ﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Client.Features.EntityFeature.UsersFeature.Services
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Contracts.Athletes.ViewModels
 @using Steps.Shared.Contracts.Contests.ViewModels
 
+@inject UsersManager UsersManager
+
 <RadzenFieldset Text="@Title">
-    <RadzenStack Gap="2rem">
+        <RadzenRow>
+            <RadzenColumn Size="6">
+                <RadzenStack Gap="2rem">
+                    <RadzenTextBox @bind-Value="@Contest.Name" Name="@nameof(Contest.Name)" Placeholder="Введите название"
+                                   Style="width: 100%" />
+                    <RadzenRequiredValidator Component="@nameof(Contest.Name)" Text="Название обязательно"
+                                             Style="position: absolute" />
 
-        <RadzenTextBox @bind-Value="@Contest.Name" Name="@nameof(Contest.Name)" Placeholder="Введите название"
-                       Style="width: 100%"/>
-        <RadzenRequiredValidator Component="@nameof(Contest.Name)" Text="Название обязательно"
-                                 Style="position: absolute"/>
+                    <RadzenTextArea @bind-Value="@Contest.Description" Placeholder="Введите описание"
+                                    Style="width: 100%" />
 
-        <RadzenTextArea @bind-Value="@Contest.Description" Placeholder="Введите описание" Style="width: 100%"/>
+                    <RadzenDatePicker @bind-Value="@Contest.StartDate" Name="@nameof(Contest.StartDate)"
+                                      Placeholder="Дата начала" Style="width: 100%" />
+                    <RadzenRequiredValidator Component="@nameof(Contest.StartDate)" Text="Дата начала обязательна" />
+                    <RadzenCustomValidator Validator="() => Contest.StartDate > DateTime.Now"
+                                           Component="@nameof(Contest.StartDate)" Text="Укажите дату и время начала" />
 
-        <RadzenDatePicker @bind-Value="@Contest.StartDate" Name="@nameof(Contest.StartDate)" Placeholder="Дата начала"
-                          Style="width: 100%"/>
-        <RadzenRequiredValidator Component="@nameof(Contest.StartDate)" Text="Дата начала обязательна"/>
-        <RadzenCustomValidator Validator="() => Contest.StartDate > DateTime.Now" Component="@nameof(Contest.StartDate)"
-                               Text="Укажите дату и время начала"/>
+                    <RadzenDatePicker @bind-Value="@Contest.EndDate" Name="@nameof(Contest.EndDate)"
+                                      Placeholder="Дата окончания" Style="width: 100%" />
+                    <RadzenRequiredValidator Component="@nameof(Contest.EndDate)" Text="Дата окончания обязательна" />
+                    <RadzenCustomValidator Validator="() => Contest.EndDate < DateTime.Now.AddMonths(12)"
+                                           Component="@nameof(Contest.EndDate)" Text="Дата окончания должна быть в пределах года" />
 
-        <RadzenDatePicker @bind-Value="@Contest.EndDate" Name="@nameof(Contest.EndDate)" Placeholder="Дата окончания"
-                          Style="width: 100%"/>
-        <RadzenRequiredValidator Component="@nameof(Contest.EndDate)" Text="Дата окончания обязательна"/>
-        <RadzenCustomValidator Validator="() => Contest.EndDate < DateTime.Now.AddMonths(12)"
-                               Component="@nameof(Contest.EndDate)" Text="Укажите дату и время начала"/>
-    </RadzenStack>
+                    <RadzenDropDown @bind-Value="Contest.Type" Name="@nameof(Contest.Type)"
+                                    Data="@ContestTypes" Placeholder="Выберите тип" Style="width: 100%" />
+                    <RadzenRequiredValidator Component="@nameof(Contest.Type)" Text="Тип обязателен"
+                                                 Style="position: absolute" />
+                </RadzenStack>
+            </RadzenColumn>
 
+            <RadzenColumn Size="6">
+                <RadzenStack Gap="2rem">
+                    <RadzenListBox TValue="Guid" Data="@Judges" TextProperty="Login" ValueProperty="Id" Multiple="true"
+                                   Style="width: 100%; height: 150px;" />
+                    <RadzenListBox TValue="Guid" Data="@Counters" TextProperty="Login" ValueProperty="Id" Multiple="true"
+                                   Style="width: 100%; height: 150px;" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
 </RadzenFieldset>
 
 
 @code {
     [Parameter] [Required] public string Title { get; set; } = null!;
     [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;
+
+    protected List<UserViewModel> Judges { get; set; } = new List<UserViewModel>();
+    protected List<UserViewModel> Counters { get; set; } = new List<UserViewModel>();
+
+    private List<ContestType> ContestTypes = Enum.GetValues(typeof(ContestType)).Cast<ContestType>().ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJudges();
+
+        await LoadCounters();
+    }
+
+    private async Task LoadJudges()
+    {
+        var result = await UsersManager.GetJudges(new Page(0, UsersManager.PageSize));
+        Judges = result.Value.Items.ToList();
+    }
+
+    private async Task LoadCounters()
+    {
+        var result = await UsersManager.GetCounters(new Page(0, UsersManager.PageSize));
+        Counters = result.Value.Items.ToList();
+    }
 }

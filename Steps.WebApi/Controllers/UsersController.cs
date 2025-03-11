@@ -48,6 +48,18 @@ public class UsersController : IUsersService
         return _mediator.Send(new GetPagedUsersQuery(page));
     }
 
+    [HttpGet("[action]")]
+    public Task<Result<PaggedListViewModel<UserViewModel>>> GetJudges([FromQuery] Page page)
+    {
+        return _mediator.Send(new GetJudgesQuery(page));
+    }
+
+    [HttpGet("[action]")]
+    public Task<Result<PaggedListViewModel<UserViewModel>>> GetCounters([FromQuery] Page page)
+    {
+        return _mediator.Send(new GetCountersQuery(page));
+    }
+
     [HttpDelete("{id:guid}")]
     public Task<Result> Delete(Guid id)
     {

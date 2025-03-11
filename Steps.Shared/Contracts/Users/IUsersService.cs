@@ -4,4 +4,9 @@ using Steps.Shared.Contracts.Users.ViewModels;
 
 namespace Steps.Shared.Contracts.Users;
 
-public interface IUsersService : ICrudService<User, UserViewModel, CreateUserViewModel, UpdateUserViewModel>;
+public interface IUsersService : ICrudService<User, UserViewModel, CreateUserViewModel, UpdateUserViewModel>
+{
+    Task<Result<PaggedListViewModel<UserViewModel>>> GetCounters(Page page);
+
+    Task<Result<PaggedListViewModel<UserViewModel>>> GetJudges(Page page);
+}

@@ -16,5 +16,5 @@ public class BaseApiRoutes(string basePath) : IApiRoutes
 
     public string Update() => $"{BasePath}/";
     
-    public string Delete(Guid id) => $"{BasePath}/{id}"; 
+    public string Delete(Guid id) => $"{BasePath}/{id}";
 }

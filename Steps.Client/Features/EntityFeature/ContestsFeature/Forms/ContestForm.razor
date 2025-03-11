@@ -41,23 +41,21 @@
 
             <RadzenColumn Size="6">
                 <RadzenStack Gap="2rem">
-                <RadzenListBox TValue="Guid"
-                               Data="@Judges"
-                               TextProperty="Login"
-                               ValueProperty="Id"
-                               Multiple="true"
-                               Value="@selectedJudges"
-                               Change="@(args => OnJudgesChanged(args))"
-                               Style="width: 100%; height: 150px;" />
+                    <RadzenListBox TValue="Guid" Data="@Judges"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Multiple="true"
+                                   Value="@selectedJudges"
+                                   Change="@(args => OnJudgesChanged(args))"
+                                   Style="width: 100%; height: 150px;" />
 
-                <RadzenListBox TValue="Guid"
-                               Data="@Counters"
-                               TextProperty="Login"
-                               ValueProperty="Id"
-                               Multiple="true"
-                               Value="@selectedCounters"
-                               Change="@(args => OnCountersChanged(args))"
-                               Style="width: 100%; height: 150px;" />
+                    <RadzenListBox TValue="Guid" Data="@Counters"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Multiple="true"
+                                   Value="@selectedCounters"
+                                   Change="@(args => OnCountersChanged(args))"
+                                   Style="width: 100%; height: 150px;" />
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
@@ -66,9 +64,10 @@
 
 @code {
     [Parameter] [Required] public string Title { get; set; } = null!;
-    [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;
-
+    [Parameter] [Required] public CreateContestViewModel Contest { get; set; } = null!;
+    
     private List<Guid> selectedJudges { get; set; } = new();
+    
     private List<Guid> selectedCounters { get; set; } = new();
 
     protected List<UserViewModel> Judges { get; set; } = new List<UserViewModel>();
@@ -94,28 +93,22 @@
         var result = await UsersManager.GetCounters(new Page(0, UsersManager.PageSize));
         Counters = result.Value.Items.ToList();
     }
-
+    
     private void OnJudgesChanged(object values)
     {
         if (values is IEnumerable<Guid> selected)
         {
             selectedJudges = selected.ToList();
-            Contest.Judjes = Judges
-                .Where(j => selectedJudges.Contains(j.Id))
-                .Select(j => new User { Id = j.Id, Login = j.Login, Role = j.Role })
-                .ToList();
+            Contest.Judjes = selectedJudges;
         }
     }
-
+    
     private void OnCountersChanged(object values)
     {
         if (values is IEnumerable<Guid> selected)
         {
             selectedCounters = selected.ToList();
-            Contest.Counters = Counters
-                .Where(c => selectedCounters.Contains(c.Id))
-                .Select(c => new User { Id = c.Id, Login = c.Login, Role = c.Role })
-                .ToList();
+            Contest.Counters = selectedCounters;
         }
     }
 }

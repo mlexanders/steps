@@ -4,7 +4,7 @@
 
 @inherits BaseModal
 @inject ContestManager ContestManager
-<RadzenTemplateForm TItem="ContestViewModel" Submit="Create" Data="_contest">
+<RadzenTemplateForm TItem="CreateContestViewModel" Submit="Create" Data="_contest">
     <RadzenCard>
 
         <ContestForm Contest="@_contest" Title="Мероприятие"/>
@@ -16,7 +16,7 @@
 </RadzenTemplateForm>
 
 @code {
-    private readonly ContestViewModel _contest = new();
+    private readonly CreateContestViewModel _contest = new();
 
     private async Task Create()
     {

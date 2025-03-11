@@ -12,6 +12,6 @@ public class CreateContestViewModel
     public DateTime EndDate { get; set; }
     public ContestType Type { get; set; }
 
-    public List<User> Judjes { get; set; }
-    public List<User> Counters { get; set; }
+    public List<Guid> Judjes { get; set; }
+    public List<Guid> Counters { get; set; }
 }

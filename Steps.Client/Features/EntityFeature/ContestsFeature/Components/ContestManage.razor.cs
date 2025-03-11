@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Contests.ViewModels;

@@ -43,7 +43,9 @@ public class ScheduledCellMapperConfiguration : Profile
             .ForMember(x => x.SequenceNumber, o => o.MapFrom(m => m.SequenceNumber))
             .ForMember(x => x.ExitTime, o => o.MapFrom(m => m.ExitTime))
             .ForMember(x => x.GroupBlockId, o => o.MapFrom(m => m.GroupBlockId))
-            .ForMember(x => x.AthleteFullName, o => o.MapFrom(m => m.Athlete.FullName))
+            .ForMember(x => x.Athlete, o => o.MapFrom(m => m.Athlete))
+            .ForMember(x => x.TeamName, o => o.MapFrom(m => m.Athlete.Team.Name))
+            .ForMember(x => x.ClubName, o => o.MapFrom(m => m.Athlete.Team.Club.Name))
             .ForMember(x => x.AthleteId, o => o.MapFrom(m => m.AthleteId));
         
         

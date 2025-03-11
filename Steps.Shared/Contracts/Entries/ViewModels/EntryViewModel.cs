@@ -9,7 +9,6 @@ public class EntryViewModel : IHaveId
     public Guid Id { get; set; }
     public int Number { get; set; }
     public bool IsSuccess { get; set; }
-    public DateTime SubmissionDate { get; set; }
     
     public Guid ContestId { get; set; }
     public Contest Contest { get; set; }

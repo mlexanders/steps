@@ -32,7 +32,7 @@ public class GetTeamsForCreateGroupBlocksQueryHandler : IRequestHandler<GetTeams
     public async Task<Result<List<TeamViewModel>>> Handle(GetTeamsForCreateGroupBlocksQuery request, CancellationToken cancellationToken)
     {
         var block = await _unitOfWork.GetRepository<Entry>().GetAllAsync(
-                        predicate: e => e.ContestId.Equals(request.ContestId),
+                        predicate: e => e.ContestId.Equals(request.ContestId) && e.IsSuccess,
                         selector: g =>   _mapper.Map<TeamViewModel>(g.Team),
                         trackingType: TrackingType.NoTracking)
                     ?? throw new StepsBusinessException("Команды не найдены");

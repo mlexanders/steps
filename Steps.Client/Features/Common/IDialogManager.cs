@@ -1,6 +1,4 @@
-﻿using Radzen;
-
-namespace Steps.Client.Features;
+﻿namespace Steps.Client.Features.Common;
 
 public interface IDialogManager<in TViewModel>
 {

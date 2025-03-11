@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
 
-namespace Steps.Client.Features;
+namespace Steps.Client.Features.Common;
 
 public class BaseModal : BaseNotificate
 {

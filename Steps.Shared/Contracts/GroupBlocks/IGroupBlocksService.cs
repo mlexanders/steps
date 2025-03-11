@@ -16,7 +16,7 @@ public interface IGroupBlocksService
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    Task CreateByTeams(CreateGroupBlockViewModel model);
+    Task<Result> CreateByTeams(CreateGroupBlockViewModel model);
     
     /// <summary>
     /// Получить групповые блоки по id Contest`a
@@ -33,7 +33,7 @@ public interface IGroupBlocksService
     Task<Result<GroupBlockViewModel>> GetById(Guid id);
     
     /// <summary>
-    /// Удаление всех блоков
+    /// Удаление всех блоков по ContestId
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

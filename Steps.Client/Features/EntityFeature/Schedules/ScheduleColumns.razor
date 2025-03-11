@@ -1,0 +1,20 @@
+﻿@using Steps.Shared.Contracts.Schedules.ViewModels
+
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.SequenceNumber)" Title="Номер"/>
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.TeamName)" Title="Команда"/>
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.ClubName)" Title="Клуб"/>
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.Athlete.FullName)" Title="ФИО">
+    <Template Context="cell">
+        @cell.Athlete.FullName
+    </Template>
+</RadzenDataGridColumn>
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.Athlete.BirthDate)" Title="Дата рождения">
+    <Template Context="cell">
+        @cell.Athlete.BirthDate
+    </Template>
+</RadzenDataGridColumn>
+<RadzenDataGridColumn TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.ExitTime)" Title="Время выхода">
+    <Template Context="cell">
+        @cell.ExitTime.ToString("t")
+    </Template>
+</RadzenDataGridColumn>

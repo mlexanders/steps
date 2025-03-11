@@ -1,4 +1,5 @@
 ﻿using Radzen;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Dialogs;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.Schedules.ViewModels;
@@ -27,13 +28,7 @@ public class GroupBlocksDialogManager : IDialogManager<GroupBlockViewModel>
         var result = await _dialogService.OpenAsync<CreateTeamDialog>("Создание команды");
         return result ?? false;
     }
-
-    public async Task<bool> ShowCreateDialog(GroupBlockViewModel club)
-    {
-        var options = new Dictionary<string, object> { { "Model", club } };
-        var result = await _dialogService.OpenAsync<CreateTeamDialog>("Создание команды", options);
-        return result ?? false;
-    }
+    
 
     public async Task<bool> ShowUpdateDialog(GroupBlockViewModel model)
     {

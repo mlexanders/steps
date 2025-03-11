@@ -1,13 +1,18 @@
 ﻿@using Steps.Shared.Contracts.Contests.ViewModels
+@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
+@using Steps.Client.Features.Common
 
 @inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard Style="width: 100%; max-width: 600px;">
-        <p><strong>Адрес:</strong> @Model.Name</p>
+    <p><strong>Адрес:</strong> @Model.Name</p>
 
-        <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                      Click="() => OnCreate()" Style="margin-bottom: 10px;" />
+    <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                  Click="() => OnCreate()" Style="margin-bottom: 10px;" />
 </RadzenCard>
+
+Групповые блоки:
+<GroupBlocksManage Contest="Model" />
 
 @code {
     [Parameter] public ContestViewModel Model { get; set; } = null!;

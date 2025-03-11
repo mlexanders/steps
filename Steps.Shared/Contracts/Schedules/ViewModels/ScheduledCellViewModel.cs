@@ -1,4 +1,5 @@
 ﻿using Steps.Domain.Base;
+using Steps.Shared.Contracts.Athletes.ViewModels;
 
 namespace Steps.Shared.Contracts.Schedules.ViewModels;
 
@@ -8,8 +9,8 @@ public class ScheduledCellViewModel : IHaveId
     public DateTime ExitTime { get; set; }
     public int SequenceNumber { get; set; }
     public Guid AthleteId { get; set; }
-    public string AthleteFullName { get; set; } = null!;
-    // public Athlete Athlete { get; set; } = null!;
-
+    public AthleteViewModel Athlete { get; set; }
+    public string ClubName { get; set; }
+    public string TeamName { get; set; }
     public Guid GroupBlockId { get; set; }
 }

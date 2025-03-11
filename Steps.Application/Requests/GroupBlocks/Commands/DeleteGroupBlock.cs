@@ -27,6 +27,6 @@ public class DeleteByContestIdHandler : IRequestHandler<DeleteByContestId, Resul
         _unitOfWork.GetRepository<GroupBlock>().Delete(blocks);
         await _unitOfWork.SaveChangesAsync();
         
-        return Result.Ok();
+        return Result.Ok().SetMessage("Блоки удалены");
     }
 }

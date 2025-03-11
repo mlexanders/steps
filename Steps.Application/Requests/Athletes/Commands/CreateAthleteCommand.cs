@@ -7,9 +7,9 @@ using Calabonga.UnitOfWork;
 
 namespace Steps.Application.Requests.Athletes.Commands
 {
-    public record CreateAthleteCommand(CreateAthleteViewModel Model) : IRequest<Result<Guid>>;
+    public record CreateAthleteCommand(CreateAthleteViewModel Model) : IRequest<Result<AthleteViewModel>>;
 
-    public class CreateAthleteCommandHandler : IRequestHandler<CreateAthleteCommand, Result<Guid>>
+    public class CreateAthleteCommandHandler : IRequestHandler<CreateAthleteCommand, Result<AthleteViewModel>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -20,17 +20,19 @@ namespace Steps.Application.Requests.Athletes.Commands
             _mapper = mapper;
         }
 
-        public async Task<Result<Guid>> Handle(CreateAthleteCommand request, CancellationToken cancellationToken)
+        public async Task<Result<AthleteViewModel>> Handle(CreateAthleteCommand request,
+            CancellationToken cancellationToken)
         {
             var model = request.Model;
             var athlete = _mapper.Map<Athlete>(model);
 
             var athleteRepository = _unitOfWork.GetRepository<Athlete>();
-  
-            athleteRepository.Insert(athlete);
+
+            var entry = await athleteRepository.InsertAsync(athlete, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
 
-            return Result<Guid>.Ok(athlete.Id).SetMessage("Спортсмен добавлен!");
+            var view = _mapper.Map<AthleteViewModel>(entry.Entity);
+            return Result<AthleteViewModel>.Ok(view).SetMessage("Спортсмен добавлен!");
         }
     }
 }

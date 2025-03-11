@@ -2,7 +2,7 @@
 using Radzen;
 using Steps.Domain.Base;
 
-namespace Steps.Client.Features;
+namespace Steps.Client.Features.Common;
 
 public class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> : ComponentBase, IDisposable
     where TViewModel : IHaveId
@@ -12,7 +12,7 @@ public class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateV
 
 {
     [Parameter]
-    public BaseEntityManager<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> Manager { get; set; } = null!;
+    public EntityManagerBase<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> Manager { get; set; } = null!;
 
     [Parameter] public IDialogManager<TViewModel> DialogManager { get; set; } = null!;
 

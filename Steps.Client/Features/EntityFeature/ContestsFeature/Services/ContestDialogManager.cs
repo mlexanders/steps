@@ -1,4 +1,5 @@
 ﻿using Radzen;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Dialogs;
 using Steps.Shared.Contracts.Contests.ViewModels;
 

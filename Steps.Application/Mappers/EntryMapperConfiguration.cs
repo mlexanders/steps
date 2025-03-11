@@ -13,7 +13,6 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Id, x => x.MapFrom(m => m.Id))
             .ForMember(x => x.Number, x => x.MapFrom(m => m.Number))
             .ForMember(x => x.IsSuccess, x => x.MapFrom(m => m.IsSuccess))
-            .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.Contest, x => x.MapFrom(m => m.Contest))
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
@@ -25,7 +24,7 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.Number, x => x.MapFrom(m => m.Number))
             .ForMember(x => x.IsSuccess, x => x.MapFrom(m => m.IsSuccess))
-            .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
+            .ForMember(x => x.SubmissionDate, x => x.Ignore())
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.Contest, x => x.Ignore())
             .ForMember(x => x.CreatorId, x => x.Ignore())
@@ -41,7 +40,7 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Creator, x => x.Ignore())
             .ForMember(x => x.Number, x => x.Ignore())
             .ForMember(x => x.IsSuccess, x => x.Ignore())
-            .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
+            .ForMember(x => x.SubmissionDate, x => x.Ignore())
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.CreatorId, x => x.Ignore())
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
@@ -50,7 +49,6 @@ public class EntryMapperConfiguration : Profile
         
         // Из Entry в CreateEntryViewModel
         CreateMap<Entry, CreateEntryViewModel>()
-            .ForMember(x => x.SubmissionDate, x => x.MapFrom(m => m.SubmissionDate))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
             .ForMember(x => x.AthletesIds, x => x.Ignore());
     }

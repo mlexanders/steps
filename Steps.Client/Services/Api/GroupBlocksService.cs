@@ -1,21 +1,18 @@
 ﻿using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
-using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
-using Steps.Shared.Contracts.Schedules;
-using Steps.Shared.Contracts.Schedules.ViewModels;
 using Steps.Shared.Contracts.Teams.ViewModels;
 
 namespace Steps.Client.Services.Api;
 
-public class GroupBlocksesService : IGroupBlocksService
+public class GroupBlocksService : IGroupBlocksService
 {
     private readonly HttpClientService _httpClient;
     private readonly ApiRoutes.GroupBlockRoute _routes;
 
-    public GroupBlocksesService(HttpClientService httpClient)
+    public GroupBlocksService(HttpClientService httpClient)
     {
         _httpClient = httpClient;
         _routes = new ApiRoutes.GroupBlockRoute();
@@ -26,23 +23,23 @@ public class GroupBlocksesService : IGroupBlocksService
         return _httpClient.GetAsync<Result<List<TeamViewModel>>>(_routes.GetTeamsForCreateGroupBlocks(contestId));
     }
 
-    public Task CreateByTeams(CreateGroupBlockViewModel model)
+    public Task<Result> CreateByTeams(CreateGroupBlockViewModel model)
     {
-        throw new NotImplementedException();
+        return _httpClient.PostAsync<Result, CreateGroupBlockViewModel>(_routes.CreateByTeams, model);
     }
 
     public Task<Result<List<GroupBlockViewModel>>> GetByContestId(Guid contestId)
     {
-        throw new NotImplementedException();
+        return _httpClient.GetAsync<Result<List<GroupBlockViewModel>>>(_routes.GetByContestId(contestId));
     }
 
     public Task<Result<GroupBlockViewModel>> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return _httpClient.GetAsync<Result<GroupBlockViewModel>>(_routes.GetById(id));
     }
 
     public Task<Result> DeleteByContestId(Guid id)
     {
-        throw new NotImplementedException();
+        return _httpClient.DeleteAsync<Result>(_routes.DeleteByContestId(id));
     }
 }

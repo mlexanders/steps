@@ -2,7 +2,7 @@
 using Radzen;
 using Steps.Shared;
 
-namespace Steps.Client.Features;
+namespace Steps.Client.Features.Common;
 
 public class BaseNotificate : ComponentBase
 {

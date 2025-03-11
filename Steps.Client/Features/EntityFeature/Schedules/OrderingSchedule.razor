@@ -1,0 +1,96 @@
+﻿@using System.Collections.ObjectModel
+@using Steps.Client.Features.EntityFeature.Schedules.Services
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Contracts.Schedules
+@using Steps.Shared.Contracts.Schedules.ViewModels
+@using Steps.Client.Features.Common
+
+@inject SchedulerManager SchedulerManager
+@inherits BaseNotificate
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="true" PageSize="SchedulerManager.PageSize" AllowPaging="true"
+                PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@_cells" ColumnWidth="180px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                SelectionMode="DataGridSelectionMode.Single"
+                @bind-Value="@_selectedCell" RowRender="@RowRender" IsLoading="@SchedulerManager.IsLoading"
+                AllowVirtualization="true" Style="height:400px">
+    <HeaderTemplate>
+        <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Сохранить"
+                      Click="Save"/>
+
+        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="" Text="Отмена"
+                      Click="CloseEditing"/>
+    </HeaderTemplate>
+    <Columns>
+        <ScheduleColumns/>
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    [Parameter] public bool Editing { get; set; }
+    [Parameter] public EventCallback<bool> EditingChanged { get; set; }
+
+    private ObservableCollection<ScheduledCellViewModel> _cells;
+    private IList<ScheduledCellViewModel> _selectedCell;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (GroupBlock is null) return;
+
+        SchedulerManager.ChangePageSize(int.MaxValue);
+        await SchedulerManager.Initialize(GroupBlock.Id);
+
+        _cells = new ObservableCollection<ScheduledCellViewModel>(SchedulerManager.Data);
+
+        _selectedCell = new List<ScheduledCellViewModel>() { _cells.FirstOrDefault() };
+    }
+
+    private ScheduledCellViewModel _draggedItem;
+
+    private void RowRender(RowRenderEventArgs<ScheduledCellViewModel> args)
+    {
+        args.Attributes.Add("title", "Drag row to reorder");
+        args.Attributes.Add("style", "cursor:grab");
+        args.Attributes.Add("draggable", "true");
+        args.Attributes.Add("ondragover", "event.preventDefault();event.target.closest('.rz-data-row').classList.add('my-class')");
+        args.Attributes.Add("ondragleave", "event.target.closest('.rz-data-row').classList.remove('my-class')");
+        args.Attributes.Add("ondragstart", EventCallback.Factory.Create<DragEventArgs>(this, () => _draggedItem = args.Data));
+        args.Attributes.Add("ondrop", EventCallback.Factory.Create<DragEventArgs>(this, () =>
+        {
+            var draggedIndex = _cells.IndexOf(_draggedItem);
+            var droppedIndex = _cells.IndexOf(args.Data);
+
+            _cells.Remove(_draggedItem);
+            _cells.Insert(draggedIndex <= droppedIndex ? droppedIndex++ : droppedIndex, _draggedItem);
+        }));
+    }
+
+    private async Task CloseEditing()
+    {
+        Editing = false;
+        if (EditingChanged.HasDelegate)
+        {
+            await EditingChanged.InvokeAsync(false);
+        }
+    }
+
+    private async Task Save()
+    {
+        var reordered = new ReorderGroupBlockViewModel();
+        
+        reordered.GroupBlockId = GroupBlock.Id;
+        reordered.Schedule = _cells.Select((s, index) => new ScheduleAthleteViewMode
+        {
+            AthleteId = s.AthleteId,
+            SequenceNumber = index
+        }).ToList();
+
+        var result = await SchedulerManager.Reorder(reordered);
+        ShowResultMessage(result);
+    }
+}

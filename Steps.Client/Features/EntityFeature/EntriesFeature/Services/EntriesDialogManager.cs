@@ -1,7 +1,6 @@
 ﻿using Radzen;
-using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Dialogs;
-using Steps.Shared.Contracts.Athletes.ViewModels;
 using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.EntriesFeature.Services;

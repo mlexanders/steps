@@ -1,9 +1,11 @@
 ﻿@using Steps.Client.Features.EntityFeature.ContestsFeature.Services
 @using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Client.Features.EntityFeature.ContestsFeature.Forms
+@using Steps.Client.Features.Common
 
 @inherits BaseModal
 @inject ContestManager ContestManager
+
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Create" Data="_contest">
     <RadzenCard>
 

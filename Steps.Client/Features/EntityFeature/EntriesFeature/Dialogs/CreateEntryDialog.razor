@@ -1,8 +1,10 @@
 ﻿@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
 @using Steps.Shared.Contracts.Entries.ViewModels
 @using Steps.Client.Features.EntityFeature.EntriesFeature.Forms
+@using Steps.Client.Features.Common
+
 @inherits BaseModal
-@inject EntriesManagement Manager
+@inject EntriesManager EntriesManager
 
 
 <RadzenTemplateForm TItem="CreateEntryViewModel" Submit="Create" Data="_entryViewModel">
@@ -26,15 +28,14 @@
     
     private async Task Create()
     {
-        var result = await Manager.Create(new()
+        var result = await EntriesManager.Create(new()
         {
-            SubmissionDate = DateTime.SpecifyKind(_entryViewModel.SubmissionDate, DateTimeKind.Utc),
             ContestId = _entryViewModel.ContestId,
-            AthletesIds = _entryViewModel.AthletesIds
+            AthletesIds = _entryViewModel.AthletesIds,
+            TeamId = _entryViewModel.TeamId
         });
         ShowResultMessage(result);
 
         if (result.IsSuccess) Close(true);
     }
-
 }

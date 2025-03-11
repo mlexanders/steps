@@ -40,8 +40,8 @@ public class GroupBlocksController : ControllerBase, IGroupBlocksService
         return _mediator.Send(new GetTeamsForCreateGroupBlocksQuery(contestId));
     }
 
-    [HttpPost]
-    public Task CreateByTeams([FromBody] CreateGroupBlockViewModel model)
+    [HttpPost("[action]")]
+    public Task<Result> CreateByTeams([FromBody] CreateGroupBlockViewModel model)
     {
         return _mediator.Send(new CreateGroupBlocksByTeamsCommand(model));
     }

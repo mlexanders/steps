@@ -23,7 +23,7 @@ public class EntryController : ControllerBase, IEntryService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateEntryViewModel entryViewModel)
+    public async Task<Result<EntryViewModel>> Create([FromBody] CreateEntryViewModel entryViewModel)
     {
         return await _mediator.Send(new CreateEntryCommand(entryViewModel));
     }
@@ -56,11 +56,5 @@ public class EntryController : ControllerBase, IEntryService
     public async Task<Result> AcceptEntry(Guid entryId)
     {
         return await _mediator.Send(new AcceptEntryCommand(entryId));
-    }
-    
-    [HttpPost("Reject-entry")]
-    Task<Result<EntryViewModel>> ICrudService<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>.Create(CreateEntryViewModel model)
-    {
-        throw new NotImplementedException();
     }
 }

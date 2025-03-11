@@ -6,9 +6,9 @@ using Steps.Shared.Contracts.Athletes.ViewModels;
 
 namespace Steps.Client.Services.Api;
 
-public class AthleteService : CrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>, IAthleteService
+public class AthletesService : CrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>, IAthletesService
 {
-    public AthleteService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.AthletesRoute())
+    public AthletesService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.AthletesRoute())
     {
     }
 }

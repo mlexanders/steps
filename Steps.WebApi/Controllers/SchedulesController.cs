@@ -24,7 +24,7 @@ public class SchedulesController : ControllerBase, ISchedulesService
 
     [HttpPost("[action]/{groupBlockId:guid}")]
     public Task<Result<PaggedListViewModel<ScheduledCellViewModel>>> 
-        GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId, [FromQuery] Page page)
+        GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId, [FromBody] Page page)
     {
         return _mediator.Send(new GetPagedScheduledCellsByGroupBlockIdQuery(groupBlockId, page));
     }

@@ -26,6 +26,8 @@
             Description = _contest.Description,
             StartDate = DateTime.SpecifyKind(_contest.StartDate, DateTimeKind.Utc),
             EndDate = DateTime.SpecifyKind(_contest.EndDate, DateTimeKind.Utc),
+            Judjes = _contest.Judjes,
+            Counters = _contest.Counters
         });
 
         ShowResultMessage(result);

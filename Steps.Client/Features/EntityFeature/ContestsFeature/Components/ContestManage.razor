@@ -1,27 +1,44 @@
-﻿@using Steps.Shared.Contracts.Contests.ViewModels
+﻿@using Microsoft.AspNetCore.Authorization
+@using Steps.Domain.Base
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Contests.ViewModels
+@attribute [Authorize]
 
 @inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
-@if (Manager.Data != null && Manager.Data.Any())
-{
-    <RadzenCard>
-        <RadzenScheduler @ref=@scheduler TItem="ContestViewModel" Data="Manager.Data"
-                         StartProperty="StartDate" EndProperty="EndDate" TextProperty="Name"
-                         AppointmentSelect="@(e => DialogManager.ShowCardDialog(e.Data))"
-                         SlotSelect="@(e => DialogManager.ShowCreateDialog())">
-            <RadzenMonthView />
-            <RadzenWeekView />
-            <RadzenDayView />
-        </RadzenScheduler>
-    </RadzenCard>
-}
-else
-{
-    <p>Нет данных для отображения.</p>
-}
+<RadzenCard>
+    <RadzenScheduler @ref=@scheduler TItem="ContestViewModel" Data="Manager.Data"
+                     StartProperty="StartDate" EndProperty="EndDate" TextProperty="Name"
+                     AppointmentSelect="@(e => DialogManager.ShowCardDialog(e.Data))"
+                     SlotSelect="GetSlotSelectHandler()">
+        <RadzenMonthView />
+        <RadzenWeekView />
+        <RadzenDayView />
+    </RadzenScheduler>
+</RadzenCard>
 
 @code{
 
     RadzenScheduler<ContestViewModel> scheduler;
+    
+    [CascadingParameter] public IUser? User { get; set; }
+    private Role? UserRole => User?.Role;
 
+    
+    private EventCallback<SchedulerSlotSelectEventArgs> GetSlotSelectHandler()
+    {
+        if (UserRole is Role.Organizer)
+        {
+            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, e => DialogManager.ShowCreateDialog());
+        }
+        else
+        {
+            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, e => NoAccessMessage());
+        }
+    }
+    
+    private void NoAccessMessage()
+    {
+        Console.WriteLine("У вас нет прав для создания мероприятий.");
+    }
 }

@@ -1,0 +1,56 @@
+﻿@using Steps.Client.Features.EntityFeature.Schedules.Services
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Contracts.Schedules.ViewModels
+
+@inject SchedulerManager SchedulerManager
+
+@if (!_isEditing)
+{
+    <RadzenCard>
+        <RadzenDataGrid TItem="ScheduledCellViewModel" Data="SchedulerManager.Data" AllowPaging="true"
+                        SelectionMode="DataGridSelectionMode.Single" 
+                        PageSize="SchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
+                        IsLoading="@SchedulerManager.IsLoading" Count="@SchedulerManager.TotalCount"
+                        LoadData="@OnChangePage">
+            <HeaderTemplate>
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Изменить порядок"
+                              Click="OnEditing"/>
+            </HeaderTemplate>
+
+            <Columns>
+                <ScheduleColumns/>
+            </Columns>
+        </RadzenDataGrid>
+    </RadzenCard>
+}
+else
+{
+    <OrderingSchedule GroupBlock="GroupBlock" @bind-Editing="_isEditing"></OrderingSchedule>
+}
+
+
+@code {
+    private bool _isEditing;
+
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SchedulerManager.ChangePageSize(15); 
+        if (GroupBlock is null)
+        {
+            return;
+        }
+        await SchedulerManager.Initialize(GroupBlock.Id);
+    }
+
+    private async Task OnChangePage(LoadDataArgs arg)
+    {
+        await SchedulerManager.ChangePage(arg.Skip, arg.Top);
+    }
+
+    private void OnEditing()
+    {
+        _isEditing = true;
+    }
+}

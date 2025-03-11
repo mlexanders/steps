@@ -7,14 +7,14 @@
              Gap="0.5rem" class="rz-p-12">
     <RadzenLabel Text="Select Value" Component="DropDownDataGridFilteringLoadData"/>
 
-    <RadzenDropDownDataGrid @bind-Value="@UserId" Data="@UsersManager.Data" Change="@((o) => OnChange(o))"
+    <RadzenDropDownDataGrid @bind-Value="@UserId" Data="@UsersManagerEntityManager.Data" Change="@((o) => OnChange(o))"
                             TextProperty="@nameof(UserViewModel.Login)" ValueProperty="@nameof(UserViewModel.Id)"
-                            Name="DropDownDataGridTextValueProperties" IsLoading="@UsersManager.IsLoading"/>
+                            Name="DropDownDataGridTextValueProperties" IsLoading="@UsersManagerEntityManager.IsLoading"/>
 </RadzenStack>
 
 @code
 {
-    [Inject] protected UsersManager UsersManager { get; set; } = null!;
+    [Inject] protected UsersManager UsersManagerEntityManager { get; set; } = null!;
 
     [Parameter] public Guid UserId { get; set; }
 
@@ -22,8 +22,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UsersManager.ChangedList += StateHasChanged;
-        await UsersManager.Initialize();
+        UsersManagerEntityManager.ChangedList += StateHasChanged;
+        await UsersManagerEntityManager.Initialize();
     }
 
     private async Task LoadData(LoadDataArgs arg)
@@ -31,10 +31,10 @@
         if (!string.IsNullOrEmpty(arg.Filter))
         {
             var filter = arg.Filter.ToLower();
-            UsersManager.UseSpecification(new Specification<User>().Where(u => u.Login.Contains(filter)));
+            UsersManagerEntityManager.UseSpecification(new Specification<User>().Where(u => u.Login.Contains(filter)));
         }
 
-        await UsersManager.ChangePage(arg.Skip, arg.Top);
+        await UsersManagerEntityManager.ChangePage(arg.Skip, arg.Top);
     }
 
     private async Task OnChange(object? userId)
@@ -45,6 +45,6 @@
 
     public void Dispose()
     {
-        UsersManager.ChangedList -= StateHasChanged;
+        UsersManagerEntityManager.ChangedList -= StateHasChanged;
     }
 }

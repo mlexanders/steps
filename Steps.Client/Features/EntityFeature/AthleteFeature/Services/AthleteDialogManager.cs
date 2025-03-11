@@ -1,4 +1,5 @@
 ﻿using Radzen;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
 using Steps.Shared.Contracts.Athletes.ViewModels;
 
@@ -12,7 +13,7 @@ public class AthleteDialogManager : IDialogManager<AthleteViewModel>
     {
         _dialogService = dialogService;
     }
-    
+
     public Task<bool> ShowCardDialog(AthleteViewModel model)
     {
         throw new NotImplementedException();
@@ -23,7 +24,7 @@ public class AthleteDialogManager : IDialogManager<AthleteViewModel>
         var result = await _dialogService.OpenAsync<CreateAthleteDialog>("Создание спортсмена");
         return result ?? false;
     }
-    
+
     public async Task<bool> ShowCreateDialog(Guid teamId)
     {
         var result = await _dialogService.OpenAsync<CreateAthleteDialog>(

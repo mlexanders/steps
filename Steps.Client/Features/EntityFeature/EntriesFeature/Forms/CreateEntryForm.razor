@@ -1,27 +1,21 @@
 ﻿@using System.ComponentModel.DataAnnotations
-@using Microsoft.EntityFrameworkCore
 @using Steps.Client.Features.EntityFeature.AthleteFeature.Services
-@using Steps.Client.Features.EntityFeature.TeamsFeature.Services
-@using Steps.Client.Services.Authentication
-@using Steps.Domain.Definitions
 @using Steps.Shared
 @using Steps.Shared.Contracts.Athletes.ViewModels
 @using Steps.Shared.Contracts.Entries.ViewModels
+@using Steps.Client.Features.EntityFeature.TeamsFeature.Components
 
 @inject AthleteManager AthleteManager
-@inject TeamsManager TeamsManager
+@inherits Steps.Client.Features.Common.BaseNotificate
 
 <RadzenFieldset Text="Создание заявки">
     <RadzenStack Gap="2rem">
 
-        <RadzenDatePicker @bind-Value="Model.SubmissionDate" Name="@nameof(Model.SubmissionDate)" Placeholder="Выберите дату подачи"
-                          Style="width: 100%"/>
-        <RadzenRequiredValidator Component="@nameof(Model.SubmissionDate)" Text="Дата подачи обязательна"
-                                 Style="position: absolute"/>
-
+        <SelectTeamDropDown TeamIdChanged="@TeamChanged" />
+        
         <RadzenListBox @bind-Value="Model.AthletesIds"
                        Name="@nameof(Model.AthletesIds)"
-                       Data="@Athletes"
+                       Data="@_athletesByTeam"
                        Multiple="true"
                        Placeholder="Выберите спортсменов"
                        Style="width: 100%"
@@ -32,38 +26,21 @@
 </RadzenFieldset>
 
 @code {
+    private List<AthleteViewModel>? _athletesByTeam;
     [Parameter] [Required] public CreateEntryViewModel Model { get; set; } = null!;
     
-    protected List<AthleteViewModel> Athletes { get; set; } = new List<AthleteViewModel>();
-    
-    protected override async Task OnInitializedAsync()
+
+    private async Task TeamChanged(Guid teamId)
     {
-        try
-        {
-            var teamSpecification = new Specification<Team>()
-                .Include(t => t.Include(a => a.Athletes));
+        Model.TeamId = teamId;
+        var spec = new Specification<Athlete>()
+            .Where(a => a.TeamId.Equals(teamId));
 
-            var result = await TeamsManager.Read(teamSpecification);
+        AthleteManager.ChangePageSize(2000); // todo: to athlete Manage component with paging
+        var result = await AthleteManager.Read(spec);
+        if (result?.IsSuccess != true) ShowResultMessage(result);
 
-            if (result != null)
-            {
-                foreach (var team in result.Value.Items)
-                {
-                    var athleteViewModels = team.Athletes.Select(a => new AthleteViewModel
-                    {
-                        Id = a.Id,
-                        FullName = a.FullName,
-                        BirthDate = a.BirthDate,
-                        AthleteType = a.AthleteType ?? AthleteType.Cheer,
-                        Degree = a.Degree ?? Degree.Baby
-                    }).ToList();
-
-                    Athletes.AddRange(athleteViewModels);
-                }
-            }
-
-            await base.OnInitializedAsync();
-        }
-        catch (Exception ex) { }
+        _athletesByTeam = result?.Value?.Items.ToList() ?? [];
+        StateHasChanged();
     }
 }

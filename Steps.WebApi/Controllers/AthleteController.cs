@@ -12,17 +12,17 @@ namespace Steps.Services.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class AthleteController : ControllerBase, IAthleteService
+    public class AthletesController : ControllerBase, IAthletesService
     {
         private readonly IMediator _mediator;
 
-        public AthleteController(IMediator mediator)
+        public AthletesController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<Result<Guid>> Create(CreateAthleteViewModel createAthleteViewModel)
+        public async Task<Result<AthleteViewModel>> Create(CreateAthleteViewModel createAthleteViewModel)
         {
             return await _mediator.Send(new CreateAthleteCommand(createAthleteViewModel));
         }
@@ -39,7 +39,7 @@ namespace Steps.Services.WebApi.Controllers
             throw new NotImplementedException();
         }
         
-        [HttpGet("paged")]
+        [HttpPost("[action]")]
         public async Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, Specification<Athlete>? specification = null)
         {
             return await _mediator.Send(new GetPagedAthletesQuery(page, specification));
@@ -47,12 +47,6 @@ namespace Steps.Services.WebApi.Controllers
         
         [HttpDelete]
         public Task<Result> Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-        
-        [HttpPost]
-        Task<Result<AthleteViewModel>> ICrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>.Create(CreateAthleteViewModel model)
         {
             throw new NotImplementedException();
         }

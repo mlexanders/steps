@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Entries.Commands;
 using Steps.Application.Requests.Entries.Queries;
@@ -10,6 +11,7 @@ using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
 public class EntryController : ControllerBase, IEntryService
@@ -22,7 +24,7 @@ public class EntryController : ControllerBase, IEntryService
     }
 
     [HttpPost]
-    public async Task<Result<Guid>> Create([FromBody] CreateEntryViewModel entryViewModel)
+    public async Task<Result<EntryViewModel>> Create([FromBody] CreateEntryViewModel entryViewModel)
     {
         return await _mediator.Send(new CreateEntryCommand(entryViewModel));
     }
@@ -55,11 +57,5 @@ public class EntryController : ControllerBase, IEntryService
     public async Task<Result> AcceptEntry(Guid entryId)
     {
         return await _mediator.Send(new AcceptEntryCommand(entryId));
-    }
-    
-    [HttpPost("Reject-entry")]
-    Task<Result<EntryViewModel>> ICrudService<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>.Create(CreateEntryViewModel model)
-    {
-        throw new NotImplementedException();
     }
 }

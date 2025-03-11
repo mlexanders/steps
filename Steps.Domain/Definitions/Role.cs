@@ -14,7 +14,7 @@ public enum Role
     Counter,
     
     [Display(Name="Судья")]
-    Judje,
+    Judge,
     
     [Display(Name="Пользователь")]
     User

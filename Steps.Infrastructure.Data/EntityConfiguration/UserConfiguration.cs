@@ -19,10 +19,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.PasswordHash).IsRequired();
         builder.Property(u => u.Role).IsRequired();
-        
-        builder.HasMany(u => u.Entries)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Steps.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Contests.ViewModels;
@@ -22,14 +21,22 @@ public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, R
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-
-
+    
     public async Task<Result<ContestViewModel>> Handle(GetContestByIdQuery request, CancellationToken cancellationToken)
     {
+        var contest1 = await _unitOfWork.GetRepository<Contest>()
+            .GetFirstOrDefaultAsync(
+                predicate: c => c.Id.Equals(request.ContestId),
+                include: x => x.Include(a => a.Judges).Include(a => a.Counters),
+                orderBy: c => c.OrderByDescending(o => o.StartDate),
+                trackingType: TrackingType.NoTracking);
+
+        
         var contest = await _unitOfWork.GetRepository<Contest>()
             .GetFirstOrDefaultAsync(
                 predicate: c => c.Id.Equals(request.ContestId),
                 selector: c => _mapper.Map<ContestViewModel>(c),
+                include: x => x.Include(a => a.Judges).Include(a => a.Counters),
                 orderBy: c => c.OrderByDescending(o => o.StartDate),
                 trackingType: TrackingType.NoTracking);
 

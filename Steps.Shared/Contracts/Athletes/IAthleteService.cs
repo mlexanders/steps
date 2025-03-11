@@ -2,4 +2,4 @@
 using Steps.Shared.Contracts.Athletes.ViewModels;
 
 namespace Steps.Shared.Contracts.Athletes;
-public interface IAthleteService : ICrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>;
+public interface IAthletesService : ICrudService<Athlete, AthleteViewModel, CreateAthleteViewModel, UpdateAthleteViewModel>;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
@@ -14,7 +15,7 @@ namespace Steps.Client.Features.EntityFeature.TeamsFeature.Components;
 public partial class TeamCard: ManageBaseComponent<Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
 {
     [Inject] protected TeamsManager TeamsManager { get; set; } = null!;
-    [Inject] protected AthleteManager AthleteManager { get; set; } = null!;
+    [Inject] protected AthleteManager AthleteManagerEntityManager { get; set; } = null!;
     [Inject] protected TeamsDialogManager TeamsDialogManager { get; set; } = null!;
     [Inject] protected AthleteDialogManager AthleteDialogManager { get; set; } = null!;
 

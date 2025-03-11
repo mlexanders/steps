@@ -1,13 +1,10 @@
-﻿@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
-@using Steps.Shared.Contracts.Athletes.ViewModels
-@using Steps.Client.Features.EntityFeature.AthleteFeature.Forms
-@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
-@using Steps.Client.Services.Authentication
+﻿@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
 @using Steps.Shared.Contracts.Entries.ViewModels
 @using Steps.Client.Features.EntityFeature.EntriesFeature.Forms
+@using Steps.Client.Features.Common
+
 @inherits BaseModal
-@inject EntriesManagement Manager
-@inject SecurityService SecurityService
+@inject EntriesManager EntriesManager
 
 
 <RadzenTemplateForm TItem="CreateEntryViewModel" Submit="Create" Data="_entryViewModel">
@@ -27,24 +24,18 @@
     protected override async Task OnParametersSetAsync()
     {
         _entryViewModel.ContestId = ContestId;
-
-        var user = await SecurityService.GetCurrentUser();
-
-        _entryViewModel.UserId = user.Id;
     }
     
     private async Task Create()
     {
-        var result = await Manager.Create(new()
+        var result = await EntriesManager.Create(new()
         {
-            SubmissionDate = DateTime.SpecifyKind(_entryViewModel.SubmissionDate, DateTimeKind.Utc),
             ContestId = _entryViewModel.ContestId,
-            UserId = _entryViewModel.UserId,
-            AthletesIds = _entryViewModel.AthletesIds
+            AthletesIds = _entryViewModel.AthletesIds,
+            TeamId = _entryViewModel.TeamId
         });
         ShowResultMessage(result);
 
         if (result.IsSuccess) Close(true);
     }
-
 }

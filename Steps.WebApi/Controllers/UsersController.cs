@@ -45,7 +45,7 @@ public class UsersController : IUsersService
     public Task<Result<PaggedListViewModel<UserViewModel>>> GetPaged([FromQuery] Page page,
         [FromBody] Specification<User>? specification = null)
     {
-        return _mediator.Send(new GetPagedUsersQuery(page));
+        return _mediator.Send(new GetPagedUsersQuery(page, specification));
     }
 
     [HttpGet("[action]")]

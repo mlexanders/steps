@@ -6,39 +6,42 @@
 
 @inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
-<RadzenCard>
-    <ChildContent>
-        <h3>@Model.Name</h3>
-        <p>@Model.Description</p>
-
-        <div class="grid grid-cols-3 gap-4">
-            <div>
+<RadzenFieldset Text="Информация о мероприятии">
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="1rem">
                 <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy")</p>
                 <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
                 <p><strong>Статус:</strong> @Model.Status</p>
                 <p><strong>Тип:</strong> @Model.Type</p>
-            </div>
+            </RadzenStack>
+        </RadzenColumn>
 
-            <div>
-                <h4>Судьи</h4>
-                <RadzenDataList Items="@Judges" TItem="UserViewModel">
-                    <Template Context="judge">
-                        <p>@judge.Login</p>
-                    </Template>
-                </RadzenDataList>
-            </div>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="2rem">
+                <div>
+                    <h4>Судьи</h4>
+                    <RadzenListBox TValue="Guid" Data="@Judges"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
 
-            <div>
-                <h4>Счетчики</h4>
-                <RadzenDataList Items="@Counters" TItem="UserViewModel">
-                    <Template Context="counter">
-                        <p>@counter.Login</p>
-                    </Template>
-                </RadzenDataList>
-            </div>
-        </div>
-    </ChildContent>
-</RadzenCard>
+                <div>
+                    <h4>Счетчики</h4>
+                    <RadzenListBox TValue="Guid" Data="@Counters"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenFieldset>
 
 Групповые блоки:
 <GroupBlocksManage Contest="Model" />

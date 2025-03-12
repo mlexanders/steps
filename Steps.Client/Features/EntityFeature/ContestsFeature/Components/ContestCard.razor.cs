@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Dialogs;
@@ -32,18 +34,34 @@ public partial class ContestCard : ManageBaseComponent<Contest, ContestViewModel
         Manager = ContestManager;
         DialogManager = ContestDialogManager;
 
-        var judgeSpecification = new Specification<User>().Where(j => j.Role == Role.Judge && Model.JudjesIds.Contains(j.Id));
-
-        var judges = await UsersManager.Read(judgeSpecification);
+        var specification = new Specification<Contest>().Include(c =>
+            c.Include(j => j.Judges).Include(c => c.Counters));
         
-        Judges = judges.Value.Items.ToList();
-        
-        var counterSpecification = new Specification<User>().Where(j => j.Role == Role.Judge && Model.JudjesIds.Contains(j.Id));
+        Manager.UseSpecification(specification);
 
-        var counters = await UsersManager.Read(counterSpecification);
+        var contest = await Manager.Read(Model.Id);
         
-        Counters = counters.Value.Items.ToList();
+        if (contest.Value.JudjesIds.Any())
+        {
+            var judgeIds = contest.Value.JudjesIds.ToArray();
+            var judgeSpecification = new Specification<User>()
+                .Where(j => j.Role == Role.Judge && judgeIds.Contains(j.Id));
 
+            var judges = await UsersManager.Read(judgeSpecification);
+            Judges = judges?.Value?.Items?.ToList() ?? new List<UserViewModel>();
+        }
+
+        if (contest.Value.CountersIds.Any())
+        {
+            var counterIds = contest.Value.CountersIds.ToArray();
+            var counterSpecification = new Specification<User>()
+                .Where(j => j.Role == Role.Counter && counterIds.Contains(j.Id));
+
+            var counters = await UsersManager.Read(counterSpecification);
+            Counters = counters?.Value?.Items?.ToList() ?? new List<UserViewModel>();
+        }
+
+        
         await base.OnInitializedAsync();
     }
 

@@ -25,11 +25,8 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Name, o => o.MapFrom(m => m.Name))
             .ForMember(x => x.Description, o => o.MapFrom(m => m.Description))
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
-            
-            .ForMember(x => x.JudjesIds, o => o.Ignore())
-            .ForMember(x => x.CountersIds, o => o.Ignore())
-            
-            
+            .ForMember(x => x.JudjesIds, o => o.MapFrom(m => m.Judges.Select(j => j.Id).ToList()))
+            .ForMember(x => x.CountersIds, o => o.MapFrom(m => m.Counters.Select(c => c.Id).ToList()))
             .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate));
 
         //CreateContestViewModel

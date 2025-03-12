@@ -54,8 +54,8 @@ public class EntryController : ControllerBase, IEntryService
     }
 
     [HttpPost("Accept-entry")]
-    public async Task<Result> AcceptEntry(Guid entryId)
+    public async Task<Result> AcceptEntry(EntryViewModel entryViewModel)
     {
-        return await _mediator.Send(new AcceptEntryCommand(entryId));
+        return await _mediator.Send(new AcceptEntryCommand(entryViewModel));
     }
 }

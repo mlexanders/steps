@@ -14,7 +14,7 @@
         
         <AuthorizeView Roles="@Role.Organizer.ToString()">
             <RadzenButton Text="Принять заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                          Click="() => OnCreate()" Style="margin-bottom: 10px;" />
+                          Click="() => OnAccept()" Style="margin-bottom: 10px;" />
         </AuthorizeView>
 
         <AuthorizeView Roles="@Role.User.ToString()">

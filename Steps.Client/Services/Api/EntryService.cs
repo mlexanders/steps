@@ -11,12 +11,14 @@ namespace Steps.Client.Services.Api;
 
 public class EntryService : CrudService<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>, IEntryService
 {
-    public EntryService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.EntriesRoute())
+    private readonly IEntryRoutes _entryRoutes;
+    public EntryService(HttpClientService httpClient, IEntryRoutes entryRoutes) : base(httpClient, new ApiRoutes.EntriesRoute())
     {
+        _entryRoutes = entryRoutes;
     }
 
-    public Task<Result> AcceptEntry(Guid entryId)
+    public async Task<Result> AcceptEntry(EntryViewModel entryViewModel)
     {
-        throw new NotImplementedException();
+        return await HttpClient.PostAsync<Result, EntryViewModel>(_entryRoutes.AcceptEntry(), entryViewModel);
     }
 }

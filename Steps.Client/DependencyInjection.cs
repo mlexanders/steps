@@ -53,6 +53,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IEntryService, EntryService>();
 
         services.AddSingleton<IUserRoutes, UsersRoute>();
+        services.AddSingleton<IEntryRoutes, EntriesRoute>();
         
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();

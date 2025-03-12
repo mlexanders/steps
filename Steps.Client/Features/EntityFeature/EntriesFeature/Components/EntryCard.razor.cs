@@ -36,4 +36,10 @@ public partial class EntryCard: ManageBaseComponent<Entry, EntryViewModel, Creat
         var result = await EntriesDialogManager.ShowCreateDialog(Contest.Id);
         if (result) await Manager.LoadPage();
     }
+    
+    protected async Task OnAccept()
+    {
+        var result = await EntriesDialogManager.ShowCreateDialog(Contest.Id);
+        if (result) await Manager.LoadPage();
+    }
 }

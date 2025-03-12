@@ -1,0 +1,26 @@
+﻿@using Steps.Shared.Contracts.Schedules.ViewModels
+
+<RadzenDataGridColumn Filterable="false" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.SequenceNumber)" Title="Номер"/>
+<RadzenDataGridColumn Filterable="false" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.TeamName)" Title="Команда"/>
+<RadzenDataGridColumn Filterable="false" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.ClubName)" Title="Клуб"/>
+<RadzenDataGridColumn Filterable="IsFilterable" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.Athlete.FullName)" Title="ФИО">
+    <Template Context="cell">
+        @cell.Athlete.FullName
+    </Template>
+</RadzenDataGridColumn>
+<RadzenDataGridColumn Filterable="false" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.Athlete.BirthDate)" Title="Дата рождения">
+    <Template Context="cell">
+        @cell.Athlete.BirthDate
+    </Template>
+</RadzenDataGridColumn>
+<RadzenDataGridColumn Filterable="false" TItem="ScheduledCellViewModel" Property="@nameof(ScheduledCellViewModel.ExitTime)" Title="Время выхода">
+    <Template Context="cell">
+        @cell.ExitTime.ToString("t")
+    </Template>
+</RadzenDataGridColumn>
+
+@code{
+
+    [Parameter] public bool IsFilterable { get; set; }
+
+}

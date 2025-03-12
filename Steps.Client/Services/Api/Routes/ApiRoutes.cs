@@ -32,7 +32,8 @@ public static class ApiRoutes
 
     public class SchedulesService 
     {
-        public string GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId) => $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}/{groupBlockId}";
+        public string GetPagedScheduledCellsByGroupBlockIdQuery => $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
         public string Reorder => $"Schedules/{nameof(ISchedulesService.Reorder)}";
+        public string MarkAthlete = $"Schedules/{nameof(ISchedulesService.MarkAthlete)}";
     }
 }

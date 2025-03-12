@@ -1,4 +1,5 @@
-﻿using Steps.Domain.Base;
+﻿using System.Security.AccessControl;
+using Steps.Domain.Base;
 
 namespace Steps.Domain.Entities.GroupBlocks;
 
@@ -25,4 +26,11 @@ public class ScheduledCell : Entity
 
     public Guid GroupBlockId { get; set; }
     public virtual GroupBlock GroupBlock { get; set; } = null!;
+    public bool IsConfirmed { get; set; }
 }
+
+// public class MarkedAthlete : Entity
+// {
+//     public Guid AthleteId { get; set; }
+//     public Guid AthleteId { get; set; }
+// }

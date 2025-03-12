@@ -13,4 +13,5 @@ public class ScheduledCellViewModel : IHaveId
     public string ClubName { get; set; }
     public string TeamName { get; set; }
     public Guid GroupBlockId { get; set; }
+    public bool IsConfirmed { get; set; }
 }

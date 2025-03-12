@@ -23,9 +23,17 @@ public class GroupBlockService
     /// <summary>
     /// Помечает спортсмена как подтвержденного в заданном блоке.
     /// </summary>
-    public async Task MarkAthlete(GroupBlock groupBlock, Guid athleteId)
+    public async Task MarkAthlete(MarkAthleteViewModel model)
     {
-        throw new NotImplementedException();
+        var cell = await _unitOfWork.GetRepository<ScheduledCell>()
+                       .GetFirstOrDefaultAsync(
+                           predicate: g => g.GroupBlockId.Equals(model.GroupBlockId)
+                                           && g.AthleteId.Equals(model.AthleteId),
+                           trackingType: TrackingType.Tracking)
+                   ?? throw new StepsBusinessException("Участник в заданном блоке не найден");
+
+        cell.IsConfirmed = model.Confirmation;
+        await _unitOfWork.SaveChangesAsync();
     }
 
     /// <summary>
@@ -166,8 +174,11 @@ public class GroupBlockService
                                   trackingType: TrackingType.Tracking)
                               ?? throw new StepsBusinessException("Групповой блок не найден");
 
+        var joined = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => new { oldOrder.IsConfirmed }).ToList();
         for (var i = 0; i < orderedSchedule.Count; i++)
         {
+            var oldConfirmed = joined[i].IsConfirmed;
+            orderedSchedule[i].IsConfirmed = oldConfirmed;
             orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
         }
 
@@ -175,30 +186,3 @@ public class GroupBlockService
         await _unitOfWork.SaveChangesAsync();
     }
 }
-
-
-
-// {
-// "sequenceNumber": 1,
-// "athleteId": "01956755-a3df-7d9c-a0e2-3339e3651c9e",
-// },
-// {
-//     "sequenceNumber": 2,
-//     "athleteId": "01956755-bad4-7a12-9492-dfabade663be",
-// },
-// {
-//     "sequenceNumber": 3,
-//     "athleteId": "01956755-c976-7bec-8f22-4ea250ac9916",
-// },
-// {
-//     "sequenceNumber": 6,
-//     "athleteId": "01956755-eeb6-7638-b208-293e010ca1a8",
-// },
-// {
-//     "sequenceNumber": 5,
-//     "athleteId": "01956755-d3e5-76bf-aa99-03025bfa5f3f",
-// },
-// {
-//     "sequenceNumber": 4,
-//     "athleteId": "01956755-dca4-791c-b846-df61f727a986",
-// }

@@ -2,22 +2,24 @@
 using Calabonga.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Steps.Application.Helpers;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
 using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.Schedules;
 using Steps.Shared.Contracts.Schedules.ViewModels;
 using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Schedules.Queries;
 
-public record GetPagedScheduledCellsByGroupBlockIdQuery(Guid GroupBlockId, Page Page)
-    : IRequest<Result<PaggedListViewModel<ScheduledCellViewModel>>>;
+public record GetPagedScheduledCellsByGroupBlockIdQuery(GetPagedScheduledCellsViewModel Model)
+    : SpecificationRequest<ScheduledCell>(Model.Specification), IRequest<Result<PaggedListViewModel<ScheduledCellViewModel>>>;
 
 public class GetPagedScheduledCellsByGroupBlockIdHandler : IRequestHandler<GetPagedScheduledCellsByGroupBlockIdQuery,
     Result<PaggedListViewModel<ScheduledCellViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private IMapper _mapper;
+    private readonly IMapper _mapper;
 
     public GetPagedScheduledCellsByGroupBlockIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
@@ -28,13 +30,14 @@ public class GetPagedScheduledCellsByGroupBlockIdHandler : IRequestHandler<GetPa
     public async Task<Result<PaggedListViewModel<ScheduledCellViewModel>>> Handle(
         GetPagedScheduledCellsByGroupBlockIdQuery request, CancellationToken cancellationToken)
     {
-        var groupBlockId = request.GroupBlockId;
-        var page = request.Page;
+        var groupBlockId = request.Model.GroupBlockId;
+        var page = request.Model.Page;
 
+        request.AddPredicate(c => c.GroupBlockId.Equals(groupBlockId));
         var scheduledCells = await _unitOfWork.GetRepository<ScheduledCell>().GetPagedListAsync(
-            predicate: c => c.GroupBlockId == groupBlockId,
+            predicate: request.Predicate,
             include: x =>
-                x.Include(x => x.Athlete)
+                x.Include(s => s.Athlete)
                     .ThenInclude(a => a.Team)
                     .ThenInclude(t => t.Club),
             selector: c => _mapper.Map<ScheduledCellViewModel>(c),

@@ -82,9 +82,11 @@
     private async Task Save()
     {
         var reordered = new ReorderGroupBlockViewModel();
+
+        if (GroupBlock == null) return;
         
         reordered.GroupBlockId = GroupBlock.Id;
-        reordered.Schedule = _cells.Select((s, index) => new ScheduleAthleteViewMode
+        reordered.Schedule = _cells.Select((s, index) => new ScheduleAthleteViewModel
         {
             AthleteId = s.AthleteId,
             SequenceNumber = index

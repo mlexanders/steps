@@ -22,16 +22,24 @@ public class SchedulesController : ControllerBase, ISchedulesService
         _mediator = mediator;
     }
 
-    [HttpPost("[action]/{groupBlockId:guid}")]
+    [HttpPost("[action]")]
     public Task<Result<PaggedListViewModel<ScheduledCellViewModel>>> 
-        GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId, [FromBody] Page page)
+        GetPagedScheduledCellsByGroupBlockIdQuery([FromBody] GetPagedScheduledCellsViewModel model)
+
     {
-        return _mediator.Send(new GetPagedScheduledCellsByGroupBlockIdQuery(groupBlockId, page));
+        return _mediator.Send(new GetPagedScheduledCellsByGroupBlockIdQuery(model));
     }
+
 
     [HttpPost("[action]")]
     public Task<Result> Reorder([FromBody] ReorderGroupBlockViewModel model)
     {
         return _mediator.Send(new ReorderGroupBlockCommand(model));
+    }
+    
+    [HttpPost("[action]")]
+    public Task<Result> MarkAthlete(MarkAthleteViewModel model)
+    {
+        return _mediator.Send(new MarkAthleteCommand(model));
     }
 }

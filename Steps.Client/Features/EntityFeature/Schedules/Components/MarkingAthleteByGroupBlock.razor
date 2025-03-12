@@ -1,0 +1,79 @@
+﻿@using Steps.Client.Features.EntityFeature.Schedules.Services
+@using Steps.Domain.Entities.GroupBlocks
+@using Steps.Shared
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Contracts.Schedules.ViewModels
+@using Steps.Client.Features.Common
+@using Steps.Shared.Contracts.Schedules
+
+@inject SchedulerManager SchedulerManager
+@inherits BaseNotificate
+
+<RadzenDataGrid TItem="ScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
+                IsLoading="@SchedulerManager.IsLoading" Count="@SchedulerManager.TotalCount"
+                PageSize="SchedulerManager.PageSize" LoadData="@OnChangePage"
+                FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@SchedulerManager.Data" ColumnWidth="300px"
+                FilterCaseSensitivity="@FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="@LogicalFilterOperator.And">
+    <Columns> 
+        <RadzenDataGridColumn Width="55px"  Filterable="@(false)" TItem="ScheduledCellViewModel"  Property="@nameof(ScheduledCellViewModel.IsConfirmed)" Title="Явка">
+            <Template Context="cell">
+                @if (cell.IsConfirmed)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="check" Size="ButtonSize.Small" Click="@(() => ChangeConfirmation(cell))" />
+                }
+                else
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="remove" Size="ButtonSize.Small" Click="@(() => ChangeConfirmation(cell))" />
+                }
+            
+                </Template>
+        </RadzenDataGridColumn>
+        <ScheduleColumns IsFilterable="true"/>
+    </Columns>
+    
+</RadzenDataGrid>
+
+
+@code {
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SchedulerManager.ChangePageSize(15); 
+        if (GroupBlock is null)
+        {
+            return;
+        }
+        await SchedulerManager.Initialize(GroupBlock.Id);
+    }
+
+    private async Task OnChangePage(LoadDataArgs arg)
+    {
+        var filter = arg.Filters?.FirstOrDefault()?
+            .FilterValue?.ToString();
+
+        var specification = new Specification<ScheduledCell>();
+        if (!string.IsNullOrEmpty(filter))
+        {
+            specification.Where(u => u.Athlete.FullName.Contains(filter));
+        }
+        
+        SchedulerManager.UseSpecification(specification);
+        
+        await SchedulerManager.ChangePage(arg.Skip, arg.Top);
+    }
+
+    private async Task ChangeConfirmation(ScheduledCellViewModel cell)
+    {
+        var newState = !cell.IsConfirmed;
+        cell.IsConfirmed = newState;
+        
+        var result = await SchedulerManager.MarkAthlete(new MarkAthleteViewModel
+        {
+            GroupBlockId = cell.GroupBlockId,
+            AthleteId = cell.AthleteId,
+            Confirmation = newState
+        });
+        ShowResultMessage(result);
+    }
+}

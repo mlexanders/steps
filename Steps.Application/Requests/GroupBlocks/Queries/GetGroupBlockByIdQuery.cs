@@ -27,7 +27,7 @@ public class GetGroupBlockByIdQueryHandler : IRequestHandler<GetGroupBlockByIdQu
     {
         var view = await _unitOfWork.GetRepository<GroupBlock>().GetFirstOrDefaultAsync(
                         predicate: g => g.Id == request.Id,
-                        include: s => s.Include(g => g.Schedule),
+                        include: s => s.Include(g => g.Schedule).Include(g => g.FinalSchedule),
                         selector: g => _mapper.Map<GroupBlockViewModel>(g),
                         trackingType: TrackingType.NoTracking)
                     ?? throw new StepsBusinessException("Блок не найден");

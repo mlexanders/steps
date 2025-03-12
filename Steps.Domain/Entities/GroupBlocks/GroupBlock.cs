@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-using Steps.Domain.Base;
+﻿using Steps.Domain.Base;
 
 namespace Steps.Domain.Entities.GroupBlocks;
 
@@ -13,10 +12,21 @@ public class GroupBlock : Entity
     public DateTime EndTime { get; set; }
 
     public virtual List<ScheduledCell> Schedule { get; set; } = [];
+    public virtual List<FinalScheduledCell> FinalSchedule { get; set; } = [];
 }
 
 
-public class ScheduledCell : Entity
+public class ScheduledCell : ScheduledCellBase
+{
+    public bool IsConfirmed { get; set; }
+}
+
+public class FinalScheduledCell : ScheduledCellBase
+{
+    
+}
+
+public abstract class ScheduledCellBase : Entity
 {
     public DateTime ExitTime { get; set; }
     public int SequenceNumber { get; set; }
@@ -26,11 +36,4 @@ public class ScheduledCell : Entity
 
     public Guid GroupBlockId { get; set; }
     public virtual GroupBlock GroupBlock { get; set; } = null!;
-    public bool IsConfirmed { get; set; }
 }
-
-// public class MarkedAthlete : Entity
-// {
-//     public Guid AthleteId { get; set; }
-//     public Guid AthleteId { get; set; }
-// }

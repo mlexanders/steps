@@ -6,6 +6,7 @@ using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
+using Steps.Client.Services.Api;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Clubs.ViewModels;
@@ -18,6 +19,7 @@ public partial class EntryCard: ManageBaseComponent<Entry, EntryViewModel, Creat
 {
     [Inject] protected EntriesManager EntriesManagement { get; set; } = null!;
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
+    [Inject] protected EntryService EntryService { get; set; } = null!;
     
     [Parameter] [Required] public ContestViewModel Contest { get; set; } = null!;
 
@@ -39,7 +41,8 @@ public partial class EntryCard: ManageBaseComponent<Entry, EntryViewModel, Creat
     
     protected async Task OnAccept()
     {
-        var result = await EntriesDialogManager.ShowCreateDialog(Contest.Id);
-        if (result) await Manager.LoadPage();
+        await EntryService.AcceptEntry(Model);
+
+        await Manager.LoadPage();
     }
 }

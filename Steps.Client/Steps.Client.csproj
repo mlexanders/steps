@@ -14,22 +14,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
-        <PackageReference Include="Radzen.Blazor" Version="6.0.19"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+        <PackageReference Include="Radzen.Blazor" Version="6.0.19" />
     </ItemGroup>
 
     <ItemGroup>
-        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Components\ProfileMenu.razor"/>
-        <AdditionalFiles Include="Components\ProgressBar.razor"/>
-        <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
+        <AdditionalFiles Include="Components\ProfileMenu.razor" />
+        <AdditionalFiles Include="Components\ProgressBar.razor" />
+        <AdditionalFiles Include="Components\StepsPageTitle.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\ClubCardDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\CreateClubDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\DeleteClubDialog.razor" />
@@ -83,6 +83,9 @@
       <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\TestResultFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\TestResultFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\TestResultFeature\Services\" />
       <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 

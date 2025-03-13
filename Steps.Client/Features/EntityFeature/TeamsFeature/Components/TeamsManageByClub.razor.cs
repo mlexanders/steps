@@ -18,7 +18,7 @@ public partial class
     [Parameter] public bool IsReadonly { get; set; }
     [Parameter] [Required] public ClubViewModel Club { get; set; } = null!;
 
-    protected override async void OnInitialized()
+    protected override void OnInitialized()
     {
         try
         {

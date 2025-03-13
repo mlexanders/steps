@@ -11,7 +11,7 @@ public class EntryViewModel : IHaveId
     public bool IsSuccess { get; set; }
     
     public Guid ContestId { get; set; }
-    public Contest Contest { get; set; }
+    public string ContestName { get; set; }
     
     public Guid TeamId { get; set; }
     public TeamViewModel Team { get; set; } = null!;

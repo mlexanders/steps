@@ -9,6 +9,7 @@ using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
+using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Authentication;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
@@ -18,6 +19,8 @@ using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Schedules;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
+using static Steps.Client.Services.Api.Routes.ApiRoutes;
+using SchedulesService = Steps.Client.Services.Api.SchedulesService;
 
 namespace Steps.Client;
 
@@ -48,6 +51,9 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<EntriesDialogManager>();
         services.AddTransient<EntriesManager>();
         services.AddTransient<IEntryService, EntryService>();
+
+        services.AddSingleton<IUserRoutes, UsersRoute>();
+        services.AddSingleton<IEntryRoutes, EntriesRoute>();
         
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();

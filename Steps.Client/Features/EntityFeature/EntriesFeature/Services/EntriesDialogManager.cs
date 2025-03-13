@@ -1,6 +1,9 @@
 ﻿using Radzen;
 using Steps.Client.Features.Common;
+using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
+using Steps.Client.Features.EntityFeature.EntriesFeature.Components;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Dialogs;
+using Steps.Shared.Contracts.Athletes.ViewModels;
 using Steps.Shared.Contracts.Entries.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.EntriesFeature.Services;
@@ -14,9 +17,13 @@ public class EntriesDialogManager : IDialogManager<EntryViewModel>
         _dialogService = dialogService;
     }
     
-    public Task<bool> ShowCardDialog(EntryViewModel model)
+    public async Task<bool> ShowCardDialog(EntryViewModel model)
     {
-        throw new NotImplementedException();
+        var result = await _dialogService.OpenAsync<EntryCard>("Детали заявки",
+            new Dictionary<string, object> { { "Model", model } },
+            new DialogOptions { Width = "600px", CloseDialogOnOverlayClick = true });
+        
+        return result ?? false;
     }
 
     public async Task<bool> ShowCreateDialog()

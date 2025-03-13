@@ -1,4 +1,5 @@
-﻿using Steps.Shared.Contracts.GroupBlocks;
+﻿using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Schedules;
 
 namespace Steps.Client.Services.Api.Routes;
@@ -17,10 +18,18 @@ public static class ApiRoutes
     public class ContestsRoute() : BaseApiRoutes("Contests");
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
-    public class AthletesRoute() : BaseApiRoutes("Athletes");
-    public class UsersRoute() : BaseApiRoutes("Users");
-    public class EntriesRoute() : BaseApiRoutes("Entry");
+    public class AthletesRoute() : BaseApiRoutes("Athlete");
+    public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
+    {
+        public string GetJudges(Page page) => $"{BasePath}/GetJudges/{page.GetQuery()}";
+        public string GetCounters(Page page) => $"{BasePath}/GetCounters/{page.GetQuery()}";
+    }
 
+    public class EntriesRoute() : BaseApiRoutes("Entry"), IEntryRoutes
+    {
+        public string AcceptEntry() => $"{BasePath}/Accept-entry";
+    }
+    
     public class GroupBlockRoute()
     {
         public string GetTeamsForCreateGroupBlocks(Guid contestId) => $"GroupBlocks/{nameof(IGroupBlocksService.GetTeamsForCreateGroupBlocks)}/{contestId}";

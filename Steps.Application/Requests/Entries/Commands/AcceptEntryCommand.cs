@@ -1,32 +1,33 @@
-﻿using Calabonga.UnitOfWork;
+﻿using AutoMapper;
+using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
 using Steps.Domain.Base;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
+using Steps.Shared.Contracts.Entries.ViewModels;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record AcceptEntryCommand(Guid ModelId) : IRequest<Result>;
+public record AcceptEntryCommand(EntryViewModel Model) : IRequest<Result>;
 
 public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>, IRequireAuthorization
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public AcceptEntryCommandHandler(IUnitOfWork unitOfWork)
+    public AcceptEntryCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(AcceptEntryCommand request, CancellationToken cancellationToken)
     {
-        var repository = _unitOfWork.GetRepository<Entry>();
-
-        var entry = await repository.GetFirstOrDefaultAsync(
-            predicate: e => e.Id.Equals(request.ModelId),
-            trackingType: TrackingType.Tracking) ?? throw new StepsBusinessException("Заявка не найдена");
+        var model = request.Model;
+        var entry = _mapper.Map<Entry>(model);
 
         entry.IsSuccess = true;
         await _unitOfWork.SaveChangesAsync();

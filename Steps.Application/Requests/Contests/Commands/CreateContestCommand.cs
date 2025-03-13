@@ -23,12 +23,46 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
     public async Task<Result<ContestViewModel>> Handle(CreateContestCommand request,
         CancellationToken cancellationToken)
     {
+        List<User> judges = new List<User>();
+        List<User> counters = new List<User>();
+        
         var model = request.Model;
         var contest = _mapper.Map<Contest>(model);
 
         var repository = _unitOfWork.GetRepository<Contest>();
+        var userRepository = _unitOfWork.GetRepository<User>();
+        
+        foreach (var id in request.Model.Judjes)
+        {
+            var judge = await userRepository.GetFirstOrDefaultAsync(c => c.Id == id,
+                null,
+                null,
+                TrackingType.Tracking,
+                false,
+                false);
 
+            judges.Add(judge);
+        }
+        
+        foreach (var id in request.Model.Counters)
+        {
+            var counter = await userRepository.GetFirstOrDefaultAsync(c => c.Id == id,
+                null,
+                null,
+                TrackingType.Tracking,
+                false,
+                false);
+
+            counters.Add(counter);
+        }
+
+        contest.Judges = judges;
+        contest.Counters = counters;
+        
         var entry = await repository.InsertAsync(contest, cancellationToken);
+        
+        
+        
         await _unitOfWork.SaveChangesAsync();
 
         var viewModel = _mapper.Map<ContestViewModel>(entry.Entity);

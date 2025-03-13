@@ -14,7 +14,7 @@ public class EntryMapperConfiguration : Profile
             .ForMember(x => x.Number, x => x.MapFrom(m => m.Number))
             .ForMember(x => x.IsSuccess, x => x.MapFrom(m => m.IsSuccess))
             .ForMember(x => x.ContestId, x => x.MapFrom(m => m.ContestId))
-            .ForMember(x => x.Contest, x => x.MapFrom(m => m.Contest))
+            .ForMember(x => x.ContestName, x => x.Ignore())
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
             .ForMember(x => x.Team, x => x.MapFrom(m => m.Team))
             .ForMember(x => x.Athletes, x => x.MapFrom(m => m.Athletes));

@@ -9,13 +9,14 @@ namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 public partial class
     ContestManage : ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 {
-    [Inject] protected ContestManager ClubsManager { get; set; } = null!;
+    [Inject] protected ContestManager ContestManager { get; set; } = null!;
     [Inject] protected ContestDialogManager ContestDialogManager { get; set; } = null!;
-
+    
     protected override void OnInitialized()
     {
-        Manager = ClubsManager;
+        Manager = ContestManager;
         DialogManager = ContestDialogManager;
+
         base.OnInitialized();
     }
 }

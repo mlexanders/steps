@@ -1,19 +1,47 @@
-﻿@using Steps.Shared.Contracts.Contests.ViewModels
+﻿@using System.Diagnostics.Metrics
+@using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
 @using Steps.Client.Features.Common
+@using Steps.Shared.Contracts.Accounts.ViewModels
 
 @inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
-<RadzenCard Style="width: 100%; max-width: 600px;">
-    <p><strong>Адрес:</strong> @Model.Name</p>
+<RadzenFieldset Text="Информация о мероприятии">
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="1rem">
+                <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy")</p>
+                <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
+                <p><strong>Статус:</strong> @Model.Status</p>
+                <p><strong>Тип:</strong> @Model.Type</p>
+            </RadzenStack>
+        </RadzenColumn>
 
-    <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                  Click="() => OnCreate()" Style="margin-bottom: 10px;" />
-</RadzenCard>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="2rem">
+                <div>
+                    <h4>Судьи</h4>
+                    <RadzenListBox TValue="Guid" Data="@Judges"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+
+                <div>
+                    <h4>Счетчики</h4>
+                    <RadzenListBox TValue="Guid" Data="@Counters"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenFieldset>
 
 Групповые блоки:
 <GroupBlocksManage Contest="Model" />
-
-@code {
-    [Parameter] public ContestViewModel Model { get; set; } = null!;
-}

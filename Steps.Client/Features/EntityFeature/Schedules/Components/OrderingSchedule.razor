@@ -37,6 +37,7 @@
 
     private ObservableCollection<ScheduledCellViewModel> _cells;
     private IList<ScheduledCellViewModel> _selectedCell;
+    private ScheduledCellViewModel _draggedItem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,8 +50,6 @@
 
         _selectedCell = new List<ScheduledCellViewModel>() { _cells.FirstOrDefault() };
     }
-
-    private ScheduledCellViewModel _draggedItem;
 
     private void RowRender(RowRenderEventArgs<ScheduledCellViewModel> args)
     {

@@ -16,6 +16,7 @@ public class GroupBlockMapperConfiguration : Profile
             .ForMember(x => x.Contest, o => o.Ignore())
             .ForMember(x => x.EndTime, o => o.MapFrom(m => m.EndTime))
             .ForMember(x => x.StartTime, o => o.MapFrom(m => m.StartTime))
+            .ForMember(x => x.FinalSchedule, o => o.Ignore())
             .ForMember(x => x.Schedule, o => o.Ignore());
         
         CreateMap<GroupBlock, GroupBlockViewModel>()

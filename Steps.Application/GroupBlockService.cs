@@ -2,6 +2,7 @@
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
+using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.Schedules;
 using Steps.Shared.Exceptions;
 
@@ -39,10 +40,10 @@ public class GroupBlockService
     /// <summary>
     /// Генерирует ПРЕДВАРИТЕЛЬНЫЕ групповые блоки для соревнования.
     /// </summary>
-    public async Task GenerateGroupBlocks(Contest contest, int athletesPerGroup)
+    public async Task GenerateGroupBlocks(Contest contest, CreateGroupBlockViewModel model)
     {
         ValidateContestStatus(contest);
-
+        
         var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
         var entryRepository = _unitOfWork.GetRepository<Entry>();
 
@@ -52,18 +53,41 @@ public class GroupBlockService
 
         var athleteEntries = await entryRepository.GetAllAsync(
             predicate: entry => entry.ContestId.Equals(contest.Id) && entry.IsSuccess,
-            selector: entry => entry.Athletes.Select(a => a.Id).Distinct(),
+            selector: entry => entry.Athletes.Select(a => new Athlete()
+            {
+                Id = a.Id,
+                TeamId = a.TeamId,
+                // добавить свойства по необходимости
+            }),
             trackingType: TrackingType.NoTracking);
 
-        var athleteIds = athleteEntries.SelectMany(a => a).Distinct().ToList();
-        var sortedAthleteIds = GetSortedAthletes(athleteIds).ToList();
+        var a = athleteEntries.ToList();
+        //1. Все участники
+        var athletes = a.SelectMany(x => x).DistinctBy(s => s.Id).ToList();
+        
+        // 2. Определяем порядок команд
+        var teamsOrder = model.TeamsIds.Distinct().ToList();
 
+        // 3. Сортируем по возрасту и порядку команд
+        var sortedAthletes = athletes
+            .OrderBy(a => a.BirthDate)
+            .ThenBy(a => teamsOrder.IndexOf(a.TeamId))
+            .ToList();
+
+        // 4. Группируем участников по командам
+        var teamsGrouped = sortedAthletes.GroupBy(a => a.TeamId)
+            .OrderBy(g => teamsOrder.IndexOf(g.Key))
+            .Select(g => g.ToList())
+            .ToList();
+
+        // 5. Разбиваем на блоки (по целым командам)
+        var blocks = SplitIntoTeamBlocks(teamsGrouped, model.AthletesPerGroup);
+        
         var judgeCount = contest.Judges?.Count ?? DefaultJudgesCount;
         if (judgeCount == 0) judgeCount = DefaultJudgesCount;
 
-        var athleteByGroupBlock = SplitIntoBatches(sortedAthleteIds, athletesPerGroup);
-
-        var groupBlocks = CreateGroupBlocks(contest, athleteByGroupBlock, judgeCount);
+        // создания блока
+        var groupBlocks = CreateGroupBlocks(contest, blocks, judgeCount);
 
         await groupBlockRepository.InsertAsync(groupBlocks);
         await _unitOfWork.SaveChangesAsync();
@@ -99,9 +123,12 @@ public class GroupBlockService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Guid>> athleteByGroupBlock,
+    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Athlete>>? athleteByGroupBlock,
         int judgeCount)
     {
+        if (athleteByGroupBlock is null) 
+            throw new StepsBusinessException("Ошибка при создании блока, список участников пуст для создания блоков");
+        
         var groupBlocks = new List<GroupBlock>(athleteByGroupBlock.Count);
 
         foreach (var athleteBatch in athleteByGroupBlock)
@@ -128,7 +155,7 @@ public class GroupBlockService
         return groupBlocks;
     }
 
-    private static IEnumerable<ScheduledCell> CreateGroupBlockCells(List<List<Guid>> athletesByJudgeCount,
+    private static IEnumerable<ScheduledCell> CreateGroupBlockCells(List<List<Athlete>> athletesByJudgeCount,
         GroupBlock groupBlock)
     {
         var sequenceNumber = 1;
@@ -137,20 +164,51 @@ public class GroupBlockService
             var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
             var athletesSubGroup = athletesByJudgeCount[index];
 
-            foreach (var athleteId in athletesSubGroup)
+            foreach (var athlete in athletesSubGroup)
             {
                 var cell = new ScheduledCell
                 {
                     SequenceNumber = sequenceNumber,
                     GroupBlock = groupBlock,
                     ExitTime = exitTime,
-                    AthleteId = athleteId,
+                    AthleteId = athlete.Id,
                 };
                 sequenceNumber++;
 
                 yield return cell;
             }
         }
+    }
+    
+    private List<List<Athlete>> SplitIntoTeamBlocks(List<List<Athlete>> teamGroups, int maxPerBlock)
+    {
+        var result = new List<List<Athlete>>();
+        var currentBlock = new List<Athlete>();
+
+        foreach (var team in teamGroups)
+        {
+            if (team.Count > maxPerBlock)
+            {
+                // Если команда больше maxPerBlock, создаем отдельный блок
+                result.Add(new List<Athlete>(team));
+            }
+            else
+            {
+                // Если команда помещается в текущий блок, добавляем
+                if (currentBlock.Count + team.Count > maxPerBlock)
+                {
+                    result.Add(currentBlock);
+                    currentBlock = new List<Athlete>();
+                }
+                currentBlock.AddRange(team);
+            }
+        }
+
+        // Добавляем последний блок, если есть данные
+        if (currentBlock.Count > 0)
+            result.Add(currentBlock);
+
+        return result;
     }
 
     /// <summary>
@@ -186,7 +244,7 @@ public class GroupBlockService
     /// <summary>
     /// Сортирует список спортсменов (при необходимости можно добавить логику сортировки).
     /// </summary>
-    private static IEnumerable<Guid> GetSortedAthletes(IEnumerable<Guid> athleteIds)
+    private static IEnumerable<T> GetSortedAthletes<T>(IEnumerable<T> athleteIds)
     {
         return athleteIds; // TODO: 
     }

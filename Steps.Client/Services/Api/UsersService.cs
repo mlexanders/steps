@@ -12,19 +12,22 @@ namespace Steps.Client.Services.Api;
 
 public class UsersService : CrudService<User, UserViewModel, CreateUserViewModel, UpdateUserViewModel>, IUsersService
 {
+    private readonly UsersRoute _usersRoute;
+
     public UsersService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.UsersRoute())
     {
+        _usersRoute = new ApiRoutes.UsersRoute();
     }
 
     public Task<Result<PaggedListViewModel<UserViewModel>>> GetCounters(Page page)
     {
-        var route = UsersRoute.GetCounters(page);
+        var route = _usersRoute.GetCounters(page);
         return HttpClient.GetAsync<Result<PaggedListViewModel<UserViewModel>>>(route);
     }
 
     public Task<Result<PaggedListViewModel<UserViewModel>>> GetJudges(Page page)
     {
-        var route = UsersRoute.GetJudges(page);
+        var route = _usersRoute.GetJudges(page);
         return HttpClient.GetAsync<Result<PaggedListViewModel<UserViewModel>>>(route);
     }
 }

@@ -174,10 +174,10 @@ public class GroupBlockService
                                   trackingType: TrackingType.Tracking)
                               ?? throw new StepsBusinessException("Групповой блок не найден");
 
-        var joined = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => new { oldOrder.IsConfirmed }).ToList();
+        var joinedConfirmation = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => oldOrder.IsConfirmed ).ToList();
         for (var i = 0; i < orderedSchedule.Count; i++)
         {
-            var oldConfirmed = joined[i].IsConfirmed;
+            var oldConfirmed = joinedConfirmation[i];
             orderedSchedule[i].IsConfirmed = oldConfirmed;
             orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
         }

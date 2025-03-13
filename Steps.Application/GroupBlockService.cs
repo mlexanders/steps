@@ -68,6 +68,36 @@ public class GroupBlockService
         await groupBlockRepository.InsertAsync(groupBlocks);
         await _unitOfWork.SaveChangesAsync();
     }
+    
+    /// <summary>
+    /// Меняет порядок участников в блоке. Принимает полный список  с новым порядок из блока, меняет участников местами.
+    /// </summary>
+    /// <param name="reorderGroupBlockViewModel">Модель на основе который происходит изменение порядка</param>
+    /// <exception cref="StepsBusinessException">Если блок не найден</exception>
+    public async Task ReorderGroupBlock(ReorderGroupBlockViewModel reorderGroupBlockViewModel)
+    {
+        var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
+        var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
+
+        var repository = _unitOfWork.GetRepository<ScheduledCell>();
+        
+        var orderedSchedule = await repository.GetAllAsync(
+                                  predicate: s => s.GroupBlockId.Equals(groupBlockId),
+                                  orderBy: o => o.OrderBy(c => c.SequenceNumber),
+                                  trackingType: TrackingType.Tracking)
+                              ?? throw new StepsBusinessException("Групповой блок не найден");
+
+        var joinedConfirmation = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => oldOrder.IsConfirmed ).ToList();
+        for (var i = 0; i < orderedSchedule.Count; i++)
+        {
+            var oldConfirmed = joinedConfirmation[i];
+            orderedSchedule[i].IsConfirmed = oldConfirmed;
+            orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
+        }
+
+        repository.Update(orderedSchedule);
+        await _unitOfWork.SaveChangesAsync();
+    }
 
     private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Guid>> athleteByGroupBlock,
         int judgeCount)
@@ -159,30 +189,5 @@ public class GroupBlockService
     private static IEnumerable<Guid> GetSortedAthletes(IEnumerable<Guid> athleteIds)
     {
         return athleteIds; // TODO: 
-    }
-
-    public async Task ReorderGroupBlock(ReorderGroupBlockViewModel reorderGroupBlockViewModel)
-    {
-        var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
-        var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
-
-        var repository = _unitOfWork.GetRepository<ScheduledCell>();
-        
-        var orderedSchedule = await repository.GetAllAsync(
-                                  predicate: s => s.GroupBlockId.Equals(groupBlockId),
-                                  orderBy: o => o.OrderBy(c => c.SequenceNumber),
-                                  trackingType: TrackingType.Tracking)
-                              ?? throw new StepsBusinessException("Групповой блок не найден");
-
-        var joinedConfirmation = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => oldOrder.IsConfirmed ).ToList();
-        for (var i = 0; i < orderedSchedule.Count; i++)
-        {
-            var oldConfirmed = joinedConfirmation[i];
-            orderedSchedule[i].IsConfirmed = oldConfirmed;
-            orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
-        }
-
-        repository.Update(orderedSchedule);
-        await _unitOfWork.SaveChangesAsync();
     }
 }

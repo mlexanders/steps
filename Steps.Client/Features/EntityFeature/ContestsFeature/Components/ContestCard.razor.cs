@@ -14,19 +14,20 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 
-public partial class ContestCard : ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
+public partial class
+    ContestCard : ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 {
     // [Inject] protected EntriesManagement EntriesManagement { get; set; } = null!;
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
     [Inject] protected ContestManager ContestManager { get; set; } = null!;
     [Inject] protected ContestDialogManager ContestDialogManager { get; set; } = null!;
     [Inject] protected UsersManager UsersManager { get; set; } = null!;
-    
+
     [Parameter] public ContestViewModel Model { get; set; } = null!;
-    
+
     private List<UserViewModel> Judges { get; set; } = new();
     private List<UserViewModel> Counters { get; set; } = new();
-    
+
     private CreateEntryDialog _createEntryDialog;
 
     protected override async Task OnInitializedAsync()
@@ -36,11 +37,11 @@ public partial class ContestCard : ManageBaseComponent<Contest, ContestViewModel
 
         var specification = new Specification<Contest>().Include(c =>
             c.Include(j => j.Judges).Include(c => c.Counters));
-        
+
         Manager.UseSpecification(specification);
 
         var contest = await Manager.Read(Model.Id);
-        
+
         if (contest.Value.JudjesIds.Any())
         {
             var judgeIds = contest.Value.JudjesIds.ToArray();
@@ -61,11 +62,11 @@ public partial class ContestCard : ManageBaseComponent<Contest, ContestViewModel
             Counters = counters?.Value?.Items?.ToList() ?? new List<UserViewModel>();
         }
 
-        
+
         await base.OnInitializedAsync();
     }
 
-    protected override async Task OnCreate()
+    protected async Task OpenCreateEntryDialog()
     {
         var result = await EntriesDialogManager.ShowCreateDialog(Model.Id);
         if (result) await Manager.LoadPage();

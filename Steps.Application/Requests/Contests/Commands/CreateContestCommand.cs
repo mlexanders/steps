@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Contests.ViewModels;
@@ -23,45 +24,31 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
     public async Task<Result<ContestViewModel>> Handle(CreateContestCommand request,
         CancellationToken cancellationToken)
     {
-        List<User> judges = new List<User>();
-        List<User> counters = new List<User>();
-        
         var model = request.Model;
         var contest = _mapper.Map<Contest>(model);
 
         var repository = _unitOfWork.GetRepository<Contest>();
         var userRepository = _unitOfWork.GetRepository<User>();
-        
-        foreach (var id in request.Model.Judjes)
-        {
-            var judge = await userRepository.GetFirstOrDefaultAsync(c => c.Id == id,
-                null,
-                null,
-                TrackingType.Tracking,
-                false,
-                false);
 
-            judges.Add(judge);
+        if (model.Judjes is not null && model.Judjes.Count > 0)
+        {
+            var addedJudje = await userRepository.GetAllAsync(
+                predicate: u => model.Judjes.Contains(u.Id) && u.Role == Role.Judge,
+                trackingType: TrackingType.Tracking);
+            
+            contest.Judges = addedJudje.ToList();
         }
         
-        foreach (var id in request.Model.Counters)
+        if (model.Counters is not null && model.Counters.Count > 0)
         {
-            var counter = await userRepository.GetFirstOrDefaultAsync(c => c.Id == id,
-                null,
-                null,
-                TrackingType.Tracking,
-                false,
-                false);
-
-            counters.Add(counter);
+            var addedCounters = await userRepository.GetAllAsync(
+                predicate: u => model.Counters.Contains(u.Id) && u.Role == Role.Counter,
+                trackingType: TrackingType.Tracking);
+            
+            contest.Counters = addedCounters.ToList();
         }
 
-        contest.Judges = judges;
-        contest.Counters = counters;
-        
         var entry = await repository.InsertAsync(contest, cancellationToken);
-        
-        
         
         await _unitOfWork.SaveChangesAsync();
 

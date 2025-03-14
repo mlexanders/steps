@@ -40,7 +40,7 @@ namespace Steps.Services.WebApi.Controllers
         }
         
         [HttpPost("[action]")]
-        public async Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, Specification<Athlete>? specification = null)
+        public async Task<Result<PaggedListViewModel<AthleteViewModel>>> GetPaged([FromQuery] Page page, [FromBody] Specification<Athlete>? specification = null)
         {
             return await _mediator.Send(new GetPagedAthletesQuery(page, specification));
         }

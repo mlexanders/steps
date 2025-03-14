@@ -14,13 +14,10 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 
-public partial class
-    ContestCard : ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
+public partial class ContestCard 
 {
-    // [Inject] protected EntriesManagement EntriesManagement { get; set; } = null!;
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
     [Inject] protected ContestManager ContestManager { get; set; } = null!;
-    [Inject] protected ContestDialogManager ContestDialogManager { get; set; } = null!;
     [Inject] protected UsersManager UsersManager { get; set; } = null!;
 
     [Parameter] public ContestViewModel Model { get; set; } = null!;
@@ -28,21 +25,17 @@ public partial class
     private List<UserViewModel> Judges { get; set; } = new();
     private List<UserViewModel> Counters { get; set; } = new();
 
-    private CreateEntryDialog _createEntryDialog;
-
     protected override async Task OnInitializedAsync()
     {
-        Manager = ContestManager;
-        DialogManager = ContestDialogManager;
 
         var specification = new Specification<Contest>().Include(c =>
             c.Include(j => j.Judges).Include(c => c.Counters));
 
-        Manager.UseSpecification(specification);
+        ContestManager.UseSpecification(specification);
 
-        var contest = await Manager.Read(Model.Id);
+        var contest = await ContestManager.Read(Model.Id);
 
-        if (contest.Value.JudjesIds.Any())
+        if (contest.Value is { JudjesIds.Count: > 0 })
         {
             var judgeIds = contest.Value.JudjesIds.ToArray();
             var judgeSpecification = new Specification<User>()
@@ -52,7 +45,7 @@ public partial class
             Judges = judges?.Value?.Items?.ToList() ?? new List<UserViewModel>();
         }
 
-        if (contest.Value.CountersIds.Any())
+        if (contest.Value is { CountersIds.Count: > 0 })
         {
             var counterIds = contest.Value.CountersIds.ToArray();
             var counterSpecification = new Specification<User>()
@@ -69,6 +62,6 @@ public partial class
     protected async Task OpenCreateEntryDialog()
     {
         var result = await EntriesDialogManager.ShowCreateDialog(Model.Id);
-        if (result) await Manager.LoadPage();
+        if (result) await ContestManager.LoadPage();
     }
 }

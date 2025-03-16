@@ -21,9 +21,9 @@
         <RadzenRequiredValidator Component="@nameof(Model.AthleteType)" Text="Тип спортсмена обязателен"
                                  Style="position: absolute"/>
 
-        <RadzenDropDown @bind-Value="Model.Degree" Name="@nameof(Model.Degree)"
+        <RadzenDropDown @bind-Value="Model.AgeCategory" Name="@nameof(Model.AgeCategory)"
                         Data="@Degrees" Placeholder="Выберите разряд" Style="width: 100%"/>
-        <RadzenRequiredValidator Component="@nameof(Model.Degree)" Text="Разряд обязателен"
+        <RadzenRequiredValidator Component="@nameof(Model.AgeCategory)" Text="Разряд обязателен"
                                  Style="position: absolute"/>
 
     </RadzenStack>
@@ -34,5 +34,5 @@
     [Parameter] [Required] public CreateAthleteViewModel Model { get; set; } = null!;
 
     private List<AthleteType> AthleteTypes = Enum.GetValues(typeof(AthleteType)).Cast<AthleteType>().ToList();
-    private List<Degree> Degrees = Enum.GetValues(typeof(Degree)).Cast<Degree>().ToList();
+    private List<AgeCategory> Degrees = Enum.GetValues(typeof(AgeCategory)).Cast<AgeCategory>().ToList();
 }

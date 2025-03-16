@@ -20,10 +20,23 @@
 
     <ItemGroup>
       <None Remove="Properties\launchSettings.json" />
+      <None Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Migrations\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Migrations\**" />
     </ItemGroup>
 
 </Project>

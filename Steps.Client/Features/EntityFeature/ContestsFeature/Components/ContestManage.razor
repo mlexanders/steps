@@ -3,15 +3,16 @@
 @using Steps.Domain.Definitions
 @using Steps.Shared.Contracts.Contests.ViewModels
 @attribute [Authorize]
+@using Steps.Client.Features.Common
 
-@inherits Steps.Client.Features.Common.ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
+@inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenCard>
     <RadzenScheduler @ref=@scheduler TItem="ContestViewModel" Data="Manager.Data"
                      StartProperty="StartDate" EndProperty="EndDate" TextProperty="Name"
                      AppointmentSelect="@(e => DialogManager.ShowCardDialog(e.Data))"
                      SlotSelect="GetSlotSelectHandler()">
-        <RadzenMonthView />
+        <RadzenMonthView Text="Месяц" />
         <RadzenWeekView />
         <RadzenDayView />
     </RadzenScheduler>

@@ -1,4 +1,5 @@
 ﻿using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Schedules;
 
@@ -15,7 +16,13 @@ public static class ApiRoutes
         public const string ConfirmAction = "Account/confirm-action";
     }
 
-    public class ContestsRoute() : BaseApiRoutes("Contests");
+    public class ContestsRoute() : BaseApiRoutes("Contests")
+    {
+        public string GetByTimeInterval(GetContestByInterval criteria)
+        {
+            return $"{BasePath}/{nameof(IContestsService.GetByTimeInterval)}/{criteria.GetQuery()}";
+        }
+    }
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
     public class AthletesRoute() : BaseApiRoutes("Athletes");

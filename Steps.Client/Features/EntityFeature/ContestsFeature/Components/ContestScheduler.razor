@@ -1,0 +1,57 @@
+﻿@using Steps.Client.Features.EntityFeature.ContestsFeature.Services
+@using Steps.Domain.Base
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Contests.ViewModels
+
+<RadzenCard>
+    <RadzenScheduler TItem="ContestViewModel" Data="@Contests" LoadData="@Load" 
+                     TodayText="Сегодня" NextText="Далее" PrevText="Назад"
+                     
+                     StartProperty="@nameof(ContestViewModel.StartDate)" 
+                     EndProperty="@nameof(ContestViewModel.EndDate)" TextProperty="@nameof(ContestViewModel.Name)"
+                     AppointmentSelect="@(e => ShowCardDialog(e.Data))"
+                     SlotSelect="GetSlotSelectHandle()">
+        <RadzenMonthView Text="Месяц" />
+        <RadzenWeekView Text="Неделя"/>
+        <RadzenDayView Text="День"/>
+    </RadzenScheduler>
+</RadzenCard>
+
+@code{
+    private Role? UserRole => User?.Role;
+    
+    [Inject] private ContestDialogManager ContestDialogManager { get; set; } = null!;
+    [Inject] private ContestManager ContestManager { get; set; } = null!;
+    
+    private IEnumerable<ContestViewModel>? Contests { get; set; }
+    [CascadingParameter] public IUser? User { get; set; }
+    
+
+    private async Task Load(SchedulerLoadDataEventArgs arg)
+    {
+        var result = await ContestManager.GetByTimeInterval(arg.Start, arg.End);
+        Contests = result.Value;
+    }
+    
+    private EventCallback<SchedulerSlotSelectEventArgs> GetSlotSelectHandle()
+    {
+        if (UserRole is Role.Organizer)
+        {
+            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, e => ContestDialogManager.ShowCreateDialog());
+        }
+        else
+        {
+            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, e => NoAccessMessage());
+        }
+    }
+    
+    private void NoAccessMessage()
+    {
+        Console.WriteLine("У вас нет прав для создания мероприятий.");
+    }
+
+    private async Task ShowCardDialog(ContestViewModel model)
+    {
+        await ContestDialogManager.ShowCardDialog(model);
+    }
+}

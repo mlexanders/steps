@@ -9,9 +9,15 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record AcceptEntryCommand(Guid EntryId) : IRequest<Result>;
+public record AcceptEntryCommand(Guid EntryId) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
-public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>, IRequireAuthorization
+public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -32,10 +38,5 @@ public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Res
         await _unitOfWork.SaveChangesAsync();
 
         return Result.Ok().SetMessage("Заявка одобрена");
-    }
-
-    public Task<bool> CanAccess(IUser user)
-    {
-        return Task.FromResult(user.Role is Role.Organizer);
     }
 }

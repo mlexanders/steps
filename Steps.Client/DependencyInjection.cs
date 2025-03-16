@@ -34,7 +34,7 @@ public static class AddIdentityDependencyInjection
         
         services.AddTransient<ContestDialogManager>();
         services.AddTransient<ContestManager>();
-        services.AddTransient<IContestsService, ContestsesService>();
+        services.AddTransient<IContestsService, ContestsService>();
         
         services.AddTransient<ClubsDialogManager>();
         services.AddTransient<ClubsManager>();

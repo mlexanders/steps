@@ -87,7 +87,7 @@ public class HttpClientService
         return content ?? GetErrorResponse<TResponse>("Пустой ответ от сервера.");
     }
     
-    private async Task<T> ExecuteSafeAsync<T>(Func<Task<T>> action)
+    private static async Task<T> ExecuteSafeAsync<T>(Func<Task<T>> action)
         where T : Result, new()
     {
         try
@@ -97,9 +97,7 @@ public class HttpClientService
         }
         catch (AppUnauthorizedAccessException)
         {
-            var errorResponse = new T();
-            errorResponse.SetMessage("Неавторизован!");
-            return errorResponse;
+            return GetErrorResponse<T>("Неавторизован");
         }
         catch (Exception ex)
         {

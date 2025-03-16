@@ -25,8 +25,11 @@ public static class ApiRoutes
         public string GetJudges(Page page) => $"{BasePath}/GetJudges/{page.GetQuery()}";
         public string GetCounters(Page page) => $"{BasePath}/GetCounters/{page.GetQuery()}";
     }
-    public class EntriesRoute() : BaseApiRoutes("Entry");
-    
+    public class EntriesRoute() : BaseApiRoutes("Entry"), IEntryRoutes
+    {
+        public string AcceptEntry() => $"{BasePath}/Accept-entry";
+    }
+
     public class GroupBlockRoute()
     {
         public string GetTeamsForCreateGroupBlocks(Guid contestId) => $"GroupBlocks/{nameof(IGroupBlocksService.GetTeamsForCreateGroupBlocks)}/{contestId}";

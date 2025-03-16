@@ -5,7 +5,7 @@
     <RadzenDataGrid TItem="TestResultViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Результатов пока нет"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage" RowSelect="@DialogManager.ShowCardDialog">
 
         <HeaderTemplate>
             <RadzenText Text="*Отображаются результаты по текущему мероприятию"/>

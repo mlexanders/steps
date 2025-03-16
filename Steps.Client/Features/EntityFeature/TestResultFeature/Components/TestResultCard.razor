@@ -1,5 +1,30 @@
-﻿<h3>TestResultCard</h3>
+﻿@using Steps.Shared.Contracts.TestResults.ViewModels
+@using Radzen.Blazor
+@inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, Steps.Shared.Contracts.TestResults.ViewModels.TestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.CreateTestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.UpdateTestResultViewModel>
+
+<RadzenFieldset Text="Результаты спортсмена">
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="1rem">
+                <p><strong>ID спортсмена:</strong> @Model.AthleteId</p>
+                <p><strong>ID мероприятия:</strong> @Model.ContestId</p>
+            </RadzenStack>
+        </RadzenColumn>
+
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="2rem">
+                <div>
+                    <h4>Баллы</h4>
+                    <RadzenListBox TValue="int" Data="@Model.Scores"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenFieldset>
 
 @code {
-
+    [Parameter] public TestResultViewModel Model { get; set; } = null!;
 }

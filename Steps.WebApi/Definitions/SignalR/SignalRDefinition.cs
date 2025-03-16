@@ -12,10 +12,7 @@ namespace Steps.Services.WebApi.Definitions.SignalR
 
         public override void Use(WebApplication app)
         {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<TestResultHub>("/testResultHub");
-            });
+            app.MapHub<TestResultHub>("/testResultsHub");
         }
     }
 }

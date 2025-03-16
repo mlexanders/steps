@@ -19,16 +19,13 @@ public static class ApiRoutes
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
     public class AthletesRoute() : BaseApiRoutes("Athlete");
+    public class TestResultsRoute() : BaseApiRoutes("TestResults");
     public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
     {
         public string GetJudges(Page page) => $"{BasePath}/GetJudges/{page.GetQuery()}";
         public string GetCounters(Page page) => $"{BasePath}/GetCounters/{page.GetQuery()}";
     }
-
-    public class EntriesRoute() : BaseApiRoutes("Entry"), IEntryRoutes
-    {
-        public string AcceptEntry() => $"{BasePath}/Accept-entry";
-    }
+    public class EntriesRoute() : BaseApiRoutes("Entry");
     
     public class GroupBlockRoute()
     {

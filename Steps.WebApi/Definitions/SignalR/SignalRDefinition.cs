@@ -1,4 +1,5 @@
-﻿using Steps.Utils.AppDefinition;
+﻿using Steps.Shared.Contracts.TestResults;
+using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.SignalR
 {

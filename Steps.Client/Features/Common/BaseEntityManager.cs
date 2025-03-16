@@ -22,7 +22,9 @@ public abstract class EntityManagerBase<TEntity, TViewModel, TCreateViewModel, T
     {
         try
         {
-            return await _service.Create(model);
+            var result = await _service.Create(model);
+            if (result.IsSuccess) OnChangedList();
+            return result;
         }
         catch (Exception e)
         {

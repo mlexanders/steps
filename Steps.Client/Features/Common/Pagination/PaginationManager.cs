@@ -65,7 +65,7 @@ public abstract class PaginationManagerBase<TViewModel>
 
     protected abstract Task<Result<PaggedListViewModel<TViewModel>>> GetPaged();
 
-    private void OnChangedList()
+    protected void OnChangedList()
     {
         ChangedList?.Invoke();
     }

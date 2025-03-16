@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Domain.Entities;
@@ -13,7 +14,7 @@ public partial class AthleteManageByTeam :  ManageBaseComponent<Athlete, Athlete
     [Inject] protected AthleteManager AthleteManager { get; set; } = null!;
     [Inject] protected AthleteDialogManager AthleteDialogManager { get; set; } = null!;
 
-    public TeamViewModel? Team { get; set; }
+    [Parameter] public TeamViewModel? Team { get; set; }
     
     private IList<AthleteViewModel> _selected;
 
@@ -29,5 +30,18 @@ public partial class AthleteManageByTeam :  ManageBaseComponent<Athlete, Athlete
         if (Team is null) return null;
         
         return new Specification<Athlete>().Where(a => a.TeamId.Equals(Team.Id));
+    }
+
+    private async Task OnCreateByTeam()
+    {
+        if (Team is null)
+        {
+            return;
+        }
+        var result = await AthleteDialogManager.ShowCreateDialog(Team);
+        if (result)
+        {
+            StateHasChanged();
+        }
     }
 }

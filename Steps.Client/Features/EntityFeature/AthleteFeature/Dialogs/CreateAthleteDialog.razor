@@ -1,6 +1,7 @@
 ﻿@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
 @using Steps.Shared.Contracts.Athletes.ViewModels
 @using Steps.Client.Features.EntityFeature.AthleteFeature.Forms
+@using Steps.Shared.Contracts.Teams.ViewModels
 @inherits Steps.Client.Features.Common.BaseModal
 
 @inject AthleteManager Manager
@@ -9,6 +10,14 @@
 <RadzenTemplateForm TItem="CreateAthleteViewModel" Submit="Create" Data="_athleteViewModel">
     <RadzenCard>
         <CreateAthleteForm Model="@_athleteViewModel" Title="Новый спортсмен" />
+        @if (Team is null)
+        {
+            <RadzenText>Выберите команду</RadzenText>
+        }
+        else
+        {
+            <RadzenText>Участник будет добавдлен в команду @Team.Name</RadzenText>
+        }
         <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
                       Style="margin-left: 10px;"/>
@@ -18,22 +27,24 @@
 @code {
     private readonly CreateAthleteViewModel _athleteViewModel = new();
     
-    [Parameter] public Guid TeamId { get; set; }
+    [Parameter] public TeamViewModel? Team { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        _athleteViewModel.TeamId = TeamId;
-    }
     
     private async Task Create()
     {
+        if (Team is null)
+        {
+            ShowNotification("Команда не выбрана");     
+            return;
+        }
+        
         var result = await Manager.Create(new()
         {
             FullName = _athleteViewModel.FullName,
             BirthDate = DateTime.SpecifyKind(_athleteViewModel.BirthDate, DateTimeKind.Utc),
             AthleteType = _athleteViewModel.AthleteType,
             Degree = _athleteViewModel.Degree,
-            TeamId = TeamId
+            TeamId = Team.Id
         });
         ShowResultMessage(result);
 

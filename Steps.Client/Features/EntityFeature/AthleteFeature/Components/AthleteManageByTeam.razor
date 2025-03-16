@@ -13,12 +13,12 @@
                     RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
-            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать клуб"
-                          Click="@OnCreate"/>
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Добавить участника"
+                          Click="@OnCreateByTeam"/>
         </HeaderTemplate>
 
         <Columns>
-            <RadzenDataGridColumn TItem="AthleteViewModel" Property="@nameof(AthleteViewModel.FullName)" Title="Название"/>
+            <RadzenDataGridColumn TItem="AthleteViewModel" Property="@nameof(AthleteViewModel.FullName)" Title="ФИО"/>
             <RadzenDataGridColumn TItem="AthleteViewModel" Property="@nameof(AthleteViewModel.BirthDate)" Title="Дата рождения"/>
 
             <RadzenDataGridColumn Width="16%" Context="c" Filterable="false" Sortable="false"

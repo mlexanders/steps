@@ -27,7 +27,7 @@ public static class ApiRoutes
 
     public class EntriesRoute() : BaseApiRoutes("Entry"), IEntryRoutes
     {
-        public string AcceptEntry() => $"{BasePath}/Accept-entry";
+        public string AcceptEntry(Guid id) => $"{BasePath}/Accept-entry/{id}";
     }
     
     public class GroupBlockRoute()

@@ -16,29 +16,27 @@ public partial class
     [Inject] protected TeamsDialogManager TeamsDialogManager { get; set; } = null!;
 
     [Parameter] public bool IsReadonly { get; set; }
-    [Parameter] [Required] public ClubViewModel Club { get; set; } = null!;
+    [Parameter] [Required] public ClubViewModel? Club { get; set; } = null!;
 
-    protected override void OnInitialized()
+    protected override Task OnInitializedAsync()
     {
-        try
-        {
-            Manager = TeamsManager;
-            DialogManager = TeamsDialogManager;
+        Manager = TeamsManager;
+        DialogManager = TeamsDialogManager;
 
-            if (Club != null)
-            {
-                var specification = new Specification<Team>().Where(t => t.ClubId == Club.Id);
-                TeamsManager.UseSpecification(specification);
-            }
+        return base.OnInitializedAsync();
+    }
 
-
-            base.OnInitialized();
-        }
-        catch (Exception ex) { }
+    protected override async Task<Specification<Team>?> GetSpecification()
+    {
+        if (Club == null) return null;
+        
+        return new Specification<Team>().Where(t => t.ClubId == Club.Id);
     }
 
     protected override async Task OnCreate()
     {
+        if (Club is null) return;
+        
         var result = await TeamsDialogManager.ShowCreateDialog(Club);
         if (result) await Manager.LoadPage();
     }

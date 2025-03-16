@@ -2,6 +2,7 @@
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Domain.Entities;
+using Steps.Shared;
 using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
@@ -18,5 +19,10 @@ public partial class
         DialogManager = ContestDialogManager;
 
         base.OnInitialized();
+    }
+
+    protected override async Task<Specification<Contest>?> GetSpecification()
+    {
+        return null;
     }
 }

@@ -23,14 +23,13 @@ public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, 
             Manager = EntriesManagement;
             DialogManager = EntriesDialogManager;
             
-            var specification = new Specification<Entry>()
-                .Include(a => a.Include(a => a.Contest));
-        
-            EntriesManagement.UseSpecification(specification);
-
-
             base.OnInitialized();
         }
         catch (Exception ex) { }
+    }
+
+    protected override async Task<Specification<Entry>?> GetSpecification()
+    {
+        return null;
     }
 }

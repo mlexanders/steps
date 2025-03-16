@@ -53,9 +53,9 @@ public class EntryController : ControllerBase, IEntryService
         throw new NotImplementedException();
     }
 
-    [HttpPost("Accept-entry")]
-    public async Task<Result> AcceptEntry(EntryViewModel entryViewModel)
+    [HttpPost("[action]/{entryId:guid}")]
+    public async Task<Result> AcceptEntry(Guid entryId)
     {
-        return await _mediator.Send(new AcceptEntryCommand(entryViewModel));
+        return await _mediator.Send(new AcceptEntryCommand(entryId));
     }
 }

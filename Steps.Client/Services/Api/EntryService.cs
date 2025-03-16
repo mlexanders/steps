@@ -2,8 +2,6 @@
 using Steps.Client.Services.Api.Routes;
 using Steps.Domain.Entities;
 using Steps.Shared;
-using Steps.Shared.Contracts.Athletes;
-using Steps.Shared.Contracts.Athletes.ViewModels;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.Entries.ViewModels;
 
@@ -17,8 +15,8 @@ public class EntryService : CrudService<Entry, EntryViewModel, CreateEntryViewMo
         _entryRoutes = entryRoutes;
     }
 
-    public async Task<Result> AcceptEntry(EntryViewModel entryViewModel)
+    public async Task<Result> AcceptEntry(Guid entryId)
     {
-        return await HttpClient.PostAsync<Result, EntryViewModel>(_entryRoutes.AcceptEntry(), entryViewModel);
+        return await HttpClient.PostAsync<Result, object>(_entryRoutes.AcceptEntry(entryId));
     }
 }

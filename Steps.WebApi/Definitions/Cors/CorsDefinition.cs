@@ -19,6 +19,7 @@ public class CorsDefinition : AppDefinition
         {
             options.AddPolicy(AppData.PolicyName, policyBuilder =>
             {
+                policyBuilder.WithExposedHeaders();
                 policyBuilder.AllowAnyHeader();
                 policyBuilder.AllowAnyMethod();
                 policyBuilder.SetIsOriginAllowed(host => true);

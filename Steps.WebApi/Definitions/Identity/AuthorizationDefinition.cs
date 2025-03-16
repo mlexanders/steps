@@ -13,6 +13,15 @@ public class AuthorizationDefinition : AppDefinition
                 options.Cookie.Name = AppData.Identity.CookieName;
                 options.LoginPath = AppData.Identity.LoginPath;
                 options.LogoutPath = AppData.Identity.LogoutPath;
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;    
+                    context.Response.Headers.AccessControlAllowOrigin = context.Request.Headers.Origin;
+                    context.Response.Headers.AccessControlAllowHeaders = "*";
+                    context.Response.Headers.AccessControlAllowMethods = "*";
+                    context.Response.Headers.AccessControlAllowCredentials = "true";
+                    return Task.CompletedTask;
+                };
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.Strict;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Используем только HTTPS

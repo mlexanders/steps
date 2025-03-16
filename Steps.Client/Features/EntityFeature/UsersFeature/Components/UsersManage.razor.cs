@@ -2,6 +2,7 @@
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Domain.Entities;
+using Steps.Shared;
 using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Shared.Contracts.Users.ViewModels;
 
@@ -19,5 +20,10 @@ public partial class UsersManage : ManageBaseComponent<User, UserViewModel, Crea
         Manager = UsersManager;
         DialogManager = UsersDialogManager;
         base.OnInitialized();
+    }
+
+    protected override async Task<Specification<User>?> GetSpecification()
+    {
+        return null;
     }
 }

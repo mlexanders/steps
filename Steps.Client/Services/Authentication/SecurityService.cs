@@ -17,16 +17,16 @@ public class SecurityService : IDisposable
     public SecurityService(AccountService accountService)
     {
         _accountService = accountService;
-       _refreshTimer = new Timer(TimeSpan.FromMinutes(1)); // TODO:
-       _refreshTimer.Elapsed += (e, v) => _ = Refresh();
+        _refreshTimer = new Timer(TimeSpan.FromMinutes(1)); // TODO:
+        _refreshTimer.Elapsed += (e, v) => _ = Refresh();
     }
 
-    private async Task Refresh()
+    public async Task Refresh()
     {
         var refreshedUser = await GetCurrentUserRequest();
 
-        if (refreshedUser is not null && refreshedUser.Id == _currentUser?.Id) return; 
-        
+        if (refreshedUser is not null && refreshedUser.Id == _currentUser?.Id) return;
+
         _currentUser = refreshedUser;
         _refreshTimer.Stop();
         NotifyUserChanged(_currentUser);
@@ -36,7 +36,8 @@ public class SecurityService : IDisposable
     {
         if (_currentUser is not null) return _currentUser;
 
-        return await GetCurrentUserRequest();
+        _currentUser = await GetCurrentUserRequest();
+        return _currentUser;
     }
 
     private async Task<IUser?> GetCurrentUserRequest()
@@ -65,15 +66,11 @@ public class SecurityService : IDisposable
 
     public async Task Logout()
     {
-        var result = await _accountService.Logout();
-        if (!result.IsSuccess)
-        {
-            throw new InvalidOperationException($"Unable to log out: {result.Message}");
-        }
-
         _refreshTimer.Stop();
         _currentUser = null;
+
         NotifyUserChanged(_currentUser);
+        await _accountService.Logout();
     }
 
     private void NotifyUserChanged(IUser? resultValue)

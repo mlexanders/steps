@@ -32,11 +32,11 @@ public class AccountService : IAccountService
 
     public async Task<Result> Logout()
     {
-        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.Logout, new { });
+        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.Logout);
     }
 
     public async Task<Result> ConfirmAction(string token)
     {
-        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.ConfirmAction, new { });
+        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.ConfirmAction);
     }
 }

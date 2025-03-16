@@ -16,23 +16,3 @@
         <RedirectToLogin/>
     </NotAuthorized>
 </AuthorizeView>
-
-@* @code *@
-@* { *@
-@*     private AuthenticationState? _lastAuthenticationState; *@
-@*      *@
-@*     [CascadingParameter] public Task<AuthenticationState>? AuthenticationStateTask { get; set; } *@
-@*     [CascadingParameter] public AuthenticationStateProvider? AuthenticationStateProvider { get; set; } *@
-@* *@
-@*     protected override void OnInitialized() *@
-@*     { *@
-@*         if (AuthenticationStateProvider != null)  *@
-@*             AuthenticationStateProvider.AuthenticationStateChanged += OnStateChanged; *@
-@*     } *@
-@* *@
-@*     private void OnStateChanged(Task<AuthenticationState> task) *@
-@*     { *@
-@*         Console.WriteLine("OnStateChanged"); *@
-@*         StateHasChanged(); *@
-@*     } *@
-@* } *@

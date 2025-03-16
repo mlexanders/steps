@@ -53,47 +53,57 @@ public class HttpClientService
         where TRequest : class, new()
         where TResponse : Result, new()
     {
-        try
+        return await ExecuteSafeAsync(async () =>
         {
             var request = new HttpRequestMessage(method, resource);
 
             if (data is not null)
             {
-                request.Content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+                request.Content =
+                    new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
             }
 
             var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             return await HandleResponse<TResponse>(response);
-        }
-        catch (Exception e)
-        {
-            return GetErrorResponse<TResponse>(e.Message);
-        }
+        });
     }
 
     private static async Task<TResponse> HandleResponse<TResponse>(HttpResponseMessage response)
         where TResponse : Result, new()
     {
+        if (response.StatusCode == HttpStatusCode.InternalServerError)
+        {
+            return GetErrorResponse<TResponse>("Произошла ошибка. Попробуйте позже.");
+        }
+        
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new AppUnauthorizedAccessException();
+        }
+        
+        var contentString = await response.Content.ReadAsStringAsync();
+        var content = JsonSerializer.Deserialize<TResponse>(contentString, Options);
+        
+        return content ?? GetErrorResponse<TResponse>("Пустой ответ от сервера.");
+    }
+    
+    private async Task<T> ExecuteSafeAsync<T>(Func<Task<T>> action)
+        where T : Result, new()
+    {
         try
         {
-            if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                return GetErrorResponse<TResponse>("Произошла ошибка. Попробуйте позже.");
-            }
-            
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new AppUnauthorizedAccessException();
-            }
-            
-            var contentString = await response.Content.ReadAsStringAsync();
-            var content = JsonSerializer.Deserialize<TResponse>(contentString, Options);
-            
-            return content ?? GetErrorResponse<TResponse>("Пустой ответ от сервера.");
+            var result = await action();
+            return result;
+        }
+        catch (AppUnauthorizedAccessException)
+        {
+            var errorResponse = new T();
+            errorResponse.SetMessage("Неавторизован!");
+            return errorResponse;
         }
         catch (Exception ex)
         {
-            return GetErrorResponse<TResponse>("Ошибка при обработке ответа");
+            return GetErrorResponse<T>(ex.Message);
         }
     }
 

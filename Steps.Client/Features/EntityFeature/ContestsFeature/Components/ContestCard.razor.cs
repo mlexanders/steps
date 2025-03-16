@@ -65,7 +65,7 @@ public partial class ContestCard : ManageBaseComponent<Contest, ContestViewModel
         await base.OnInitializedAsync();
     }
 
-    protected override async Task OnCreate()
+    protected async Task OpenCreateEntryDialog()
     {
         var result = await EntriesDialogManager.ShowCreateDialog(Model.Id);
         if (result) await Manager.LoadPage();

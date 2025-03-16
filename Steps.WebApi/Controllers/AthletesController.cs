@@ -27,7 +27,7 @@ namespace Steps.Services.WebApi.Controllers
             return await _mediator.Send(new CreateAthleteCommand(createAthleteViewModel));
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("{id:Guid}")]
         public Task<Result<AthleteViewModel>> GetById(Guid id)
         {
             throw new NotImplementedException();
@@ -45,7 +45,7 @@ namespace Steps.Services.WebApi.Controllers
             return await _mediator.Send(new GetPagedAthletesQuery(page, specification));
         }
         
-        [HttpDelete]
+        [HttpDelete("{id:Guid}")]
         public Task<Result> Delete(Guid id)
         {
             throw new NotImplementedException();

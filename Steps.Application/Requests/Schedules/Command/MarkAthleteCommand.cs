@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Steps.Shared;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 
 namespace Steps.Application.Requests.Schedules.Command;
 

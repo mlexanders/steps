@@ -13,7 +13,7 @@
             @foreach (var block in _blocks)
             {
                 <RadzenTabsItem Text="@GetTittle(block)">
-                    <ScheduleByGroupBlock GroupBlock="block" ></ScheduleByGroupBlock>
+                    <ScheduleByGroupBlock GroupBlock="block"/>
                 </RadzenTabsItem>
             }
         </Tabs>
@@ -27,7 +27,7 @@ else
 
     if (_teams is null)
     {
-        <RadzenButton Text="Загрузить команды" Click="GetTeams"></RadzenButton>
+        <RadzenButton Text="Показать команды" Click="GetTeams"/>
     }
     else
     {
@@ -37,7 +37,7 @@ else
         }
        else
         {
-            <RadzenButton Text="Создать блоки" Click="@CreateBlocks"></RadzenButton>
+            <RadzenButton Text="Создать блоки" Click="@CreateBlocks"/>
         }
     }
 }

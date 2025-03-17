@@ -1,7 +1,7 @@
 ﻿using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules;
 
 namespace Steps.Client.Services.Api.Routes;
 

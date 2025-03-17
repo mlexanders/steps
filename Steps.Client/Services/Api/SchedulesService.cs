@@ -1,9 +1,8 @@
 ﻿using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Shared;
-using Steps.Shared.Contracts;
-using Steps.Shared.Contracts.Schedules;
-using Steps.Shared.Contracts.Schedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 
 namespace Steps.Client.Services.Api;
 
@@ -18,9 +17,9 @@ public class SchedulesService : ISchedulesService
         _routes = new ApiRoutes.SchedulesService();
     }
 
-    public Task<Result<PaggedListViewModel<ScheduledCellViewModel>>> GetPagedScheduledCellsByGroupBlockIdQuery(GetPagedScheduledCellsViewModel model)
+    public Task<Result<PaggedListViewModel<PreScheduledCellViewModel>>> GetPagedScheduledCellsByGroupBlockIdQuery(GetPagedPreScheduledCellsViewModel model)
     {
-        return _httpClient.PostAsync<Result<PaggedListViewModel<ScheduledCellViewModel>>, GetPagedScheduledCellsViewModel>(
+        return _httpClient.PostAsync<Result<PaggedListViewModel<PreScheduledCellViewModel>>, GetPagedPreScheduledCellsViewModel>(
             _routes.GetPagedScheduledCellsByGroupBlockIdQuery, model);
     }
 

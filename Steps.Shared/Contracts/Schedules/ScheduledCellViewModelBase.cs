@@ -1,9 +1,9 @@
 ﻿using Steps.Domain.Base;
 using Steps.Shared.Contracts.Athletes.ViewModels;
 
-namespace Steps.Shared.Contracts.Schedules.ViewModels;
+namespace Steps.Shared.Contracts.Schedules;
 
-public class ScheduledCellViewModel : IHaveId
+public abstract class ScheduledCellViewModelBase : IHaveId
 {
     public Guid Id { get; set; }
     public DateTime ExitTime { get; set; }
@@ -13,5 +13,4 @@ public class ScheduledCellViewModel : IHaveId
     public string ClubName { get; set; }
     public string TeamName { get; set; }
     public Guid GroupBlockId { get; set; }
-    public bool IsConfirmed { get; set; }
 }

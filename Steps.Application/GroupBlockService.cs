@@ -3,7 +3,7 @@ using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;
@@ -26,7 +26,7 @@ public class GroupBlockService
     /// </summary>
     public async Task MarkAthlete(MarkAthleteViewModel model)
     {
-        var cell = await _unitOfWork.GetRepository<ScheduledCell>()
+        var cell = await _unitOfWork.GetRepository<PreScheduledCell>()
                        .GetFirstOrDefaultAsync(
                            predicate: g => g.GroupBlockId.Equals(model.GroupBlockId)
                                            && g.AthleteId.Equals(model.AthleteId),
@@ -86,7 +86,7 @@ public class GroupBlockService
         var judgeCount = contest.Judges?.Count ?? DefaultJudgesCount;
         if (judgeCount == 0) judgeCount = DefaultJudgesCount;
 
-        // создания блока
+        // создания блоков
         var groupBlocks = CreateGroupBlocks(contest, blocks, judgeCount);
 
         await groupBlockRepository.InsertAsync(groupBlocks);
@@ -94,7 +94,7 @@ public class GroupBlockService
     }
     
     /// <summary>
-    /// Меняет порядок участников в блоке. Принимает полный список  с новым порядок из блока, меняет участников местами.
+    /// Меняет порядок участников в блоке. Принимает полный список  с новым порядком из блока, меняет участников местами.
     /// </summary>
     /// <param name="reorderGroupBlockViewModel">Модель на основе который происходит изменение порядка</param>
     /// <exception cref="StepsBusinessException">Если блок не найден</exception>
@@ -103,7 +103,7 @@ public class GroupBlockService
         var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
         var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
 
-        var repository = _unitOfWork.GetRepository<ScheduledCell>();
+        var repository = _unitOfWork.GetRepository<PreScheduledCell>();
         
         var orderedSchedule = await repository.GetAllAsync(
                                   predicate: s => s.GroupBlockId.Equals(groupBlockId),
@@ -146,7 +146,7 @@ public class GroupBlockService
             };
 
             var cells = CreateGroupBlockCells(athletesByJudgeCount, groupBlock).ToList();
-            groupBlock.Schedule.AddRange(cells);
+            groupBlock.PreSchedule.AddRange(cells);
             groupBlock.EndTime = cells.Last().ExitTime;
 
             groupBlocks.Add(groupBlock);
@@ -155,7 +155,7 @@ public class GroupBlockService
         return groupBlocks;
     }
 
-    private static IEnumerable<ScheduledCell> CreateGroupBlockCells(List<List<Athlete>> athletesByJudgeCount,
+    private static IEnumerable<PreScheduledCell> CreateGroupBlockCells(List<List<Athlete>> athletesByJudgeCount,
         GroupBlock groupBlock)
     {
         var sequenceNumber = 1;
@@ -166,7 +166,7 @@ public class GroupBlockService
 
             foreach (var athlete in athletesSubGroup)
             {
-                var cell = new ScheduledCell
+                var cell = new PreScheduledCell
                 {
                     SequenceNumber = sequenceNumber,
                     GroupBlock = groupBlock,

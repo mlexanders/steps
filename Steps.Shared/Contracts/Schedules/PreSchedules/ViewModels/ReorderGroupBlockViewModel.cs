@@ -1,4 +1,4 @@
-﻿namespace Steps.Shared.Contracts.Schedules;
+﻿namespace Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 
 public class ReorderGroupBlockViewModel
 {

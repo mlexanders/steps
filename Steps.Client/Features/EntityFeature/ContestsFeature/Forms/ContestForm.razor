@@ -91,5 +91,4 @@
         var result = await UsersManager.GetCounters(new Page(0, UsersManager.PageSize));
         Counters = result.Value?.Items.ToList();
     }
-
 }

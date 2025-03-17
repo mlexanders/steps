@@ -2,20 +2,22 @@
 @using Steps.Domain.Entities.GroupBlocks
 @using Steps.Shared
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Contracts.Schedules.ViewModels
 @using Steps.Client.Features.Common
-@using Steps.Shared.Contracts.Schedules
+@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
 
 @inject SchedulerManager SchedulerManager
 @inherits BaseNotificate
 
-<RadzenDataGrid TItem="ScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
+<RadzenDataGrid TItem="PreScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
                 IsLoading="@SchedulerManager.IsLoading" Count="@SchedulerManager.TotalCount"
                 PageSize="SchedulerManager.PageSize" LoadData="@OnChangePage"
                 FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@SchedulerManager.Data" ColumnWidth="300px"
                 FilterCaseSensitivity="@FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="@LogicalFilterOperator.And">
+    <HeaderTemplate>
+        <RadzenButton Click="@Complete" Text="Завершить и создать расписание"/>
+    </HeaderTemplate>
     <Columns> 
-        <RadzenDataGridColumn Width="55px"  Filterable="@(false)" TItem="ScheduledCellViewModel"  Property="@nameof(ScheduledCellViewModel.IsConfirmed)" Title="Явка">
+        <RadzenDataGridColumn Width="55px"  Filterable="@(false)" TItem="PreScheduledCellViewModel"  Property="@nameof(PreScheduledCellViewModel.IsConfirmed)" Title="Явка">
             <Template Context="cell">
                 @if (cell.IsConfirmed)
                 {
@@ -52,7 +54,7 @@
         var filter = arg.Filters?.FirstOrDefault()?
             .FilterValue?.ToString();
 
-        var specification = new Specification<ScheduledCell>();
+        var specification = new Specification<PreScheduledCell>();
         if (!string.IsNullOrEmpty(filter))
         {
             specification.Where(u => u.Athlete.FullName.Contains(filter));
@@ -63,7 +65,7 @@
         await SchedulerManager.ChangePage(arg.Skip, arg.Top);
     }
 
-    private async Task ChangeConfirmation(ScheduledCellViewModel cell)
+    private async Task ChangeConfirmation(PreScheduledCellViewModel cell)
     {
         var newState = !cell.IsConfirmed;
         cell.IsConfirmed = newState;
@@ -76,4 +78,10 @@
         });
         ShowResultMessage(result);
     }
+
+    private Task Complete()
+    {
+        throw new NotImplementedException();
+    }
+
 }

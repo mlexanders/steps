@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Steps.Application.Helpers;
 using Steps.Domain.Entities;
-using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
-using Steps.Shared.Contracts;
-using Steps.Shared.Contracts.GroupBlocks.ViewModels;
-using Steps.Shared.Contracts.Schedules.ViewModels;
 using Steps.Shared.Contracts.Teams.ViewModels;
 using Steps.Shared.Exceptions;
 

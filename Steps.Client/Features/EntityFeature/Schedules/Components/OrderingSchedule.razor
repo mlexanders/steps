@@ -1,9 +1,8 @@
 ﻿@using System.Collections.ObjectModel
 @using Steps.Client.Features.EntityFeature.Schedules.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Contracts.Schedules
-@using Steps.Shared.Contracts.Schedules.ViewModels
 @using Steps.Client.Features.Common
+@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
 
 @inject SchedulerManager SchedulerManager
 @inherits BaseNotificate
@@ -35,9 +34,9 @@
     [Parameter] public bool Editing { get; set; }
     [Parameter] public EventCallback<bool> EditingChanged { get; set; }
 
-    private ObservableCollection<ScheduledCellViewModel> _cells;
-    private IList<ScheduledCellViewModel> _selectedCell;
-    private ScheduledCellViewModel _draggedItem;
+    private ObservableCollection<PreScheduledCellViewModel> _cells;
+    private IList<PreScheduledCellViewModel> _selectedCell;
+    private PreScheduledCellViewModel _draggedItem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,12 +45,12 @@
         SchedulerManager.ChangePageSize(int.MaxValue);
         await SchedulerManager.Initialize(GroupBlock.Id);
 
-        _cells = new ObservableCollection<ScheduledCellViewModel>(SchedulerManager.Data);
+        _cells = new ObservableCollection<PreScheduledCellViewModel>(SchedulerManager.Data);
 
-        _selectedCell = new List<ScheduledCellViewModel>() { _cells.FirstOrDefault() };
+        _selectedCell = new List<PreScheduledCellViewModel>() { _cells.FirstOrDefault() };
     }
 
-    private void RowRender(RowRenderEventArgs<ScheduledCellViewModel> args)
+    private void RowRender(RowRenderEventArgs<PreScheduledCellViewModel> args)
     {
         args.Attributes.Add("title", "Drag row to reorder");
         args.Attributes.Add("style", "cursor:grab");

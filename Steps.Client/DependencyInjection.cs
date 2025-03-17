@@ -16,7 +16,7 @@ using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.GroupBlocks;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;

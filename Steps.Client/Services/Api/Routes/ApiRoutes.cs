@@ -39,17 +39,29 @@ public static class ApiRoutes
 
     public class GroupBlockRoute()
     {
-        public string GetTeamsForCreateGroupBlocks(Guid contestId) => $"GroupBlocks/{nameof(IGroupBlocksService.GetTeamsForCreateGroupBlocks)}/{contestId}";
+        public string GetTeamsForCreateGroupBlocks(Guid contestId) => 
+            $"GroupBlocks/{nameof(IGroupBlocksService.GetTeamsForCreateGroupBlocks)}/{contestId}";
+        
         public string CreateByTeams = $"GroupBlocks/{nameof(IGroupBlocksService.CreateByTeams)}";
+        
         public string DeleteByContestId(Guid contestId) => $"GroupBlocks/{contestId}";
+        
         public string GetById(Guid id) => $"GroupBlocks/{id}";
-        public string GetByContestId(Guid contestId) => $"GroupBlocks/{nameof(IGroupBlocksService.GetByContestId)}/{contestId}";
+        
+        public string GetByContestId(Guid contestId) => 
+            $"GroupBlocks/{nameof(IGroupBlocksService.GetByContestId)}/{contestId}";
+
+        public string CreateFinalScheduleByGroupBlock(Guid id) =>
+            $"GroupBlocks/{nameof(IGroupBlocksService.CreateFinalScheduleByGroupBlock)}/{id}";
     }
 
     public class SchedulesService 
     {
-        public string GetPagedScheduledCellsByGroupBlockIdQuery => $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
+        public string GetPagedScheduledCellsByGroupBlockIdQuery => 
+            $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
+        
         public string Reorder => $"Schedules/{nameof(ISchedulesService.Reorder)}";
+        
         public string MarkAthlete = $"Schedules/{nameof(ISchedulesService.MarkAthlete)}";
     }
 }

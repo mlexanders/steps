@@ -3,9 +3,11 @@
 @using Steps.Shared
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.Common
+@using Steps.Shared.Contracts.GroupBlocks
 @using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
 
 @inject SchedulerManager SchedulerManager
+@inject IGroupBlocksService GroupBlocksService
 @inherits BaseNotificate
 
 <RadzenDataGrid TItem="PreScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
@@ -30,7 +32,7 @@
             
                 </Template>
         </RadzenDataGridColumn>
-        <ScheduleColumns IsFilterable="true"/>
+        <ScheduleColumns TView="PreScheduledCellViewModel" IsFilterable="true"/>
     </Columns>
     
 </RadzenDataGrid>
@@ -79,9 +81,9 @@
         ShowResultMessage(result);
     }
 
-    private Task Complete()
+    private async Task Complete()
     {
-        throw new NotImplementedException();
+        await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
     }
 
 }

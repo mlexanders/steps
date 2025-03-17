@@ -42,15 +42,17 @@
 
         <RadzenColumn Size="6">
             <RadzenStack Gap="2rem">
-                    <RadzenListBox @bind-Value="@SelectedJudges"
-                                   Data="@Judges"
-                                   TextProperty="@nameof(IUser.Login)"
-                                   ValueProperty="@nameof(IUser.Id)"
-                                   Multiple="true" AllowClear="true" Placeholder="Все"
-                                   Style="width: 100%; max-width: 400px; height: 200px"
-                                   InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Выберите судей" } })"/>
+                <h4>Судьи</h4>
+                <RadzenListBox @bind-Value="@Contest.Judjes"
+                               Data="@Judges"
+                               TextProperty="@nameof(IUser.Login)"
+                               ValueProperty="@nameof(IUser.Id)"
+                               Multiple="true" AllowClear="true" Placeholder="Все"
+                               Style="width: 100%; max-width: 400px; height: 200px"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Выберите судей" } })"/>
 
-                <RadzenListBox @bind-Value="@SelectedCounters"
+                <h4>Счетчики</h4>
+                <RadzenListBox @bind-Value="@Contest.Counters"
                                Data="@Counters"
                                TextProperty="@nameof(IUser.Login)"
                                ValueProperty="@nameof(IUser.Id)"
@@ -66,9 +68,6 @@
 @code {
     [Parameter] [Required] public string Title { get; set; } = null!;
     [Parameter] [Required] public CreateContestViewModel Contest { get; set; } = null!;
-
-    private List<Guid>? SelectedJudges { get; set; } = new();
-    private List<Guid>? SelectedCounters { get; set; } = new();
 
     private List<UserViewModel> Judges { get; set; } = new List<UserViewModel>();
     private List<UserViewModel> Counters { get; set; } = new List<UserViewModel>();

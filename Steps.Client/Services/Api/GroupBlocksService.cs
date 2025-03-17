@@ -42,4 +42,9 @@ public class GroupBlocksService : IGroupBlocksService
     {
         return _httpClient.DeleteAsync<Result>(_routes.DeleteByContestId(id));
     }
+
+    public Task<Result> CreateFinalScheduleByGroupBlock(Guid groupBlockId)
+    {
+        return _httpClient.PostAsync<Result, object>(_routes.CreateFinalScheduleByGroupBlock(groupBlockId));
+    }
 }

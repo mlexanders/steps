@@ -1,19 +1,21 @@
-﻿@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
+﻿@using Steps.Shared.Contracts.Schedules
+@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
+@typeparam TView where TView : ScheduledCellViewModelBase, new()
 
-<RadzenDataGridColumn Filterable="false" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.SequenceNumber)" Title="Номер"/>
-<RadzenDataGridColumn Filterable="false" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.TeamName)" Title="Команда"/>
-<RadzenDataGridColumn Filterable="false" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.ClubName)" Title="Клуб"/>
-<RadzenDataGridColumn Filterable="IsFilterable" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.Athlete.FullName)" Title="ФИО">
+<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.SequenceNumber)" Title="Номер"/>
+<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.TeamName)" Title="Команда"/>
+<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.ClubName)" Title="Клуб"/>
+<RadzenDataGridColumn Filterable="IsFilterable" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.Athlete.FullName)" Title="ФИО">
     <Template Context="cell">
         @cell.Athlete.FullName
     </Template>
 </RadzenDataGridColumn>
-<RadzenDataGridColumn Filterable="false" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.Athlete.BirthDate)" Title="Дата рождения">
+<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.Athlete.BirthDate)" Title="Дата рождения">
     <Template Context="cell">
         @cell.Athlete.BirthDate
     </Template>
 </RadzenDataGridColumn>
-<RadzenDataGridColumn Filterable="false" TItem="PreScheduledCellViewModel" Property="@nameof(PreScheduledCellViewModel.ExitTime)" Title="Время выхода">
+<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.ExitTime)" Title="Время выхода">
     <Template Context="cell">
         @cell.ExitTime.ToString("t")
     </Template>

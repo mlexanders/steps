@@ -1,5 +1,7 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
+using Steps.Application.Requests.GroupBlocks.Queries;
 using Steps.Shared;
 
 namespace Steps.Application.Helpers;
@@ -13,6 +15,11 @@ public record SpecificationRequest<T> where T : class
 
     protected SpecificationRequest(Specification<T>? specification)
     {
+        Init(specification);
+    }
+
+    private void Init(Specification<T>? specification)
+    {
         Specification = specification;
         var expressions = Specification?.GetExpressions();
         Predicate = expressions?.Predicate;
@@ -25,7 +32,12 @@ public record SpecificationRequest<T> where T : class
         {
             Specification = new Specification<T>().Where(predicate);
         }
-        Specification.AddPredicate(predicate);
+        else
+        {
+            Specification.AddPredicate(predicate);
+        }
+        
+        Init(Specification);
         return this;
     }
 }

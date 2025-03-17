@@ -7,6 +7,7 @@
         <RadzenColumn Size="6">
             <RadzenStack Gap="1rem">
                 <p><strong>ID спортсмена:</strong> @Model.AthleteId</p>
+                <p><strong>Имя спортсмена:</strong> @Model.Athlete?.FullName</p>
                 <p><strong>ID мероприятия:</strong> @Model.ContestId</p>
             </RadzenStack>
         </RadzenColumn>
@@ -21,6 +22,21 @@
                                    Multiple="false" />
                 </div>
             </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenCard Style="margin-top: 1rem;">
+                <h3>Элементы спортсмена</h3>
+                <RadzenStack Gap="1rem">
+                    <p><strong>Элемент 1:</strong> @Model.Athlete?.AthleteElements?.Element1</p>
+                    <p><strong>Элемент 2:</strong> @Model.Athlete?.AthleteElements?.Element2</p>
+                    <p><strong>Элемент 3:</strong> @Model.Athlete?.AthleteElements?.Element3</p>
+                    <p><strong>Элемент 4:</strong> @Model.Athlete?.AthleteElements?.Element4</p>
+                    <p><strong>Элемент 5:</strong> @Model.Athlete?.AthleteElements?.Element5</p>
+                </RadzenStack>
+            </RadzenCard>
         </RadzenColumn>
     </RadzenRow>
 </RadzenFieldset>

@@ -1,4 +1,5 @@
 ﻿using Calabonga.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
@@ -20,6 +21,56 @@ public class GroupBlockService
     {
         _unitOfWork = unitOfWork;
     }
+    
+    /// <summary>
+    /// Создание финального расписания
+    /// </summary>
+    /// <param name="groupBlockId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="StepsBusinessException"></exception>
+    public async Task GenerateFinalScheduleByGroupBlock(Guid groupBlockId, CancellationToken cancellationToken)
+    {
+        var block = await _unitOfWork.GetRepository<GroupBlock>()
+            .GetFirstOrDefaultAsync(
+                predicate: b => b.Id.Equals(groupBlockId),
+                include: x => x
+                    .Include(b => b.PreSchedule)
+                    .Include(b => b.FinalSchedule),
+                trackingType: TrackingType.Tracking);
+
+        if (block is null)
+        {
+            throw new StepsBusinessException("Блок не найден");
+        }
+        
+        var pre = block.PreSchedule ?? [];
+        if (pre.Count == 0)
+        {
+            throw new StepsBusinessException("Предварительный блок не создан");
+        }
+
+        var completedPreSchedule = pre.Where(s => s.IsConfirmed).ToList();
+        if (completedPreSchedule.Count == 0)
+        {
+            throw new StepsBusinessException("Не отмечена явка на мероприятие");
+        }
+        
+        var final = block.FinalSchedule ?? [];
+        if (final.Count > 0)
+        {
+            throw new StepsBusinessException("Финальное расписание для этого блока уже сформировано");
+        }
+
+        var judgeCount = pre.GroupBy(x => x.ExitTime).Count();
+        var athletesIds = completedPreSchedule.Select(c => c.AthleteId).ToList();
+        var athletesByJudgeCount = SplitIntoBatches(athletesIds, judgeCount);
+        
+        var finalCells = CreateGroupBlockCells<FinalScheduledCell>(athletesByJudgeCount, block);
+
+        block.FinalSchedule = finalCells.ToList();
+
+        var count = await _unitOfWork.SaveChangesAsync();
+    }
 
     /// <summary>
     /// Помечает спортсмена как подтвержденного в заданном блоке.
@@ -40,7 +91,7 @@ public class GroupBlockService
     /// <summary>
     /// Генерирует ПРЕДВАРИТЕЛЬНЫЕ групповые блоки для соревнования.
     /// </summary>
-    public async Task GenerateGroupBlocks(Contest contest, CreateGroupBlockViewModel model)
+    public async Task GenerateGroupBlocksAndPreCells(Contest contest, CreateGroupBlockViewModel model)
     {
         ValidateContestStatus(contest);
         
@@ -127,7 +178,7 @@ public class GroupBlockService
         int judgeCount)
     {
         if (athleteByGroupBlock is null) 
-            throw new StepsBusinessException("Ошибка при создании блока, список участников пуст для создания блоков");
+            throw new StepsBusinessException("Ошибка при создании блока, список участников пуст");
         
         var groupBlocks = new List<GroupBlock>(athleteByGroupBlock.Count);
 
@@ -137,15 +188,16 @@ public class GroupBlockService
                 ? groupBlocks.Last().EndTime.Add(GroupBlockInterval)
                 : contest.StartDate;
 
-            var athletesByJudgeCount = SplitIntoBatches(athleteBatch, judgeCount);
-
             var groupBlock = new GroupBlock
             {
                 ContestId = contest.Id,
                 StartTime = startTime.ToUniversalTime()
             };
+            
+            var  athleteIdsBatch= athleteBatch.Select(x => x.Id).ToList();
+            var athletesIdsByJudgeCount = SplitIntoBatches(athleteIdsBatch, judgeCount);
 
-            var cells = CreateGroupBlockCells(athletesByJudgeCount, groupBlock).ToList();
+            var cells = CreateGroupBlockCells<PreScheduledCell>(athletesIdsByJudgeCount, groupBlock).ToList();
             groupBlock.PreSchedule.AddRange(cells);
             groupBlock.EndTime = cells.Last().ExitTime;
 
@@ -155,23 +207,24 @@ public class GroupBlockService
         return groupBlocks;
     }
 
-    private static IEnumerable<PreScheduledCell> CreateGroupBlockCells(List<List<Athlete>> athletesByJudgeCount,
+    private static IEnumerable<T> CreateGroupBlockCells<T>(List<List<Guid>> athletesIdByJudgeCount,
         GroupBlock groupBlock)
+    where T : ScheduledCellBase, new()
     {
         var sequenceNumber = 1;
-        for (var index = 0; index < athletesByJudgeCount.Count; index++)
+        for (var index = 0; index < athletesIdByJudgeCount.Count; index++)
         {
             var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
-            var athletesSubGroup = athletesByJudgeCount[index];
+            var athletesIdSubGroup = athletesIdByJudgeCount[index];
 
-            foreach (var athlete in athletesSubGroup)
+            foreach (var athleteId in athletesIdSubGroup)
             {
-                var cell = new PreScheduledCell
+                var cell = new T
                 {
                     SequenceNumber = sequenceNumber,
                     GroupBlock = groupBlock,
                     ExitTime = exitTime,
-                    AthleteId = athlete.Id,
+                    AthleteId = athleteId,
                 };
                 sequenceNumber++;
 

@@ -33,6 +33,12 @@ public class GroupBlocksController : ControllerBase, IGroupBlocksService
     {
         return _mediator.Send(new DeleteByContestId(contestId));
     }
+    
+    [HttpPost("[action]/{groupBlockId:guid}")]
+    public Task<Result> CreateFinalScheduleByGroupBlock(Guid groupBlockId)
+    {
+        return _mediator.Send(new CreateFinalScheduleCommand(groupBlockId));
+    }
 
     [HttpGet("[action]/{contestId:guid}")]
     public Task<Result<List<TeamViewModel>>> GetTeamsForCreateGroupBlocks(Guid contestId)
@@ -52,6 +58,5 @@ public class GroupBlocksController : ControllerBase, IGroupBlocksService
         return _mediator.Send(new GetGroupBlocksByContestIdQuery(contestId));
     }
 }
-
 
 

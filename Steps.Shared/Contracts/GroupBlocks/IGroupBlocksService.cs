@@ -38,6 +38,14 @@ public interface IGroupBlocksService
     /// <param name="id"></param>
     /// <returns></returns>
     Task<Result> DeleteByContestId(Guid id);
+
+
+    /// <summary>
+    /// Создает финальное расписание для 1 блока на основе, поджтвержденных участников из PreScheduleCells
+    /// </summary>
+    /// <param name="groupBlockId">id GroupBlock</param>
+    /// <returns>Result</returns>
+    Task<Result> CreateFinalScheduleByGroupBlock(Guid groupBlockId);
 }
 
 

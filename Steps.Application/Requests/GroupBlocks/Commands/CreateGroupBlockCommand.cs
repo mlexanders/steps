@@ -32,7 +32,7 @@ public class CreateGroupBlocksByTeamsCommandHandler : IRequestHandler<CreateGrou
                               trackingType: TrackingType.NoTracking)
                       ?? throw new StepsBusinessException("Мероприятие не найдено");
 
-        await _groupBlockService.GenerateGroupBlocks(contest, request.Model);
+        await _groupBlockService.GenerateGroupBlocksAndPreCells(contest, request.Model);
 
         return Result.Ok().SetMessage("Список создан");
     }

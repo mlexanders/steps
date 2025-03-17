@@ -83,7 +83,8 @@
 
     private async Task Complete()
     {
-        await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
+        var result = await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
+        ShowResultMessage(result);
     }
 
 }

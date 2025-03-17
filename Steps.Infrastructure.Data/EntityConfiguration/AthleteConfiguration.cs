@@ -22,6 +22,6 @@ public class AthleteConfiguration : IEntityTypeConfiguration<Athlete>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.AthleteElements)
-            .WithOne();
+            .WithMany();
     }
 }

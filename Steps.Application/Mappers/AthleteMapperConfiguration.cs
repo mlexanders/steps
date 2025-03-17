@@ -26,7 +26,8 @@ public class AthleteMapperConfiguration : Profile
             .ForMember(x => x.TeamId, x => x.MapFrom(m => m.TeamId))
             .ForMember(x => x.BirthDate, x => x.MapFrom(m => m.BirthDate))
             .ForMember(x => x.AthleteType, x => x.MapFrom(m => m.AthleteType))
-            .ForMember(x => x.AgeCategory, x => x.MapFrom(m => m.AgeCategory));
+            .ForMember(x => x.AgeCategory, x => x.MapFrom(m => m.AgeCategory))
+            .ForMember(x => x.AthleteElements, x => x.MapFrom(m => m.AthleteElements));
 
         CreateMap<CreateAthleteViewModel, Athlete>()
             .ForMember(x => x.Id, x => x.Ignore())

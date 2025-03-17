@@ -19,15 +19,13 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ISecurityService _securityService;
-    private readonly IHubContext<TestResultHub> _hubContext;
 
     public CreateTestResultCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        ISecurityService securityService, IHubContext<TestResultHub> hubContext)
+        ISecurityService securityService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _securityService = securityService;
-        _hubContext = hubContext;
     }
 
     public async Task<Result<TestResultViewModel>> Handle(CreateTestResultCommand request,
@@ -50,7 +48,7 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
 
         var viewModel = _mapper.Map<TestResultViewModel>(entry.Entity);
 
-        await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
+        // await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
 
         return Result<TestResultViewModel>.Ok(viewModel).SetMessage("Баллы сохранены");
     }

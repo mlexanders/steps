@@ -2,6 +2,7 @@
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
 using Steps.Shared.Contracts.Athletes.ViewModels;
+using Steps.Shared.Contracts.Teams.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 
@@ -25,11 +26,11 @@ public class AthleteDialogManager : IDialogManager<AthleteViewModel>
         return result ?? false;
     }
 
-    public async Task<bool> ShowCreateDialog(Guid teamId)
+    public async Task<bool> ShowCreateDialog(TeamViewModel team)
     {
         var result = await _dialogService.OpenAsync<CreateAthleteDialog>(
             "Создание спортсмена",
-            new Dictionary<string, object> { { "TeamId", teamId } }
+            new Dictionary<string, object> { { "Team", team } }
         );
         return result ?? false;
     }

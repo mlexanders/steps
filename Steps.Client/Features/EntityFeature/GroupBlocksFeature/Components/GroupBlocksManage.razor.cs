@@ -18,7 +18,8 @@ public partial class GroupBlocksManage : BaseNotificate
 
     private List<TeamViewModel>? _teams;
     private List<GroupBlockViewModel>? _blocks;
-    
+    private bool _isComplete;
+
     protected override async Task OnInitializedAsync()
     {
         if (Contest is null) return;

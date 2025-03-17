@@ -1,10 +1,5 @@
-﻿@using System.Diagnostics.Metrics
-@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
-@using Steps.Client.Features.Common
-@using Steps.Shared.Contracts.Accounts.ViewModels
+﻿@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
 
-@inherits ManageBaseComponent<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>
 
 <RadzenFieldset Text="Информация о мероприятии">
     <RadzenRow>
@@ -42,6 +37,7 @@
         </RadzenColumn>
     </RadzenRow>
 </RadzenFieldset>
+
 
 <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
               Click="() => OpenCreateEntryDialog()" Style="margin-bottom: 10px;" />

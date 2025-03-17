@@ -1,9 +1,9 @@
 ﻿using Steps.Domain.Base;
 using Steps.Shared.Contracts.Athletes.ViewModels;
 
-namespace Steps.Shared.Contracts.Schedules.ViewModels;
+namespace Steps.Shared.Contracts.Schedules;
 
-public class ScheduledCellViewModel : IHaveId
+public abstract class ScheduledCellViewModelBase : IHaveId
 {
     public Guid Id { get; set; }
     public DateTime ExitTime { get; set; }

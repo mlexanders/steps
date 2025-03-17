@@ -13,12 +13,19 @@ using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Users.Queries;
 
-public record GetPagedUsersQuery(Page Page, Specification<User>? Specification) : 
-    SpecificationRequest<User>(Specification), IRequest<Result<PaggedListViewModel<UserViewModel>>>;
+public record GetPagedUsersQuery(Page Page, Specification<User>? Specification) :
+    SpecificationRequest<User>(Specification), IRequest<Result<PaggedListViewModel<UserViewModel>>>,
+    IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class GetPagedUsersHandler
     : IRequestHandler<GetPagedUsersQuery,
-        Result<PaggedListViewModel<UserViewModel>>>, IRequireAuthorization
+        Result<PaggedListViewModel<UserViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -27,11 +34,6 @@ public class GetPagedUsersHandler
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-    }
-    
-    public Task<bool> CanAccess(IUser user)
-    {
-        return Task.FromResult(user.Role is Role.Organizer);
     }
 
     public async Task<Result<PaggedListViewModel<UserViewModel>>> Handle(GetPagedUsersQuery request,

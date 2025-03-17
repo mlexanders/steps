@@ -1,6 +1,7 @@
-﻿
-@using Steps.Client.Features.EntityFeature.Schedules
-@inherits Steps.Client.Features.Common.BaseNotificate
+﻿@using Steps.Client.Features.EntityFeature.Schedules.Components
+@using Steps.Client.Features.Common
+
+@inherits BaseNotificate
 
 
 
@@ -12,7 +13,7 @@
             @foreach (var block in _blocks)
             {
                 <RadzenTabsItem Text="@GetTittle(block)">
-                    <ScheduleByGroupBlock GroupBlock="block" ></ScheduleByGroupBlock>
+                    <ScheduleByGroupBlock GroupBlock="block"/>
                 </RadzenTabsItem>
             }
         </Tabs>
@@ -21,21 +22,22 @@
 else
 {
     <RadzenText> блоков нет</RadzenText>
-    <RadzenButton Text="Загрузить команды" Click="GetTeams"></RadzenButton>
-
+    
     <RadzenText> Выберите очередность выступления команд</RadzenText>
 
-    if (_teams is not null)
+    if (_teams is null)
     {
-
-        foreach (var team in _teams)
+        <RadzenButton Text="Показать команды" Click="GetTeams"/>
+    }
+    else
+    {
+        if (!_isComplete)
         {
-            <RadzenCard>
-                <RadzenText> @team.Name </RadzenText>
-            </RadzenCard>
+            <OrderingTeams @bind-IsComplete="@_isComplete" @bind-Teams="@_teams"/>
+        }
+       else
+        {
+            <RadzenButton Text="Создать блоки" Click="@CreateBlocks"/>
         }
     }
-    
-    <RadzenButton Text="Создать блоки" Click="@CreateBlocks"></RadzenButton>
-
 }

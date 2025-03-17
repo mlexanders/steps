@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Schedules.Command;
 using Steps.Application.Requests.Schedules.Queries;
 using Steps.Shared;
-using Steps.Shared.Contracts;
-using Steps.Shared.Contracts.Schedules;
-using Steps.Shared.Contracts.Schedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 
 namespace Steps.Services.WebApi.Controllers;
 
@@ -22,16 +21,22 @@ public class SchedulesController : ControllerBase, ISchedulesService
         _mediator = mediator;
     }
 
-    [HttpPost("[action]/{groupBlockId:guid}")]
-    public Task<Result<PaggedListViewModel<ScheduledCellViewModel>>> 
-        GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId, [FromBody] Page page)
+    [HttpPost("[action]")]
+    public Task<Result<PaggedListViewModel<PreScheduledCellViewModel>>> 
+        GetPagedScheduledCellsByGroupBlockIdQuery([FromBody] GetPagedPreScheduledCellsViewModel model)
     {
-        return _mediator.Send(new GetPagedScheduledCellsByGroupBlockIdQuery(groupBlockId, page));
+        return _mediator.Send(new GetPagedScheduledCellsByGroupBlockIdQuery(model));
     }
 
     [HttpPost("[action]")]
     public Task<Result> Reorder([FromBody] ReorderGroupBlockViewModel model)
     {
         return _mediator.Send(new ReorderGroupBlockCommand(model));
+    }
+    
+    [HttpPost("[action]")]
+    public Task<Result> MarkAthlete(MarkAthleteViewModel model)
+    {
+        return _mediator.Send(new MarkAthleteCommand(model));
     }
 }

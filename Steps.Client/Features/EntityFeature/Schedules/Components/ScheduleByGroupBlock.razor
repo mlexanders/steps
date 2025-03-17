@@ -1,13 +1,13 @@
 ﻿@using Steps.Client.Features.EntityFeature.Schedules.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Contracts.Schedules.ViewModels
+@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
 
 @inject SchedulerManager SchedulerManager
 
 @if (!_isEditing)
 {
     <RadzenCard>
-        <RadzenDataGrid TItem="ScheduledCellViewModel" Data="SchedulerManager.Data" AllowPaging="true"
+        <RadzenDataGrid TItem="PreScheduledCellViewModel" Data="SchedulerManager.Data" AllowPaging="true"
                         SelectionMode="DataGridSelectionMode.Single" 
                         PageSize="SchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
                         IsLoading="@SchedulerManager.IsLoading" Count="@SchedulerManager.TotalCount"
@@ -28,6 +28,8 @@ else
     <OrderingSchedule GroupBlock="GroupBlock" @bind-Editing="_isEditing"></OrderingSchedule>
 }
 
+<RadzenText Text="Явка на мероприятие"/>
+<MarkingAthleteByGroupBlock GroupBlock="GroupBlock"></MarkingAthleteByGroupBlock>
 
 @code {
     private bool _isEditing;

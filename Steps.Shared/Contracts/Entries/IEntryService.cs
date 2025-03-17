@@ -5,5 +5,5 @@ namespace Steps.Shared.Contracts.Entries;
 
 public interface IEntryService : ICrudService<Entry, EntryViewModel, CreateEntryViewModel, UpdateEntryViewModel>
 {
-    Task<Result> AcceptEntry(EntryViewModel entryViewModel);
+    Task<Result> AcceptEntry(Guid entryId);
 } 

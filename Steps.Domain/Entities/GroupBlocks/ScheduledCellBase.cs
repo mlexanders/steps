@@ -1,0 +1,15 @@
+﻿using Steps.Domain.Base;
+
+namespace Steps.Domain.Entities.GroupBlocks;
+
+public abstract class ScheduledCellBase : Entity
+{
+    public DateTime ExitTime { get; set; }
+    public int SequenceNumber { get; set; }
+
+    public Guid AthleteId { get; set; }
+    public virtual Athlete Athlete { get; set; } = null!;
+
+    public Guid GroupBlockId { get; set; }
+    public virtual GroupBlock GroupBlock { get; set; } = null!;
+}

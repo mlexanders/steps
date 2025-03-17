@@ -2,7 +2,8 @@
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.GroupBlocks.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;
@@ -23,18 +24,26 @@ public class GroupBlockService
     /// <summary>
     /// Помечает спортсмена как подтвержденного в заданном блоке.
     /// </summary>
-    public async Task MarkAthlete(GroupBlock groupBlock, Guid athleteId)
+    public async Task MarkAthlete(MarkAthleteViewModel model)
     {
-        throw new NotImplementedException();
+        var cell = await _unitOfWork.GetRepository<PreScheduledCell>()
+                       .GetFirstOrDefaultAsync(
+                           predicate: g => g.GroupBlockId.Equals(model.GroupBlockId)
+                                           && g.AthleteId.Equals(model.AthleteId),
+                           trackingType: TrackingType.Tracking)
+                   ?? throw new StepsBusinessException("Участник в заданном блоке не найден");
+
+        cell.IsConfirmed = model.Confirmation;
+        await _unitOfWork.SaveChangesAsync();
     }
 
     /// <summary>
     /// Генерирует ПРЕДВАРИТЕЛЬНЫЕ групповые блоки для соревнования.
     /// </summary>
-    public async Task GenerateGroupBlocks(Contest contest, int athletesPerGroup)
+    public async Task GenerateGroupBlocks(Contest contest, CreateGroupBlockViewModel model)
     {
         ValidateContestStatus(contest);
-
+        
         var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
         var entryRepository = _unitOfWork.GetRepository<Entry>();
 
@@ -44,26 +53,82 @@ public class GroupBlockService
 
         var athleteEntries = await entryRepository.GetAllAsync(
             predicate: entry => entry.ContestId.Equals(contest.Id) && entry.IsSuccess,
-            selector: entry => entry.Athletes.Select(a => a.Id).Distinct(),
+            selector: entry => entry.Athletes.Select(a => new Athlete()
+            {
+                Id = a.Id,
+                TeamId = a.TeamId,
+                // добавить свойства по необходимости
+            }),
             trackingType: TrackingType.NoTracking);
 
-        var athleteIds = athleteEntries.SelectMany(a => a).Distinct().ToList();
-        var sortedAthleteIds = GetSortedAthletes(athleteIds).ToList();
+        var a = athleteEntries.ToList();
+        //1. Все участники
+        var athletes = a.SelectMany(x => x).DistinctBy(s => s.Id).ToList();
+        
+        // 2. Определяем порядок команд
+        var teamsOrder = model.TeamsIds.Distinct().ToList();
 
+        // 3. Сортируем по возрасту и порядку команд
+        var sortedAthletes = athletes
+            .OrderBy(a => a.BirthDate)
+            .ThenBy(a => teamsOrder.IndexOf(a.TeamId))
+            .ToList();
+
+        // 4. Группируем участников по командам
+        var teamsGrouped = sortedAthletes.GroupBy(a => a.TeamId)
+            .OrderBy(g => teamsOrder.IndexOf(g.Key))
+            .Select(g => g.ToList())
+            .ToList();
+
+        // 5. Разбиваем на блоки (по целым командам)
+        var blocks = SplitIntoTeamBlocks(teamsGrouped, model.AthletesPerGroup);
+        
         var judgeCount = contest.Judges?.Count ?? DefaultJudgesCount;
         if (judgeCount == 0) judgeCount = DefaultJudgesCount;
 
-        var athleteByGroupBlock = SplitIntoBatches(sortedAthleteIds, athletesPerGroup);
-
-        var groupBlocks = CreateGroupBlocks(contest, athleteByGroupBlock, judgeCount);
+        // создания блоков
+        var groupBlocks = CreateGroupBlocks(contest, blocks, judgeCount);
 
         await groupBlockRepository.InsertAsync(groupBlocks);
         await _unitOfWork.SaveChangesAsync();
     }
+    
+    /// <summary>
+    /// Меняет порядок участников в блоке. Принимает полный список  с новым порядком из блока, меняет участников местами.
+    /// </summary>
+    /// <param name="reorderGroupBlockViewModel">Модель на основе который происходит изменение порядка</param>
+    /// <exception cref="StepsBusinessException">Если блок не найден</exception>
+    public async Task ReorderGroupBlock(ReorderGroupBlockViewModel reorderGroupBlockViewModel)
+    {
+        var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
+        var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
 
-    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Guid>> athleteByGroupBlock,
+        var repository = _unitOfWork.GetRepository<PreScheduledCell>();
+        
+        var orderedSchedule = await repository.GetAllAsync(
+                                  predicate: s => s.GroupBlockId.Equals(groupBlockId),
+                                  orderBy: o => o.OrderBy(c => c.SequenceNumber),
+                                  trackingType: TrackingType.Tracking)
+                              ?? throw new StepsBusinessException("Групповой блок не найден");
+
+        var joinedConfirmation = orderedAthletes.Join(orderedSchedule, l => l.AthleteId, r => r.AthleteId, (newOrder, oldOrder) => oldOrder.IsConfirmed ).ToList();
+        for (var i = 0; i < orderedSchedule.Count; i++)
+        {
+            var oldConfirmed = joinedConfirmation[i];
+            orderedSchedule[i].IsConfirmed = oldConfirmed;
+            orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
+        }
+
+        repository.Update(orderedSchedule);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    private static List<GroupBlock> CreateGroupBlocks(Contest contest, List<List<Athlete>>? athleteByGroupBlock,
         int judgeCount)
     {
+        if (athleteByGroupBlock is null) 
+            throw new StepsBusinessException("Ошибка при создании блока, список участников пуст для создания блоков");
+        
         var groupBlocks = new List<GroupBlock>(athleteByGroupBlock.Count);
 
         foreach (var athleteBatch in athleteByGroupBlock)
@@ -81,7 +146,7 @@ public class GroupBlockService
             };
 
             var cells = CreateGroupBlockCells(athletesByJudgeCount, groupBlock).ToList();
-            groupBlock.Schedule.AddRange(cells);
+            groupBlock.PreSchedule.AddRange(cells);
             groupBlock.EndTime = cells.Last().ExitTime;
 
             groupBlocks.Add(groupBlock);
@@ -90,7 +155,7 @@ public class GroupBlockService
         return groupBlocks;
     }
 
-    private static IEnumerable<ScheduledCell> CreateGroupBlockCells(List<List<Guid>> athletesByJudgeCount,
+    private static IEnumerable<PreScheduledCell> CreateGroupBlockCells(List<List<Athlete>> athletesByJudgeCount,
         GroupBlock groupBlock)
     {
         var sequenceNumber = 1;
@@ -99,20 +164,51 @@ public class GroupBlockService
             var exitTime = groupBlock.StartTime.Add(AthleteExitInterval * (index + 1));
             var athletesSubGroup = athletesByJudgeCount[index];
 
-            foreach (var athleteId in athletesSubGroup)
+            foreach (var athlete in athletesSubGroup)
             {
-                var cell = new ScheduledCell
+                var cell = new PreScheduledCell
                 {
                     SequenceNumber = sequenceNumber,
                     GroupBlock = groupBlock,
                     ExitTime = exitTime,
-                    AthleteId = athleteId,
+                    AthleteId = athlete.Id,
                 };
                 sequenceNumber++;
 
                 yield return cell;
             }
         }
+    }
+    
+    private List<List<Athlete>> SplitIntoTeamBlocks(List<List<Athlete>> teamGroups, int maxPerBlock)
+    {
+        var result = new List<List<Athlete>>();
+        var currentBlock = new List<Athlete>();
+
+        foreach (var team in teamGroups)
+        {
+            if (team.Count > maxPerBlock)
+            {
+                // Если команда больше maxPerBlock, создаем отдельный блок
+                result.Add(new List<Athlete>(team));
+            }
+            else
+            {
+                // Если команда помещается в текущий блок, добавляем
+                if (currentBlock.Count + team.Count > maxPerBlock)
+                {
+                    result.Add(currentBlock);
+                    currentBlock = new List<Athlete>();
+                }
+                currentBlock.AddRange(team);
+            }
+        }
+
+        // Добавляем последний блок, если есть данные
+        if (currentBlock.Count > 0)
+            result.Add(currentBlock);
+
+        return result;
     }
 
     /// <summary>
@@ -148,57 +244,8 @@ public class GroupBlockService
     /// <summary>
     /// Сортирует список спортсменов (при необходимости можно добавить логику сортировки).
     /// </summary>
-    private static IEnumerable<Guid> GetSortedAthletes(IEnumerable<Guid> athleteIds)
+    private static IEnumerable<T> GetSortedAthletes<T>(IEnumerable<T> athleteIds)
     {
         return athleteIds; // TODO: 
     }
-
-    public async Task ReorderGroupBlock(ReorderGroupBlockViewModel reorderGroupBlockViewModel)
-    {
-        var groupBlockId = reorderGroupBlockViewModel.GroupBlockId;
-        var orderedAthletes = reorderGroupBlockViewModel.Schedule.OrderBy(c => c.SequenceNumber).ToList();
-
-        var repository = _unitOfWork.GetRepository<ScheduledCell>();
-        
-        var orderedSchedule = await repository.GetAllAsync(
-                                  predicate: s => s.GroupBlockId.Equals(groupBlockId),
-                                  orderBy: o => o.OrderBy(c => c.SequenceNumber),
-                                  trackingType: TrackingType.Tracking)
-                              ?? throw new StepsBusinessException("Групповой блок не найден");
-
-        for (var i = 0; i < orderedSchedule.Count; i++)
-        {
-            orderedSchedule[i].AthleteId = orderedAthletes[i].AthleteId;
-        }
-
-        repository.Update(orderedSchedule);
-        await _unitOfWork.SaveChangesAsync();
-    }
 }
-
-
-
-// {
-// "sequenceNumber": 1,
-// "athleteId": "01956755-a3df-7d9c-a0e2-3339e3651c9e",
-// },
-// {
-//     "sequenceNumber": 2,
-//     "athleteId": "01956755-bad4-7a12-9492-dfabade663be",
-// },
-// {
-//     "sequenceNumber": 3,
-//     "athleteId": "01956755-c976-7bec-8f22-4ea250ac9916",
-// },
-// {
-//     "sequenceNumber": 6,
-//     "athleteId": "01956755-eeb6-7638-b208-293e010ca1a8",
-// },
-// {
-//     "sequenceNumber": 5,
-//     "athleteId": "01956755-d3e5-76bf-aa99-03025bfa5f3f",
-// },
-// {
-//     "sequenceNumber": 4,
-//     "athleteId": "01956755-dca4-791c-b846-df61f727a986",
-// }

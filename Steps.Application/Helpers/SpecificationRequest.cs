@@ -21,30 +21,11 @@ public record SpecificationRequest<T> where T : class
 
     public SpecificationRequest<T> AddPredicate(Expression<Func<T, bool>> predicate)
     {
-        Predicate = Combine(Predicate, predicate);
+        if (Specification is null)
+        {
+            Specification = new Specification<T>().Where(predicate);
+        }
+        Specification.AddPredicate(predicate);
         return this;
-    }
-    
-    private static Expression<TE> Combine<TE>(
-        Expression<TE>? firstExpression,
-        Expression<TE>? secondExpression)
-    {
-        if (firstExpression is null)
-        {
-            return secondExpression;
-        }
-
-        if (secondExpression is null)
-        {
-            return firstExpression;
-        }
-
-        var invokedExpression = Expression.Invoke(
-            secondExpression,
-            firstExpression.Parameters);
-
-        var combinedExpression = Expression.AndAlso(firstExpression.Body, invokedExpression);
-
-        return Expression.Lambda<TE>(combinedExpression, firstExpression.Parameters);
     }
 }

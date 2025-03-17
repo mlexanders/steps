@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Radzen;
 using Steps.Domain.Base;
+using Steps.Shared;
 
 namespace Steps.Client.Features.Common;
 
-public class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> : ComponentBase, IDisposable
+public abstract class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateViewModel> : ComponentBase, IDisposable
     where TViewModel : IHaveId
     where TCreateViewModel : class
     where TUpdateViewModel : IHaveId
@@ -18,9 +19,16 @@ public class ManageBaseComponent<TEntity, TViewModel, TCreateViewModel, TUpdateV
 
     protected override async Task OnInitializedAsync()
     {
+        var spec = await GetSpecification();
+        if (spec != null)
+        {
+            Manager.UseSpecification(spec);
+        }
         await Manager.Initialize();
         Manager.ChangedList += StateHasChanged;
     }
+
+    protected abstract Task<Specification<TEntity>?> GetSpecification();
 
     protected virtual async Task OnCreate()
     {

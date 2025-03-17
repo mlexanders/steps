@@ -1,6 +1,7 @@
 ﻿using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
-using Steps.Shared.Contracts.Schedules;
+using Steps.Shared.Contracts.Schedules.PreSchedules;
 
 namespace Steps.Client.Services.Api.Routes;
 
@@ -15,11 +16,16 @@ public static class ApiRoutes
         public const string ConfirmAction = "Account/confirm-action";
     }
 
-    public class ContestsRoute() : BaseApiRoutes("Contests");
+    public class ContestsRoute() : BaseApiRoutes("Contests")
+    {
+        public string GetByTimeInterval(GetContestByInterval criteria)
+        {
+            return $"{BasePath}/{nameof(IContestsService.GetByTimeInterval)}/{criteria.GetQuery()}";
+        }
+    }
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
     public class AthletesRoute() : BaseApiRoutes("Athlete");
-    public class TestResultsRoute() : BaseApiRoutes("TestResults");
     public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
     {
         public string GetJudges(Page page) => $"{BasePath}/GetJudges/{page.GetQuery()}";
@@ -27,7 +33,7 @@ public static class ApiRoutes
     }
     public class EntriesRoute() : BaseApiRoutes("Entry"), IEntryRoutes
     {
-        public string AcceptEntry() => $"{BasePath}/Accept-entry";
+        public string AcceptEntry(Guid id) => $"{BasePath}/AcceptEntry/{id}";
     }
 
     public class GroupBlockRoute()
@@ -41,7 +47,8 @@ public static class ApiRoutes
 
     public class SchedulesService 
     {
-        public string GetPagedScheduledCellsByGroupBlockIdQuery(Guid groupBlockId) => $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}/{groupBlockId}";
+        public string GetPagedScheduledCellsByGroupBlockIdQuery => $"Schedules/{nameof(ISchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
         public string Reorder => $"Schedules/{nameof(ISchedulesService.Reorder)}";
+        public string MarkAthlete = $"Schedules/{nameof(ISchedulesService.MarkAthlete)}";
     }
 }

@@ -2,5 +2,5 @@
 
 public interface IEntryRoutes
 {
-    string AcceptEntry();
+    string AcceptEntry(Guid id);
 }

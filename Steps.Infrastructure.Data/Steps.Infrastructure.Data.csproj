@@ -15,28 +15,15 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.2" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Properties\launchSettings.json" />
-      <None Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Steps.Domain\Steps.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Migrations\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Migrations\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Migrations\**" />
     </ItemGroup>
 
 </Project>

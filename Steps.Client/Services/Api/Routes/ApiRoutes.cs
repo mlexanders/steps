@@ -25,7 +25,7 @@ public static class ApiRoutes
     }
     public class ClubsRoute() : BaseApiRoutes("Clubs");
     public class TeamsRoute() : BaseApiRoutes("Teams");
-    public class AthletesRoute() : BaseApiRoutes("Athlete");
+    public class AthletesRoute() : BaseApiRoutes("Athletes");
     public class TestResultsRoute() : BaseApiRoutes("TestResults");
     public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
     {

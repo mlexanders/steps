@@ -1,8 +1,9 @@
-﻿using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+﻿namespace Steps.Shared.Contracts.Schedules;
 
-namespace Steps.Shared.Contracts.Schedules;
-
-public interface ISchedulesServiceBase<TScheduledCell> where TScheduledCell : ScheduledCellViewModelBase
+public interface ISchedulesServiceBase<TEntity, TScheduledCellViewModel, in TGetView> 
+    where TScheduledCellViewModel : ScheduledCellViewModelBase
+    where TGetView : GetPagedScheduledCellsBase<TEntity>
+    where TEntity : class
 {
-    Task<Result<PaggedListViewModel<TScheduledCell>>> GetPagedScheduledCellsByGroupBlockIdQuery(GetPagedPreScheduledCellsViewModel model);
+    Task<Result<PaggedListViewModel<TScheduledCellViewModel>>> GetPagedScheduledCellsByGroupBlockIdQuery(TGetView model);
 }

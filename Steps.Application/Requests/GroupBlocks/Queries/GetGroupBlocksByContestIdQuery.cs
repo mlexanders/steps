@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
@@ -27,6 +28,7 @@ public class GetGroupBlocksByContestIdQueryHandler : IRequestHandler<GetGroupBlo
         var block = await _unitOfWork.GetRepository<GroupBlock>().GetAllAsync(
                         predicate: s => s.ContestId.Equals(request.ContestId),
                         selector: g => _mapper.Map<GroupBlockViewModel>(g),
+                        include: x => x.Include(g => g.FinalSchedule),
                         trackingType: TrackingType.NoTracking)
                     ?? throw new StepsBusinessException("Блоки не найдены");
 

@@ -1,19 +1,19 @@
 ﻿@using System.Collections.ObjectModel
-@using Steps.Client.Features.EntityFeature.Schedules.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.Common
-@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
+@using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels
 
-@inject SchedulerManager SchedulerManager
+@inject PreSchedulerManager PreSchedulerManager
 @inherits BaseNotificate
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
                 FilterMode="FilterMode.Advanced"
-                AllowSorting="true" PageSize="SchedulerManager.PageSize" AllowPaging="true"
+                AllowSorting="true" PageSize="PreSchedulerManager.PageSize" AllowPaging="true"
                 PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@_cells" ColumnWidth="180px" LogicalFilterOperator="LogicalFilterOperator.Or"
                 SelectionMode="DataGridSelectionMode.Single"
-                @bind-Value="@_selectedCell" RowRender="@RowRender" IsLoading="@SchedulerManager.IsLoading"
+                @bind-Value="@_selectedCell" RowRender="@RowRender" IsLoading="@PreSchedulerManager.IsLoading"
                 AllowVirtualization="true" Style="height:400px">
     <HeaderTemplate>
         <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Сохранить"
@@ -42,10 +42,10 @@
     {
         if (GroupBlock is null) return;
 
-        SchedulerManager.ChangePageSize(int.MaxValue);
-        await SchedulerManager.Initialize(GroupBlock.Id);
+        PreSchedulerManager.ChangePageSize(int.MaxValue);
+        await PreSchedulerManager.Initialize(GroupBlock.Id);
 
-        _cells = new ObservableCollection<PreScheduledCellViewModel>(SchedulerManager.Data);
+        _cells = new ObservableCollection<PreScheduledCellViewModel>(PreSchedulerManager.Data);
 
         _selectedCell = new List<PreScheduledCellViewModel>() { _cells.FirstOrDefault() };
     }
@@ -90,7 +90,7 @@
             SequenceNumber = index
         }).ToList();
 
-        var result = await SchedulerManager.Reorder(reordered);
+        var result = await PreSchedulerManager.Reorder(reordered);
         ShowResultMessage(result);
     }
 }

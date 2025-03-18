@@ -25,6 +25,7 @@ public class ContestsService : CrudService<Contest, ContestViewModel, CreateCont
 
     public Task<Result> CloseCollectingEntries(Guid contestId)
     {
-        throw new NotImplementedException();
+        var path = _contestRoutes.CloseCollectingEntries(contestId);
+        return HttpClient.PostAsync<Result, object>(path);
     }
 }

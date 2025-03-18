@@ -1,19 +1,19 @@
-﻿@using Steps.Client.Features.EntityFeature.Schedules.Services
-@using Steps.Domain.Entities.GroupBlocks
+﻿@using Steps.Domain.Entities.GroupBlocks
 @using Steps.Shared
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
 @using Steps.Shared.Contracts.GroupBlocks
-@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
+@using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels
 
-@inject SchedulerManager SchedulerManager
+@inject PreSchedulerManager PreSchedulerManager
 @inject IGroupBlocksService GroupBlocksService
 @inherits BaseNotificate
 
 <RadzenDataGrid TItem="PreScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
-                IsLoading="@SchedulerManager.IsLoading" Count="@SchedulerManager.TotalCount"
-                PageSize="SchedulerManager.PageSize" LoadData="@OnChangePage"
-                FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@SchedulerManager.Data" ColumnWidth="300px"
+                IsLoading="@PreSchedulerManager.IsLoading" Count="@PreSchedulerManager.TotalCount"
+                PageSize="PreSchedulerManager.PageSize" LoadData="@OnChangePage"
+                FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@PreSchedulerManager.Data"  ColumnWidth="300px"
                 FilterCaseSensitivity="@FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="@LogicalFilterOperator.And">
     <HeaderTemplate>
         <RadzenButton Click="@Complete" Text="Завершить и создать расписание"/>
@@ -43,12 +43,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SchedulerManager.ChangePageSize(15); 
+        PreSchedulerManager.ChangePageSize(15); 
         if (GroupBlock is null)
         {
             return;
         }
-        await SchedulerManager.Initialize(GroupBlock.Id);
+        await PreSchedulerManager.Initialize(GroupBlock.Id);
     }
 
     private async Task OnChangePage(LoadDataArgs arg)
@@ -62,9 +62,9 @@
             specification.Where(u => u.Athlete.FullName.Contains(filter));
         }
         
-        SchedulerManager.UseSpecification(specification);
+        PreSchedulerManager.UseSpecification(specification);
         
-        await SchedulerManager.ChangePage(arg.Skip, arg.Top);
+        await PreSchedulerManager.ChangePage(arg.Skip, arg.Top);
     }
 
     private async Task ChangeConfirmation(PreScheduledCellViewModel cell)
@@ -72,7 +72,7 @@
         var newState = !cell.IsConfirmed;
         cell.IsConfirmed = newState;
         
-        var result = await SchedulerManager.MarkAthlete(new MarkAthleteViewModel
+        var result = await PreSchedulerManager.MarkAthlete(new MarkAthleteViewModel
         {
             GroupBlockId = cell.GroupBlockId,
             AthleteId = cell.AthleteId,

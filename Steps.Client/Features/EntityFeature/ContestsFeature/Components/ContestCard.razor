@@ -1,5 +1,7 @@
 ﻿@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
-
+@using Steps.Domain.Definitions
+@using Steps.Shared.Utils
+@inherits Steps.Client.Features.Common.BaseNotificate
 
 <RadzenFieldset Text="Информация о мероприятии">
     <RadzenRow>
@@ -7,8 +9,8 @@
             <RadzenStack Gap="1rem">
                 <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy")</p>
                 <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
-                <p><strong>Статус:</strong> @Model.Status</p>
-                <p><strong>Тип:</strong> @Model.Type</p>
+                <p><strong>Статус:</strong> @Model.Status.GetDisplayName()</p>
+                <p><strong>Тип:</strong> @Model.Type.GetDisplayName()</p>
             </RadzenStack>
         </RadzenColumn>
 
@@ -42,5 +44,12 @@
 <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
               Click="() => OpenCreateEntryDialog()" Style="margin-bottom: 10px;" />
 
-Групповые блоки:
+@if (Model.Status is ContestStatus.Open)
+{
+    <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                  Click="() => CloseCollectingEntries()" Style="margin-bottom: 10px;" />
+}
+
+
+<RadzenText Text="Групповые блоки:"></RadzenText>
 <GroupBlocksManage Contest="Model" />

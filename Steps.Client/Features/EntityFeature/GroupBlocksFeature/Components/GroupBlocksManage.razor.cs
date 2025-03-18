@@ -23,7 +23,11 @@ public partial class GroupBlocksManage : BaseNotificate
     protected override async Task OnInitializedAsync()
     {
         if (Contest is null) return;
-        
+        await Init();
+    }
+
+    private async Task Init()
+    {
         var result = await GroupBlocksService.GetByContestId(Contest.Id);
         if (result?.IsSuccess != true) ShowResultMessage(result);
 
@@ -50,11 +54,12 @@ public partial class GroupBlocksManage : BaseNotificate
         {
             ContestId = Contest.Id,
             AthletesPerGroup = 3,
-            TeamsIds = _teams.Select(t => t.Id).ToList(),
+            TeamsIds = _teams?.Select(t => t.Id).ToList() ?? [],
         };
         
         var result = await GroupBlocksService.CreateByTeams(createGroupBlockViewModel);
         ShowResultMessage(result);
+        await Init();
         StateHasChanged();
     }
 
@@ -62,6 +67,7 @@ public partial class GroupBlocksManage : BaseNotificate
     {
         var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
         ShowResultMessage(result);
+        await Init();
         StateHasChanged();
     }
 }

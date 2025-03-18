@@ -1,0 +1,67 @@
+﻿@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.FinalScheduleFeature
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
+@using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels
+
+@inject PreSchedulerManager PreSchedulerManager
+
+@if (GroupBlock?.IsHaveFinalBlock is true)
+{
+    <FinalScheduleByGroupBlock GroupBlock="GroupBlock"/>
+}
+else
+{
+    @if (!_isEditing)
+    {
+        <RadzenText Text="Предварительное расписание:"/>
+        <RadzenCard>
+            <RadzenDataGrid TItem="PreScheduledCellViewModel" Data="PreSchedulerManager.Data" AllowPaging="true"
+                            SelectionMode="DataGridSelectionMode.Single" 
+                            PageSize="PreSchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
+                            IsLoading="@PreSchedulerManager.IsLoading" Count="@PreSchedulerManager.TotalCount"
+                            LoadData="@OnChangePage">
+                <HeaderTemplate>
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Изменить порядок"
+                                  Click="OnEditing"/>
+                </HeaderTemplate>
+
+                <Columns>
+                    <ScheduleColumns TView="PreScheduledCellViewModel"/>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    }
+    else
+    {
+        <OrderingSchedule GroupBlock="GroupBlock" @bind-Editing="_isEditing"/>
+    }
+
+    <RadzenText Text="Явка на мероприятие:"/>
+    <MarkingAthleteByGroupBlock GroupBlock="GroupBlock"></MarkingAthleteByGroupBlock>
+}
+
+@code {
+    private bool _isEditing;
+
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        PreSchedulerManager.ChangePageSize(15); 
+        if (GroupBlock is null)
+        {
+            return;
+        }
+        await PreSchedulerManager.Initialize(GroupBlock.Id);
+    }
+
+    private async Task OnChangePage(LoadDataArgs arg)
+    {
+        await PreSchedulerManager.ChangePage(arg.Skip, arg.Top);
+    }
+
+    private void OnEditing()
+    {
+        _isEditing = true;
+    }
+}

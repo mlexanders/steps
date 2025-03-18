@@ -1,5 +1,5 @@
-﻿@using Steps.Client.Features.EntityFeature.Schedules.Components
-@using Steps.Client.Features.Common
+﻿@using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
 
 @inherits BaseNotificate
 
@@ -12,7 +12,7 @@
         <Tabs>
             @foreach (var block in _blocks)
             {
-                <RadzenTabsItem Text="@GetTittle(block)">
+                <RadzenTabsItem  Text="@GetTittle(block)">
                     <ScheduleByGroupBlock GroupBlock="block"/>
                 </RadzenTabsItem>
             }

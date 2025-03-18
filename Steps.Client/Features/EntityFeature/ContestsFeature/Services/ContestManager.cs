@@ -15,6 +15,11 @@ public class ContestManager : EntityManagerBase<Contest, ContestViewModel, Creat
         _contestsService = contestsService;
     }
 
+    public async Task<Result> CloseContest(Guid contestId)
+    {
+        return await _contestsService.CloseCollectingEntries(contestId);
+    }
+
     public async Task<Result<List<ContestViewModel>>> GetByTimeInterval(DateTime argStart, DateTime argEnd)
     {
         try

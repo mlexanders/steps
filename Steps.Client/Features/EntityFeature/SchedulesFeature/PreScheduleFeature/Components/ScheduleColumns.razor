@@ -1,11 +1,10 @@
 ﻿@using Steps.Shared.Contracts.Schedules
-@using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels
 @typeparam TView where TView : ScheduledCellViewModelBase, new()
 
 <RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.SequenceNumber)" Title="Номер"/>
 <RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.TeamName)" Title="Команда"/>
 <RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.ClubName)" Title="Клуб"/>
-<RadzenDataGridColumn Filterable="IsFilterable" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.Athlete.FullName)" Title="ФИО">
+<RadzenDataGridColumn Width="190px" Resizable="true" Filterable="IsFilterable" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.Athlete.FullName)" Title="ФИО">
     <Template Context="cell">
         @cell.Athlete.FullName
     </Template>
@@ -15,7 +14,7 @@
         @cell.Athlete.BirthDate
     </Template>
 </RadzenDataGridColumn>
-<RadzenDataGridColumn Filterable="false" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.ExitTime)" Title="Время выхода">
+<RadzenDataGridColumn Filterable="false"  Width="100px" Resizable="true" TItem="TView" Property="@nameof(ScheduledCellViewModelBase.ExitTime)" Title="Время выхода">
     <Template Context="cell">
         @cell.ExitTime.ToString("t")
     </Template>

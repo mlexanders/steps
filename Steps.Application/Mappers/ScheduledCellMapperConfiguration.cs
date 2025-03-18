@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared.Contracts.Schedules;
-using Steps.Shared.Contracts.Schedules.FinalSchedules.ViewModels;
-using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
 namespace Steps.Application.Mappers;
 

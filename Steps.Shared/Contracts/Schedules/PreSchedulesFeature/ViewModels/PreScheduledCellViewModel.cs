@@ -1,4 +1,4 @@
-﻿namespace Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+﻿namespace Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
 public class PreScheduledCellViewModel : ScheduledCellViewModelBase
 {

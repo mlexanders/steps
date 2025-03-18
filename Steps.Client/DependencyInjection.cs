@@ -4,23 +4,25 @@ using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
-using Steps.Client.Features.EntityFeature.Schedules.Services;
+using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
+using Steps.Client.Services.Api.Scheduled;
 using Steps.Client.Services.Authentication;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.GroupBlocks;
-using Steps.Shared.Contracts.Schedules.PreSchedules;
+using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature;
+using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.Users;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;
-using SchedulesService = Steps.Client.Services.Api.SchedulesService;
+using PreSchedulesService = Steps.Client.Services.Api.Scheduled.PreSchedulesService;
 
 namespace Steps.Client;
 
@@ -58,8 +60,11 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();
                 
-        services.AddTransient<SchedulerManager>();
-        services.AddTransient<ISchedulesService, SchedulesService>();
+        services.AddTransient<PreSchedulerManager>();
+        services.AddTransient<IPreSchedulesService, PreSchedulesService>();
+        
+        services.AddTransient<FinalSchedulerManager>();
+        services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

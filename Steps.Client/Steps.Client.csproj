@@ -34,6 +34,10 @@
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\CreateClubDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\DeleteClubDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\UpdateClubDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\MarkingAthleteByGroupBlock.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\OrderingSchedule.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\ScheduleByGroupBlock.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\ScheduleColumns.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamCard.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamsManageByClub.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\CreateTeamDialog.razor" />
@@ -83,6 +87,7 @@
       <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\" />
       <Folder Include="Features\EntityFeature\TestResultFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\TestResultFeature\Forms\" />
       <Folder Include="Features\EntityFeature\TestResultFeature\Services\" />

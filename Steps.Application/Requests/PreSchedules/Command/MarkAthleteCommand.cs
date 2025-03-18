@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Steps.Shared;
-using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
-namespace Steps.Application.Requests.Schedules.Command;
+namespace Steps.Application.Requests.PreSchedules.Command;
 
 public record MarkAthleteCommand(MarkAthleteViewModel Model) : IRequest<Result>;
 

@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Steps.Application.Helpers;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
-using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 using Steps.Shared.Utils;
 
-namespace Steps.Application.Requests.Schedules.Queries;
+namespace Steps.Application.Requests.PreSchedules.Queries;
 
-public record GetPagedScheduledCellsByGroupBlockIdQuery(GetPagedPreScheduledCellsViewModel Model)
+public record GetPagedPreScheduledCellsByGroupBlockIdQuery(GetPagedPreScheduledCells Model)
     : SpecificationRequest<PreScheduledCell>(Model.Specification), IRequest<Result<PaggedListViewModel<PreScheduledCellViewModel>>>;
 
-public class GetPagedScheduledCellsByGroupBlockIdHandler : IRequestHandler<GetPagedScheduledCellsByGroupBlockIdQuery,
+public class GetPagedScheduledCellsByGroupBlockIdHandler : IRequestHandler<GetPagedPreScheduledCellsByGroupBlockIdQuery,
     Result<PaggedListViewModel<PreScheduledCellViewModel>>>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -26,7 +26,7 @@ public class GetPagedScheduledCellsByGroupBlockIdHandler : IRequestHandler<GetPa
     }
 
     public async Task<Result<PaggedListViewModel<PreScheduledCellViewModel>>> Handle(
-        GetPagedScheduledCellsByGroupBlockIdQuery request, CancellationToken cancellationToken)
+        GetPagedPreScheduledCellsByGroupBlockIdQuery request, CancellationToken cancellationToken)
     {
         var groupBlockId = request.Model.GroupBlockId;
         var page = request.Model.Page;

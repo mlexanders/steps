@@ -60,7 +60,7 @@ public class ContestsController : ControllerBase, IContestsService
         return _mediator.Send(new GetByTimeIntervalQuery(criteria));
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]/{contestId:guid}")]
     public Task<Result> CloseCollectingEntries(Guid contestId)
     {
         return _mediator.Send(new CloseCollectingContestCommand(contestId));

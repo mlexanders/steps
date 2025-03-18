@@ -1,9 +1,7 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
-using Steps.Client.Features.EntityFeature.EntriesFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Domain.Definitions;
@@ -14,7 +12,7 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 
-public partial class ContestCard 
+public partial class ContestCard : BaseNotificate
 {
     [Inject] protected EntriesDialogManager EntriesDialogManager { get; set; } = null!;
     [Inject] protected ContestManager ContestManager { get; set; } = null!;
@@ -55,7 +53,6 @@ public partial class ContestCard
             Counters = counters?.Value?.Items?.ToList() ?? new List<UserViewModel>();
         }
 
-
         await base.OnInitializedAsync();
     }
 
@@ -63,5 +60,11 @@ public partial class ContestCard
     {
         var result = await EntriesDialogManager.ShowCreateDialog(Model.Id);
         if (result) await ContestManager.LoadPage();
+    }
+
+    private async Task CloseCollectingEntries()
+    {
+        var result = await ContestManager.CloseContest(Model.Id);
+        ShowResultMessage(result);
     }
 }

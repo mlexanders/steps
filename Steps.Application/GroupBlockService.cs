@@ -4,7 +4,7 @@ using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
-using Steps.Shared.Contracts.Schedules.PreSchedules.ViewModels;
+using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application;

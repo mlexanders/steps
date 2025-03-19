@@ -71,9 +71,11 @@ public static class ApiRoutes
 
     public class ScheduledRoutes(string basePath)
     {
-        private string BasePath { get; init; } = basePath;
+        private string BasePath { get; } = basePath;
 
         public string GetPagedScheduled =>
             $"{BasePath}/{nameof(IPreSchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
     }
+
+    public class TestResultsRoute() : BaseApiRoutes("TestResults");
 }

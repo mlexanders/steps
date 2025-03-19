@@ -53,7 +53,7 @@ public partial class GroupBlocksManage : BaseNotificate
         var createGroupBlockViewModel = new CreateGroupBlockViewModel
         {
             ContestId = Contest.Id,
-            AthletesPerGroup = 3,
+            AthletesPerGroup = 5,
             TeamsIds = _teams?.Select(t => t.Id).ToList() ?? [],
         };
         

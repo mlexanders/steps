@@ -11,15 +11,15 @@
     <ChildContent>
         <RadzenFieldset Text="Оценки за элементы">
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[0]"/>
+                           Style="width: 100%" Placeholder="@ElementNames[0]"/>
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[1]"/>
+                           Style="width: 100%" Placeholder="@ElementNames[1]"/>
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[2]"/>
+                           Style="width: 100%" Placeholder="@ElementNames[2]"/>
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[3]"/>
+                           Style="width: 100%" Placeholder="@ElementNames[3]"/>
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[4]"/>
+                           Style="width: 100%" Placeholder="@ElementNames[4]"/>
         </RadzenFieldset>
 
         <RadzenButton Text="Сохранить" Icon="save" Click="@Create" Style="margin-top: 10px"/>
@@ -32,39 +32,20 @@
         Scores = new List<int> { 0, 0, 0, 0, 0 }
     };
 
-    private List<string> _elementNames = new();
+    private static readonly List<string> ElementNames = ["1", "2", "3", "4", "5"];
 
     [Parameter] public Guid ContestId { get; set; }
     [Parameter] public Guid AthleteId { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnInitialized()
     {
         _createTestResultViewModel.ContestId = ContestId;
         _createTestResultViewModel.AthleteId = AthleteId;
-
-        await LoadAthleteElements();
-    }
-
-    private async Task LoadAthleteElements()
-    {
-        var athlete = await AthleteManager.Read(AthleteId);
-        if (athlete?.Value.AthleteElements == null) return;
-
-        _elementNames = new List<string>
-        {
-            athlete.Value.AthleteElements.Element1,
-            athlete.Value.AthleteElements.Element2,
-            athlete.Value.AthleteElements.Element3,
-            athlete.Value.AthleteElements.Element4,
-            athlete.Value.AthleteElements.Element5
-        };
-
-        StateHasChanged();
     }
 
     private async Task Create()
     {
-        var result = await TestResultsManager.Create(new()
+        var result = await TestResultsManager.Create(new CreateTestResultViewModel
         {
             ContestId = _createTestResultViewModel.ContestId,
             AthleteId = _createTestResultViewModel.AthleteId,

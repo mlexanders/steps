@@ -195,10 +195,13 @@ public class SchedulesService
                 StartTime = startTime.ToUniversalTime()
             };
             
-            var  athleteIdsBatch= athleteBatch.Select(x => x.Id).ToList();
+            var sortedForBlock = SortIntoBlock(athleteBatch);
+            
+            var athleteIdsBatch = sortedForBlock.Select(x => x.Id).ToList();
             var athletesIdsByJudgeCount = SplitIntoBatches(athleteIdsBatch, judgeCount);
 
             var cells = CreateGroupBlockCells<PreScheduledCell>(athletesIdsByJudgeCount, groupBlock).ToList();
+            
             groupBlock.PreSchedule.AddRange(cells);
             groupBlock.EndTime = cells.Last().ExitTime;
 
@@ -206,6 +209,29 @@ public class SchedulesService
         }
 
         return groupBlocks;
+    }
+    
+    private static List<Athlete> SortIntoBlock(List<Athlete> athletes)
+    {
+        var sorted = athletes.OrderBy(p => p.BirthDate).ToList();
+
+        var groupedByTeam = sorted.GroupBy(p => p.Team).ToList();
+
+        var result = new List<Athlete>();
+
+        var maxCount = groupedByTeam.Max(g => g.Count());
+        for (var i = 0; i < maxCount; i++)
+        {
+            foreach (var team in groupedByTeam)
+            {
+                if (i < team.Count())
+                {
+                    result.Add(team.ElementAt(i));
+                }
+            }
+        }
+
+        return result;
     }
 
     private static IEnumerable<T> CreateGroupBlockCells<T>(List<List<Guid>> athletesIdByJudgeCount,

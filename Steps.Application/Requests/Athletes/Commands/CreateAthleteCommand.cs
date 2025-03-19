@@ -33,8 +33,8 @@ namespace Steps.Application.Requests.Athletes.Commands
                         x => x.AgeCategory == athlete.AgeCategory.ToString()
                         && x.Degree == athlete.Degree.ToString(), null, null, false, false);
 
-            athlete.AthleteElementsId = athleteElements.Id;
-            athlete.AthleteElements = athleteElements;
+            // athlete.AthleteElementsId = athleteElements.Id;
+            // athlete.AthleteElements = athleteElements;
 
             var entry = await athleteRepository.InsertAsync(athlete, cancellationToken);
             await _unitOfWork.SaveChangesAsync();

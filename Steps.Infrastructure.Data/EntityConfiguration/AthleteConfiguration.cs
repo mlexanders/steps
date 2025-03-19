@@ -20,8 +20,5 @@ public class AthleteConfiguration : IEntityTypeConfiguration<Athlete>
             .WithMany(t => t.Athletes)
             .HasForeignKey(a => a.TeamId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(x => x.AthleteElements)
-            .WithMany();
     }
 }

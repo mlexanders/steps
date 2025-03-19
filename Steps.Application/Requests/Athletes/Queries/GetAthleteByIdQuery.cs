@@ -27,15 +27,13 @@ public class GetAthleteByIdQueryHandler : IRequestHandler<GetAthleteByIdQuery, R
     public async Task<Result<AthleteViewModel>> Handle(GetAthleteByIdQuery request, CancellationToken cancellationToken)
     {
         var repository = _unitOfWork.GetRepository<Athlete>();
-        var athlete = await repository.GetFirstOrDefaultAsync(a => a.Id == request.Id,
-                          null,
-                          a => a.Include(a => a.AthleteElements),
-                          false,
-                          false)
-                      ?? throw new AppNotFoundException("спортсмен не найден");
-        
+        var athlete = await repository.GetFirstOrDefaultAsync(
+                          predicate: a => a.Id == request.Id,
+                          trackingType: TrackingType.NoTracking)
+                      ?? throw new AppNotFoundException("Участник не найден");
+
         var mapped = _mapper.Map<AthleteViewModel>(athlete);
-        
+
         return Result<AthleteViewModel>.Ok(mapped);
     }
 }

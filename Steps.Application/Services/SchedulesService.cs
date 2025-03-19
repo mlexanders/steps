@@ -108,6 +108,7 @@ public class SchedulesService
             {
                 Id = a.Id,
                 TeamId = a.TeamId,
+                BirthDate = a.BirthDate,
                 // добавить свойства по необходимости
             }),
             trackingType: TrackingType.NoTracking);

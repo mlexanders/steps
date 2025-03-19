@@ -2,6 +2,7 @@
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Infrastructure.Data.EntityConfiguration;
+using Steps.Infrastructure.Data.Seed;
 
 namespace Steps.Infrastructure.Data;
 
@@ -31,5 +32,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ContestConfiguration());
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
+        
+        AthleteElementsSeed.SeedCheer(modelBuilder);
+        AthleteElementsSeed.SeedBaby(modelBuilder);
+        AthleteElementsSeed.SeedCheerFreestyle(modelBuilder);
     }
 }

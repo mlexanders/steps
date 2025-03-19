@@ -28,9 +28,9 @@ namespace Steps.Services.WebApi.Controllers
         }
         
         [HttpGet("{id:Guid}")]
-        public Task<Result<AthleteViewModel>> GetById(Guid id)
+        public async Task<Result<AthleteViewModel>> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _mediator.Send(new GetAthleteByIdQuery(id));
         }
         
         [HttpPatch]

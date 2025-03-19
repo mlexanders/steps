@@ -16,8 +16,10 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
         <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="Radzen.Blazor" Version="6.0.19" />
     </ItemGroup>
@@ -87,10 +89,13 @@
       <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
+<<<<<<< HEAD
       <Folder Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\" />
       <Folder Include="Features\EntityFeature\TestResultFeature\Dialogs\" />
+=======
+>>>>>>> STE-20
       <Folder Include="Features\EntityFeature\TestResultFeature\Forms\" />
-      <Folder Include="Features\EntityFeature\TestResultFeature\Services\" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
       <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 

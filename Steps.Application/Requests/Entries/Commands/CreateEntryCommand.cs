@@ -9,9 +9,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record CreateEntryCommand(CreateEntryViewModel Model) : IRequest<Result<Guid>>;
+public record CreateEntryCommand(CreateEntryViewModel Model) : IRequest<Result<EntryViewModel>>;
 
-public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Result<Guid>>
+public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Result<EntryViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
         _securityService = securityService;
     }
 
-    public async Task<Result<Guid>> Handle(CreateEntryCommand request, CancellationToken cancellationToken)
+    public async Task<Result<EntryViewModel>> Handle(CreateEntryCommand request, CancellationToken cancellationToken)
     {
         var entry = request.Model;
         var creator = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
@@ -39,11 +39,14 @@ public class CreateEntryCommandHandler : IRequestHandler<CreateEntryCommand, Res
 
         var entity = _mapper.Map<Entry>(entry);
         entity.Athletes = athletes.ToList();
-        entity.UserId = creator.Id;
+        entity.CreatorId = creator.Id;
+        entity.SubmissionDate = DateTime.UtcNow;
 
         var entityEntry = await _unitOfWork.GetRepository<Entry>().InsertAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
+        
+        var view = _mapper.Map<EntryViewModel>(entityEntry.Entity);
 
-        return Result<Guid>.Ok(entityEntry.Entity.Id).SetMessage("Заявка подана");
+        return Result<EntryViewModel>.Ok(view).SetMessage("Заявка подана");
     }
 }

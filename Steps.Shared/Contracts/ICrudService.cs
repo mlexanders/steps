@@ -2,7 +2,7 @@
 
 namespace Steps.Shared.Contracts;
 
-public interface ICrudService<TEntity, TViewModel, in TCreateViewModel, in TUpdateViewModel> 
+public interface ICrudService<TEntity, TViewModel, in TCreateViewModel, in TUpdateViewModel> :  IPaginationService<TEntity, TViewModel>
     where TEntity : class
     where TViewModel : IHaveId
     where TCreateViewModel : class
@@ -11,6 +11,5 @@ public interface ICrudService<TEntity, TViewModel, in TCreateViewModel, in TUpda
     Task<Result<TViewModel>> Create(TCreateViewModel model);
     Task<Result<TViewModel>> GetById(Guid id);
     Task<Result<Guid>> Update(TUpdateViewModel model);
-    Task<Result<PaggedListViewModel<TViewModel>>> GetPaged(Page page, Specification<TEntity>? specification = null);
     Task<Result> Delete(Guid id);
 }

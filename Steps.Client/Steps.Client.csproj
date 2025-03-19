@@ -14,26 +14,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
-        <PackageReference Include="Radzen.Blazor" Version="6.0.19"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+        <PackageReference Include="Radzen.Blazor" Version="6.0.19" />
     </ItemGroup>
 
     <ItemGroup>
-        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Components\ProfileMenu.razor"/>
-        <AdditionalFiles Include="Components\ProgressBar.razor"/>
-        <AdditionalFiles Include="Components\StepsPageTitle.razor"/>
+        <AdditionalFiles Include="Components\ProfileMenu.razor" />
+        <AdditionalFiles Include="Components\ProgressBar.razor" />
+        <AdditionalFiles Include="Components\StepsPageTitle.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\ClubCardDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\CreateClubDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\DeleteClubDialog.razor" />
         <AdditionalFiles Include="Features\EntityFeature\ClubsFeature\Dialogs\UpdateClubDialog.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\MarkingAthleteByGroupBlock.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\OrderingSchedule.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\ScheduleByGroupBlock.razor" />
+        <AdditionalFiles Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\Components\ScheduleColumns.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamCard.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Components\TeamsManageByClub.razor" />
         <AdditionalFiles Include="Features\EntityFeature\TeamsFeature\Dialogs\CreateTeamDialog.razor" />
@@ -53,7 +59,6 @@
         <AdditionalFiles Include="Features\EntityFeature\UsersFeature\UsersPage.razor" />
         <AdditionalFiles Include="Features\RoleFeature\CounterFeature\CounterNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\CounterFeature\Pages\CounterHome.razor" />
-        <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\JudjeNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\JudjeFeature\Pages\JudjeHome.razor" />
         <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\OrganizerNavMenu.razor" />
         <AdditionalFiles Include="Features\RoleFeature\OrganizerFeature\Pages\OrganizerClubs.razor" />
@@ -70,6 +75,27 @@
     </ItemGroup>
 
     <ItemGroup>
+
+      <Folder Include="Features\EntityFeature\EntriesFeature\Components\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
+
+      <Folder Include="Features\EntityFeature\EntriesFeature\Components\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Forms\" />
+      <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
+      <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
+<<<<<<< HEAD
+      <Folder Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\" />
+      <Folder Include="Features\EntityFeature\TestResultFeature\Dialogs\" />
+=======
+>>>>>>> STE-20
+      <Folder Include="Features\EntityFeature\TestResultFeature\Forms\" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
       <Folder Include="Features\RoleFeature\" />
     </ItemGroup>
 

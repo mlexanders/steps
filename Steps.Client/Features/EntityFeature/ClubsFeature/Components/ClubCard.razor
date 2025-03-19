@@ -48,7 +48,7 @@
 @code {
     private UserViewModel? _owner;
 
-    [Inject] public UsersManager UsersManager { get; set; } = null!;
+    [Inject] public UsersManager UsersManagerEntityManager { get; set; } = null!;
     [Parameter] public ClubViewModel Model { get; set; } = null!;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

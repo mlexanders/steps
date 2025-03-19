@@ -1,6 +1,7 @@
-﻿@using Steps.Client.Features.EntityFeature.ContestsFeature.Services
+@using Steps.Client.Features.EntityFeature.ContestsFeature.Services
 @using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Client.Features.EntityFeature.ContestsFeature.Forms
+@using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.ContestsFeature.Components
 
 @inherits BaseModal
 @inject ContestManager ContestManager
@@ -8,7 +9,7 @@
 <RadzenTemplateForm TItem="ContestViewModel" Submit="Update" Data="Model">
     <RadzenCard>
 
-        <ContestForm Contest="@Model" Title="Мероприятие"/>
+        <ContestCard Model="@Model" />
 
         <RadzenButton Text="Сохранить" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
         <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
@@ -21,18 +22,18 @@
 
     private async Task Update()
     {
-        var result = await ContestManager.Update(new UpdateContestViewModel()
-        {
-            Id = Model.Id,
-            Name = Model.Name,
-            Description = Model.Description,
-            StartDate = DateTime.SpecifyKind(Model.StartDate, DateTimeKind.Utc),
-            EndDate = DateTime.SpecifyKind(Model.EndDate, DateTimeKind.Utc),
-        });
+        // var result = await ContestManager.Update(new UpdateContestViewModel()
+        // {
+        //     Id = Model.Id,
+        //     Name = Model.Name,
+        //     Description = Model.Description,
+        //     StartDate = DateTime.SpecifyKind(Model.StartDate, DateTimeKind.Utc),
+        //     EndDate = DateTime.SpecifyKind(Model.EndDate, DateTimeKind.Utc),
+        // });
 
-        ShowResultMessage(result);
-
-        if (result.IsSuccess) Close(true);
+        // ShowResultMessage(result);
+        //
+        // if (result.IsSuccess) Close(true);
     }
 
 }

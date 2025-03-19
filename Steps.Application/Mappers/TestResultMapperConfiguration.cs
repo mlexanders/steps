@@ -12,7 +12,7 @@ public class TestResultMapperConfiguration : Profile
         CreateMap<TestResultViewModel, TestResult>()
             .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
             .ForMember(x => x.AthleteId, o => o.MapFrom(m => m.AthleteId))
-            .ForMember(x => x.Athlete, o => o.Ignore())
+            .ForMember(x => x.Athlete, o => o.MapFrom(m => m.Athlete))
             
             .ForMember(x => x.ContestId, o => o.MapFrom(m => m.ContestId))
             .ForMember(x => x.Contest, o => o.Ignore())
@@ -26,7 +26,8 @@ public class TestResultMapperConfiguration : Profile
             .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
             .ForMember(x => x.AthleteId, o => o.MapFrom(m => m.AthleteId))
             .ForMember(x => x.ContestId, o => o.MapFrom(m => m.ContestId))
-            .ForMember(x => x.Scores, o => o.MapFrom(m => m.Scores));
+            .ForMember(x => x.Scores, o => o.MapFrom(m => m.Scores))
+            .ForMember(x => x.Athlete, o => o.MapFrom(m => m.Athlete));
 
         
         //CreateTeamViewModel

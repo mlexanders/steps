@@ -35,7 +35,7 @@ public class GetPagedTeamsQueryHandler
     {
         var user = await _securityService.GetCurrentUser() ?? throw new AppAccessDeniedException();
 
-        request.AddPredicate(t => t.OwnerId.Equals(user.Id)); // Только команды пользователя
+        request.AddPredicate(x => x.OwnerId.Equals(user.Id)); // Только команды пользователя
         
         var views = await _unitOfWork.GetRepository<Team>()
             .GetPagedListAsync(

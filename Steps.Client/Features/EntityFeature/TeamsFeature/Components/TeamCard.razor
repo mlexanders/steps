@@ -1,7 +1,14 @@
 ﻿@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Components
 
-<h3>@this</h3>
-@Model.Name
+<RadzenCard Style="width: 100%; max-width: 600px;">
+    <ChildContent>
+        <p><strong>Адрес:</strong> @Model.Address</p>
+        <p><strong>Владелец:</strong> @(Model.Owner?.Login ?? "Не указан")</p>
+
+        <AthleteManageByTeam Team="Model"/>
+    </ChildContent>
+</RadzenCard>
 
 @code {
     [Parameter] public TeamViewModel Model { get; set; } = null!;

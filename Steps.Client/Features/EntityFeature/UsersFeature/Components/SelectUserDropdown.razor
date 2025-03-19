@@ -1,4 +1,5 @@
 ﻿@using Steps.Client.Features.EntityFeature.UsersFeature.Services
+@using Steps.Domain.Definitions
 @using Steps.Shared
 @using Steps.Shared.Contracts.Accounts.ViewModels
 
@@ -7,34 +8,60 @@
              Gap="0.5rem" class="rz-p-12">
     <RadzenLabel Text="Select Value" Component="DropDownDataGridFilteringLoadData"/>
 
-    <RadzenDropDownDataGrid @bind-Value="@UserId" Data="@UsersManager.Data" Change="@((o) => OnChange(o))"
+    <RadzenDropDownDataGrid @bind-Value="@UserId" Data="@UsersManagerEntityManager.Data" Change="@((o) => OnChange(o))"
                             TextProperty="@nameof(UserViewModel.Login)" ValueProperty="@nameof(UserViewModel.Id)"
-                            Name="DropDownDataGridTextValueProperties" IsLoading="@UsersManager.IsLoading"/>
+                            Name="DropDownDataGridTextValueProperties" IsLoading="@UsersManagerEntityManager.IsLoading"/>
 </RadzenStack>
 
 @code
 {
-    [Inject] protected UsersManager UsersManager { get; set; } = null!;
+    [Inject] protected UsersManager UsersManagerEntityManager { get; set; } = null!;
 
-    [Parameter] public Guid UserId { get; set; }
+    [Parameter] public Guid UserId { get; set; } 
+    
+    [Parameter] public Role? Role { get; set; }
 
     [Parameter] public EventCallback<Guid> UserIdChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        UsersManager.ChangedList += StateHasChanged;
-        await UsersManager.Initialize();
+        var roleSpec = GetBaseSpecification();
+        UsersManagerEntityManager.UseSpecification(roleSpec);
+        
+        UsersManagerEntityManager.ChangedList += StateHasChanged;
+        await UsersManagerEntityManager.Initialize();
+    }
+
+    private Specification<User> GetBaseSpecification()
+    {
+        try
+        {
+            var spec = Specification.Users;
+            return Role is null ?  spec : spec.Where(u => u.Role == Role);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private async Task LoadData(LoadDataArgs arg)
     {
+        var baseSpec = GetBaseSpecification();
+
         if (!string.IsNullOrEmpty(arg.Filter))
         {
             var filter = arg.Filter.ToLower();
-            UsersManager.UseSpecification(new Specification<User>().Where(u => u.Login.Contains(filter)));
+            var combinedSpec =  baseSpec.AddPredicate(u => u.Login.Contains(filter));
+            UsersManagerEntityManager.UseSpecification(combinedSpec);
+        }
+        else
+        {
+            UsersManagerEntityManager.UseSpecification(baseSpec);
         }
 
-        await UsersManager.ChangePage(arg.Skip, arg.Top);
+        await UsersManagerEntityManager.ChangePage(arg.Skip, arg.Top);
     }
 
     private async Task OnChange(object? userId)
@@ -45,6 +72,6 @@
 
     public void Dispose()
     {
-        UsersManager.ChangedList -= StateHasChanged;
+        UsersManagerEntityManager.ChangedList -= StateHasChanged;
     }
 }

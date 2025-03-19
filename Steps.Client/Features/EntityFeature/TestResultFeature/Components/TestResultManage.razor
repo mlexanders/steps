@@ -1,0 +1,32 @@
+﻿@using Steps.Shared
+@using Steps.Shared.Contracts.TestResults.ViewModels
+@inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, Steps.Shared.Contracts.TestResults.ViewModels.TestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.CreateTestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.UpdateTestResultViewModel>
+
+@code {
+    protected override Task<Specification<TestResult>?> GetSpecification()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+<RadzenCard>
+    <RadzenDataGrid TItem="TestResultViewModel" Data="Manager.Data" AllowPaging="true"
+                    PageSize="Manager.PageSize" EmptyText="Результатов пока нет"
+                    IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
+                    LoadData="@OnChangePage" RowSelect="@DialogManager.ShowCardDialog">
+
+        <HeaderTemplate>
+            <RadzenText Text="*Отображаются результаты по текущему мероприятию"/>
+        </HeaderTemplate>
+
+        <Columns>
+            <RadzenDataGridColumn TItem="TestResultViewModel" Property="@nameof(TestResultViewModel.AthleteId)" Title="Спортсмен"/>
+            <RadzenDataGridColumn TItem="TestResultViewModel" Property="@nameof(TestResultViewModel.Scores)" Title="Баллы">
+                <Template Context="item">
+                    @string.Join(", ", item.Scores)
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+

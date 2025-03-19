@@ -1,0 +1,90 @@
+﻿@using Steps.Domain.Entities.GroupBlocks
+@using Steps.Shared
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
+@using Steps.Shared.Contracts.GroupBlocks
+@using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels
+
+@inject PreSchedulerManager PreSchedulerManager
+@inject IGroupBlocksService GroupBlocksService
+@inherits BaseNotificate
+
+<RadzenDataGrid TItem="PreScheduledCellViewModel" AllowFiltering="true" AllowColumnResize="true"
+                IsLoading="@PreSchedulerManager.IsLoading" Count="@PreSchedulerManager.TotalCount"
+                PageSize="PreSchedulerManager.PageSize" LoadData="@OnChangePage"
+                FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@PreSchedulerManager.Data"  ColumnWidth="300px"
+                FilterCaseSensitivity="@FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="@LogicalFilterOperator.And">
+    <HeaderTemplate>
+        <RadzenButton Click="@Complete" Text="Завершить и создать расписание"/>
+    </HeaderTemplate>
+    <Columns> 
+        <RadzenDataGridColumn Width="55px"  Filterable="@(false)" TItem="PreScheduledCellViewModel"  Property="@nameof(PreScheduledCellViewModel.IsConfirmed)" Title="Явка">
+            <Template Context="cell">
+                @if (cell.IsConfirmed)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="check" Size="ButtonSize.Small" Click="@(() => ChangeConfirmation(cell))" />
+                }
+                else
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="remove" Size="ButtonSize.Small" Click="@(() => ChangeConfirmation(cell))" />
+                }
+            
+                </Template>
+        </RadzenDataGridColumn>
+        <ScheduleColumns TView="PreScheduledCellViewModel" IsFilterable="true"/>
+    </Columns>
+    
+</RadzenDataGrid>
+
+
+@code {
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        PreSchedulerManager.ChangePageSize(15); 
+        if (GroupBlock is null)
+        {
+            return;
+        }
+        await PreSchedulerManager.Initialize(GroupBlock.Id);
+    }
+
+    private async Task OnChangePage(LoadDataArgs arg)
+    {
+        var filter = arg.Filters?.FirstOrDefault()?
+            .FilterValue?.ToString();
+
+        var specification = new Specification<PreScheduledCell>();
+        if (!string.IsNullOrEmpty(filter))
+        {
+            specification.Where(u => u.Athlete.FullName.Contains(filter));
+        }
+        
+        PreSchedulerManager.UseSpecification(specification);
+        
+        await PreSchedulerManager.ChangePage(arg.Skip, arg.Top);
+    }
+
+    private async Task ChangeConfirmation(PreScheduledCellViewModel cell)
+    {
+        var newState = !cell.IsConfirmed;
+        cell.IsConfirmed = newState;
+        
+        var result = await PreSchedulerManager.MarkAthlete(new MarkAthleteViewModel
+        {
+            GroupBlockId = cell.GroupBlockId,
+            AthleteId = cell.AthleteId,
+            Confirmation = newState
+        });
+        ShowResultMessage(result);
+    }
+
+    private async Task Complete()
+    {
+        var result = await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
+        ShowResultMessage(result);
+    }
+
+}

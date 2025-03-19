@@ -26,10 +26,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
             .HasForeignKey(t => t.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(t => t.Athletes)
-            .WithOne()
-            .HasForeignKey(t => t.TeamId);
-
         builder.HasOne<Club>(t => t.Club)
             .WithMany(c => c.Teams)
             .IsRequired()

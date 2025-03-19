@@ -1,0 +1,93 @@
+﻿@using System.Collections.ObjectModel
+@using Steps.Client.Features.Common
+@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.EntityFeature.TeamsFeature.Components
+
+@inherits BaseNotificate
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                FilterMode="FilterMode.Advanced"
+                AllowSorting="true" 
+                
+                PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@_items" ColumnWidth="180px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                SelectionMode="DataGridSelectionMode.Single"
+                @bind-Value="@_selectedItem" RowRender="@RowRender" 
+                AllowVirtualization="true" Style="height:400px">
+    <HeaderTemplate>
+        <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Сохранить"
+                      Click="Save"/>
+
+        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="" Text="Назад"
+                      Click="CloseEditing"/>
+    </HeaderTemplate>
+    <Columns>
+        <TeamsColumns/>
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    [Parameter] public bool IsComplete { get; set; }
+    [Parameter] public EventCallback<bool> IsCompleteChanged { get; set; }
+    
+    [Parameter] public List<TeamViewModel>? Teams { get; set; }
+    [Parameter] public EventCallback<List<TeamViewModel>> TeamsChanged { get; set; }
+
+    
+    private ObservableCollection<TeamViewModel> _items;
+    private IList<TeamViewModel> _selectedItem;
+    private TeamViewModel _draggedItem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Teams is null) Teams = [];
+        
+        _items = new ObservableCollection<TeamViewModel>(Teams);
+
+        _selectedItem = new List<TeamViewModel>() { _items.FirstOrDefault() };
+    }
+
+    private void RowRender(RowRenderEventArgs<TeamViewModel> args)
+    {
+        try
+        {
+            args.Attributes.Add("title", "Drag row to reorder");
+            args.Attributes.Add("style", "cursor:grab");
+            args.Attributes.Add("draggable", "true");
+            args.Attributes.Add("ondragover", "event.preventDefault();event.target.closest('.rz-data-row').classList.add('my-class')");
+            args.Attributes.Add("ondragleave", "event.target.closest('.rz-data-row').classList.remove('my-class')");
+            args.Attributes.Add("ondragstart", EventCallback.Factory.Create<DragEventArgs>(this, () => _draggedItem = args.Data));
+            args.Attributes.Add("ondrop", EventCallback.Factory.Create<DragEventArgs>(this, () =>
+            {
+                var draggedIndex = _items.IndexOf(_draggedItem);
+                var droppedIndex = _items.IndexOf(args.Data);
+
+                _items.Remove(_draggedItem);
+                _items.Insert(draggedIndex <= droppedIndex ? droppedIndex++ : droppedIndex, _draggedItem);
+            }));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private async Task CloseEditing()
+    {
+        IsComplete = true;
+        if (IsCompleteChanged.HasDelegate)
+        {
+            await IsCompleteChanged.InvokeAsync(IsComplete);
+        }
+    }
+
+    private async Task Save()
+    {
+        Teams = _items.ToList();
+        if (TeamsChanged.HasDelegate)
+        {
+            await TeamsChanged.InvokeAsync(Teams);
+        }
+    }
+}

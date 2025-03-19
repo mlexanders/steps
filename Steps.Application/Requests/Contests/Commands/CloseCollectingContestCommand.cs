@@ -1,13 +1,25 @@
-﻿using Calabonga.UnitOfWork;
+﻿using AutoMapper;
+using Calabonga.UnitOfWork;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Steps.Application.Interfaces;
+using Steps.Application.Requests.Contests.Queries;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
-using Steps.Domain.Entities.AthletesLists;
 using Steps.Shared;
+using Steps.Shared.Contracts.Contests.ViewModels;
+using Steps.Shared.Exceptions;
+using Steps.Shared.Utils;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record CloseCollectingContestCommand(Guid ModelId) : IRequest<Result>;
+public record CloseCollectingContestCommand(Guid ContestId) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollectingContestCommand, Result>
 {
@@ -17,52 +29,19 @@ public class CloseCollectingContestCommandHandler : IRequestHandler<CloseCollect
     {
         _unitOfWork = unitOfWork;
     }
-
+    
     public async Task<Result> Handle(CloseCollectingContestCommand request, CancellationToken cancellationToken)
+
     {
-        var modelId = request.ModelId;
-
-        var contestRepository = _unitOfWork.GetRepository<Contest>();
-        var preAthletesListRepository = _unitOfWork.GetRepository<PreAthletesList>();
-
-        try
-        {
-            var contest = await contestRepository.GetFirstOrDefaultAsync(
-                predicate: c => c.Id == modelId,
-                include: q => q.Include(c => c.Entries)
-                    .ThenInclude(a => a.Athletes),
-                trackingType: TrackingType.Tracking
-            );
-
-            var preAthletesList = new PreAthletesList();
-
-            preAthletesList.ContestId = contest.Id;
-            preAthletesList.Contest = contest;
-
-            var acceptedEntries = contest.Entries.Where(c => c.IsSuccess);
-
-            foreach (var entry in acceptedEntries)
-            {
-                foreach (var athlete in entry.Athletes)
-                {
-                    preAthletesList.Athletes.Add(athlete);
-                }
-            }
-
-            preAthletesListRepository.Insert(preAthletesList);
-
-            contest.PreAthletesListId = preAthletesList.Id;
-            contest.PreAthletesList = preAthletesList;
-
-            contestRepository.Update(contest);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return Result.Ok().SetMessage("Сбор заявок закрыт, предварительный список спортсменов готов!");
-        }
-        catch (Exception ex)
-        {
-            return Result.Fail($"Ошибка при закрытии сбора заявок: {ex.Message}");
-        }
+        var contest = await _unitOfWork.GetRepository<Contest>()
+                          .GetFirstOrDefaultAsync(
+                              predicate: c => c.Id.Equals(request.ContestId),
+                              trackingType: TrackingType.Tracking)
+                      ?? throw new StepsBusinessException("Соревнование не найдено");
+        
+        contest.Status = ContestStatus.Closed;
+        await _unitOfWork.SaveChangesAsync();
+        
+        return Result.Ok().SetMessage(contest.Status.GetDisplayName());
     }
 }

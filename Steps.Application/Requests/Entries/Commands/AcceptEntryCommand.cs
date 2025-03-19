@@ -9,9 +9,15 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Entries.Commands;
 
-public record AcceptEntryCommand(Guid ModelId) : IRequest<Result>;
+public record AcceptEntryCommand(Guid EntryId) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
-public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>, IRequireAuthorization
+public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -22,20 +28,15 @@ public class AcceptEntryCommandHandler : IRequestHandler<AcceptEntryCommand, Res
 
     public async Task<Result> Handle(AcceptEntryCommand request, CancellationToken cancellationToken)
     {
-        var repository = _unitOfWork.GetRepository<Entry>();
-
-        var entry = await repository.GetFirstOrDefaultAsync(
-            predicate: e => e.Id.Equals(request.ModelId),
-            trackingType: TrackingType.Tracking) ?? throw new StepsBusinessException("Заявка не найдена");
-
+        var entry = await _unitOfWork.GetRepository<Entry>()
+                        .GetFirstOrDefaultAsync(
+                            predicate: e => e.Id.Equals(request.EntryId),
+                            trackingType: TrackingType.Tracking)
+                    ?? throw new StepsBusinessException("Заявка не найдена");
+        
         entry.IsSuccess = true;
         await _unitOfWork.SaveChangesAsync();
 
         return Result.Ok().SetMessage("Заявка одобрена");
-    }
-
-    public Task<bool> CanAccess(IUser user)
-    {
-        return Task.FromResult(user.Role is Role.Organizer);
     }
 }

@@ -2,9 +2,9 @@
 @using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Client.Features.EntityFeature.ContestsFeature.Forms
 
-@inherits BaseModal
+@inherits Steps.Client.Features.Common.BaseModal
 @inject ContestManager ContestManager
-<RadzenTemplateForm TItem="ContestViewModel" Submit="Create" Data="_contest">
+<RadzenTemplateForm TItem="CreateContestViewModel" Submit="Create" Data="_contest">
     <RadzenCard>
 
         <ContestForm Contest="@_contest" Title="Мероприятие"/>
@@ -16,7 +16,7 @@
 </RadzenTemplateForm>
 
 @code {
-    private readonly ContestViewModel _contest = new();
+    private readonly CreateContestViewModel _contest = new();
 
     private async Task Create()
     {
@@ -26,6 +26,8 @@
             Description = _contest.Description,
             StartDate = DateTime.SpecifyKind(_contest.StartDate, DateTimeKind.Utc),
             EndDate = DateTime.SpecifyKind(_contest.EndDate, DateTimeKind.Utc),
+            Judjes = _contest.Judjes,
+            Counters = _contest.Counters
         });
 
         ShowResultMessage(result);

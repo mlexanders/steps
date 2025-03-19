@@ -1,0 +1,46 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
+@using Steps.Shared
+@using Steps.Shared.Contracts.Athletes.ViewModels
+@using Steps.Shared.Contracts.Entries.ViewModels
+@using Steps.Client.Features.EntityFeature.TeamsFeature.Components
+
+@inject AthleteManager AthleteManager
+@inherits Steps.Client.Features.Common.BaseNotificate
+
+<RadzenFieldset Text="Создание заявки">
+    <RadzenStack Gap="2rem">
+
+        <SelectTeamDropDown TeamIdChanged="@TeamChanged" />
+        
+        <RadzenListBox @bind-Value="Model.AthletesIds"
+                       Name="@nameof(Model.AthletesIds)"
+                       Data="@_athletesByTeam"
+                       Multiple="true"
+                       Placeholder="Выберите спортсменов"
+                       Style="width: 100%"
+                       TextProperty="FullName"
+                       ValueProperty="Id" />
+
+    </RadzenStack>
+</RadzenFieldset>
+
+@code {
+    private List<AthleteViewModel>? _athletesByTeam;
+    [Parameter] [Required] public CreateEntryViewModel Model { get; set; } = null!;
+    
+
+    private async Task TeamChanged(Guid teamId)
+    {
+        Model.TeamId = teamId;
+        var spec = new Specification<Athlete>()
+            .Where(a => a.TeamId.Equals(teamId));
+
+        AthleteManager.ChangePageSize(2000); // todo: to athlete Manage component with paging
+        var result = await AthleteManager.Read(spec);
+        if (result?.IsSuccess != true) ShowResultMessage(result);
+
+        _athletesByTeam = result?.Value?.Items.ToList() ?? [];
+        StateHasChanged();
+    }
+}

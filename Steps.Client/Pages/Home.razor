@@ -2,39 +2,42 @@
 @using Microsoft.AspNetCore.Authorization
 @using Steps.Domain.Base
 @using Steps.Domain.Definitions
-@using Steps.Client.Features.RoleFeature.UserFeature.Pages
-@using Steps.Client.Features.RoleFeature.UndefinedFeature.Pages
-@using Steps.Client.Features.RoleFeature.OrganizerFeature.Pages
-@using Steps.Client.Features.RoleFeature.CounterFeature.Pages
-@using Steps.Client.Features.RoleFeature.JudjeFeature.Pages
+@* @using Steps.Client.Features.RoleFeature.UserFeature.Pages *@
+@* @using Steps.Client.Features.RoleFeature.UndefinedFeature.Pages *@
+@* @using Steps.Client.Features.RoleFeature.OrganizerFeature.Pages *@
+@* @using Steps.Client.Features.RoleFeature.CounterFeature.Pages *@
+@* @using Steps.Client.Features.RoleFeature.JudjeFeature.Pages *@
+@using Steps.Client.Features.EntityFeature.ContestsFeature.Components
 @attribute [Authorize]
 
 
+<ContestScheduler/>
 
-@if (UserRole is Role.Undefined)
-{
-    <UndefinedHome/>
-}
-else if (UserRole is Role.Organizer)
-{
-    <OrganizerHome/>
-}
-
-else if (UserRole is Role.Counter)
-{
-    <CounterHome/>
-}
-
-else if (UserRole is Role.Judge)
-{
-    <JudjeHome/>
-}
-
-else if (UserRole is Role.User)
-{
-    <UserHome/>
-}
-
+@* *@
+@* @if (UserRole is Role.Undefined) *@
+@* { *@
+@*     <UndefinedHome/> *@
+@* } *@
+@* else if (UserRole is Role.Organizer) *@
+@* { *@
+@*     <OrganizerHome/> *@
+@* } *@
+@* *@
+@* else if (UserRole is Role.Counter) *@
+@* { *@
+@*     <CounterHome/> *@
+@* } *@
+@* *@
+@* else if (UserRole is Role.Judge) *@
+@* { *@
+@*     <JudjeHome/> *@
+@* } *@
+@* *@
+@* else if (UserRole is Role.User) *@
+@* { *@
+@*     <UserHome/> *@
+@* } *@
+@* *@
 
 @code
 {

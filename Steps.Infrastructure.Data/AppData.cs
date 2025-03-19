@@ -11,9 +11,9 @@ public static class AppData
     public static class Identity
     {
         public const string CookieName = "Identity";
-        public const string LogoutPath = "/api/account/login";
-        public const string LoginPath = "/api/account/logout";
+        public const string LogoutPath = "/api/account/logout";
+        public const string LoginPath = "/api/account/login";
         public const string AuthenticationType = CookieAuthenticationDefaults.AuthenticationScheme;
-        public static TimeSpan ExpireTimeSpan { get; } = TimeSpan.FromMinutes(40);
+        public static TimeSpan ExpireTimeSpan { get; } = TimeSpan.FromSeconds(60);
     }
 }

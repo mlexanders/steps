@@ -21,15 +21,14 @@ public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, R
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-
-
+    
     public async Task<Result<ContestViewModel>> Handle(GetContestByIdQuery request, CancellationToken cancellationToken)
     {
         var contest = await _unitOfWork.GetRepository<Contest>()
             .GetFirstOrDefaultAsync(
                 predicate: c => c.Id.Equals(request.ContestId),
                 selector: c => _mapper.Map<ContestViewModel>(c),
-                include: x => x.Include(a => a.Judjes).Include(a => a.Counters),
+                include: x => x.Include(a => a.Judges).Include(a => a.Counters),
                 orderBy: c => c.OrderByDescending(o => o.StartDate),
                 trackingType: TrackingType.NoTracking);
 

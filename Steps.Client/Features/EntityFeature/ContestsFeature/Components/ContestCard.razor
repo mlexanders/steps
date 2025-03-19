@@ -1,8 +1,55 @@
-﻿@using Steps.Shared.Contracts.Contests.ViewModels
-<h3>ContestCard</h3>
-@Model.Name
+﻿@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
+@using Steps.Domain.Definitions
+@using Steps.Shared.Utils
+@inherits Steps.Client.Features.Common.BaseNotificate
 
-@code {
-    [Parameter] public ContestViewModel Model { get; set; } = null!;
+<RadzenFieldset Text="Информация о мероприятии">
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="1rem">
+                <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy")</p>
+                <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
+                <p><strong>Статус:</strong> @Model.Status.GetDisplayName()</p>
+                <p><strong>Тип:</strong> @Model.Type.GetDisplayName()</p>
+            </RadzenStack>
+        </RadzenColumn>
 
+        <RadzenColumn Size="6">
+            <RadzenStack Gap="2rem">
+                <div>
+                    <h4>Судьи</h4>
+                    <RadzenListBox TValue="Guid" Data="@Judges"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+
+                <div>
+                    <h4>Счетчики</h4>
+                    <RadzenListBox TValue="Guid" Data="@Counters"
+                                   TextProperty="Login"
+                                   ValueProperty="Id"
+                                   Style="width: 100%; height: 150px;"
+                                   AllowVirtualization="false"
+                                   Multiple="false" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenFieldset>
+
+
+<RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+              Click="() => OpenCreateEntryDialog()" Style="margin-bottom: 10px;" />
+
+@if (Model.Status is ContestStatus.Open)
+{
+    <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                  Click="() => CloseCollectingEntries()" Style="margin-bottom: 10px;" />
 }
+
+
+<RadzenText Text="Групповые блоки:"></RadzenText>
+<GroupBlocksManage Contest="Model" />

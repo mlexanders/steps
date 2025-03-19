@@ -54,21 +54,17 @@ public class ContestsController : ControllerBase, IContestsService
         return await _mediator.Send(new DeleteContestCommand(contestId));
     }
 
-    [HttpPost("Generate-group-blocks")]
-    public async Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount)
+    [HttpGet("[action]")]
+    public Task<Result<List<ContestViewModel>>> GetByTimeInterval([FromQuery] GetContestByInterval criteria)
     {
-        return await _mediator.Send(new GenerateGroupBlocksCommand(contestId, athletesCount));
+        return _mediator.Send(new GetByTimeIntervalQuery(criteria));
     }
 
-    [HttpPost("Check-athlete-appeared")]
-    public async Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared)
+    [HttpPost("[action]/{contestId:guid}")]
+    public Task<Result> CloseCollectingEntries(Guid contestId)
     {
-        return await _mediator.Send(new CheckAthleteCommand(athleteId, contestId, isAppeared));
-    }
-
-    [HttpPost("Close-collecting")]
-    public async Task<Result> CloseCollectingEntries(Guid contestId)
-    {
-        return await _mediator.Send(new CloseCollectingContestCommand(contestId));
+        return _mediator.Send(new CloseCollectingContestCommand(contestId));
     }
 }
+
+

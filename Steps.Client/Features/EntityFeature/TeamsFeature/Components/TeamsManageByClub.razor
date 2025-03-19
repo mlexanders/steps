@@ -1,12 +1,14 @@
 ﻿@using Steps.Shared.Contracts.Teams.ViewModels
+@using Steps.Client.Features.Common
 
-@inherits ManageBaseComponent<Steps.Domain.Entities.Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
+@inherits ManageBaseComponent<Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="TeamViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Команды еще не созданы"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage"
+                    RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
             @if (!IsReadonly)
@@ -18,8 +20,7 @@
         </HeaderTemplate>
 
         <Columns>
-            <RadzenDataGridColumn TItem="TeamViewModel" Property="@nameof(TeamViewModel.Name)" Title="Название"/>
-            <RadzenDataGridColumn TItem="TeamViewModel" Property="@nameof(TeamViewModel.Address)" Title="Адрес"/>
+            <TeamsColumns/>
 
             @if (!IsReadonly)
             {

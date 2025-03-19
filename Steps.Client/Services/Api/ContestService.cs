@@ -7,24 +7,25 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Client.Services.Api;
 
-public class ContestsesService : CrudService<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>, IContestsService
+public class ContestsService : CrudService<Contest, ContestViewModel, CreateContestViewModel, UpdateContestViewModel>, IContestsService
 {
-    public ContestsesService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.ContestsRoute())
+    private readonly ApiRoutes.ContestsRoute _contestRoutes;
+
+    public ContestsService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.ContestsRoute())
     {
+        _contestRoutes = new ApiRoutes.ContestsRoute();
     }
 
-    public Task<Result> GenerateGroupBlocks(Guid contestId, int athletesCount)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<Result> CheckAthlete(Guid athleteId, Guid contestId, bool isAppeared)
+    public Task<Result<List<ContestViewModel>>> GetByTimeInterval(GetContestByInterval criteria)
     {
-        throw new NotImplementedException();
+        var path = _contestRoutes.GetByTimeInterval(criteria);
+        return HttpClient.GetAsync<Result<List<ContestViewModel>>>(path);
     }
 
     public Task<Result> CloseCollectingEntries(Guid contestId)
     {
-        throw new NotImplementedException();
+        var path = _contestRoutes.CloseCollectingEntries(contestId);
+        return HttpClient.PostAsync<Result, object>(path);
     }
 }

@@ -1,0 +1,43 @@
+﻿@using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
+
+@inherits BaseNotificate
+
+
+
+@if (_blocks is { Count: > 0 })
+{
+    <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
+    <RadzenTabs RenderMode="TabRenderMode.Client" >
+        <Tabs>
+            @foreach (var block in _blocks)
+            {
+                <RadzenTabsItem  Text="@GetTittle(block)">
+                    <ScheduleByGroupBlock GroupBlock="block"/>
+                </RadzenTabsItem>
+            }
+        </Tabs>
+    </RadzenTabs>
+}
+else
+{
+    <RadzenText> блоков нет</RadzenText>
+    
+    <RadzenText> Выберите очередность выступления команд</RadzenText>
+
+    if (_teams is null)
+    {
+        <RadzenButton Text="Показать команды" Click="GetTeams"/>
+    }
+    else
+    {
+        if (!_isComplete)
+        {
+            <OrderingTeams @bind-IsComplete="@_isComplete" @bind-Teams="@_teams"/>
+        }
+       else
+        {
+            <RadzenButton Text="Создать блоки" Click="@CreateBlocks"/>
+        }
+    }
+}

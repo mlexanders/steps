@@ -1,0 +1,41 @@
+﻿@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
+@using Steps.Shared.Contracts.Entries.ViewModels
+@using Steps.Client.Features.EntityFeature.EntriesFeature.Forms
+@using Steps.Client.Features.Common
+
+@inherits BaseModal
+@inject EntriesManager EntriesManager
+
+
+<RadzenTemplateForm TItem="CreateEntryViewModel" Submit="Create" Data="_entryViewModel">
+    <RadzenCard>
+        <CreateEntryForm Model="@_entryViewModel" />
+        <RadzenButton Text="Создать" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Secondary"
+                      Style="margin-left: 10px;"/>
+    </RadzenCard>
+</RadzenTemplateForm>
+
+@code {
+    private readonly CreateEntryViewModel _entryViewModel = new();
+    
+    [Parameter] public Guid ContestId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _entryViewModel.ContestId = ContestId;
+    }
+    
+    private async Task Create()
+    {
+        var result = await EntriesManager.Create(new()
+        {
+            ContestId = _entryViewModel.ContestId,
+            AthletesIds = _entryViewModel.AthletesIds,
+            TeamId = _entryViewModel.TeamId
+        });
+        ShowResultMessage(result);
+
+        if (result.IsSuccess) Close(true);
+    }
+}

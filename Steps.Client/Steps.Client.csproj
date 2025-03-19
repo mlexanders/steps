@@ -89,11 +89,8 @@
       <Folder Include="Features\EntityFeature\EntriesFeature\Services\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Dialogs\" />
       <Folder Include="Features\EntityFeature\GroupBlocksFeature\Forms\" />
-<<<<<<< HEAD
       <Folder Include="Features\EntityFeature\SchedulesFeature\PreScheduleFeature\" />
       <Folder Include="Features\EntityFeature\TestResultFeature\Dialogs\" />
-=======
->>>>>>> STE-20
       <Folder Include="Features\EntityFeature\TestResultFeature\Forms\" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
       <Folder Include="Features\RoleFeature\" />

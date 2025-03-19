@@ -3,6 +3,7 @@ using Steps.Application.Behaviors;
 using Steps.Application.Behaviors.Base;
 using Steps.Application.ExceptionsHandling;
 using Steps.Application.Interfaces;
+using Steps.Application.Services;
 using Steps.Utils.AppDefinition;
 
 namespace Steps.Application;
@@ -12,7 +13,7 @@ public static class DependencyInjection
     public static WebApplicationBuilder AddApplication(this WebApplicationBuilder builder)
     {
         builder.Services.AddTransient<CommonExceptionHandler>();
-        builder.Services.AddTransient<GroupBlockService>();
+        builder.Services.AddTransient<SchedulesService>();
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
 
         return builder;

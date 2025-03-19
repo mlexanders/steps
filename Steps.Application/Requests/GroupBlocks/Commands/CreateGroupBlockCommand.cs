@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Services;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
@@ -14,13 +15,13 @@ public class CreateGroupBlocksByTeamsCommandHandler : IRequestHandler<CreateGrou
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly GroupBlockService _groupBlockService;
+    private readonly SchedulesService _schedulesService;
 
-    public CreateGroupBlocksByTeamsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, GroupBlockService groupBlockService)
+    public CreateGroupBlocksByTeamsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, SchedulesService schedulesService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _groupBlockService = groupBlockService;
+        _schedulesService = schedulesService;
     }
 
     public async Task<Result> Handle(CreateGroupBlocksByTeamsCommand request,
@@ -32,7 +33,7 @@ public class CreateGroupBlocksByTeamsCommandHandler : IRequestHandler<CreateGrou
                               trackingType: TrackingType.NoTracking)
                       ?? throw new StepsBusinessException("Мероприятие не найдено");
 
-        await _groupBlockService.GenerateGroupBlocksAndPreCells(contest, request.Model);
+        await _schedulesService.GenerateGroupBlocksAndPreCells(contest, request.Model);
 
         return Result.Ok().SetMessage("Список создан");
     }

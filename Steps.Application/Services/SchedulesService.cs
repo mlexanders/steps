@@ -7,9 +7,9 @@ using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 using Steps.Shared.Exceptions;
 
-namespace Steps.Application;
+namespace Steps.Application.Services;
 
-public class GroupBlockService
+public class SchedulesService
 {
     private const int DefaultJudgesCount = 2;
     private static readonly TimeSpan GroupBlockInterval = TimeSpan.FromMinutes(30);
@@ -17,7 +17,7 @@ public class GroupBlockService
 
     private readonly IUnitOfWork _unitOfWork;
 
-    public GroupBlockService(IUnitOfWork unitOfWork)
+    public SchedulesService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
@@ -251,7 +251,7 @@ public class GroupBlockService
                 if (currentBlock.Count + team.Count > maxPerBlock)
                 {
                     result.Add(currentBlock);
-                    currentBlock = new List<Athlete>();
+                    currentBlock = [];
                 }
                 currentBlock.AddRange(team);
             }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
 using Steps.Client.Features.Common;
+using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Domain.Entities;
@@ -65,6 +66,8 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
 
         private async Task OnRowSelect(TestResultViewModel item)
         {
+            item.ContestId = ContestId;
+
             await DialogManager.ShowCardDialog(item);
         }
 

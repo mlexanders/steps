@@ -4,24 +4,11 @@
 @inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, Steps.Shared.Contracts.TestResults.ViewModels.TestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.CreateTestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.UpdateTestResultViewModel>
 
 <RadzenFieldset Text="Результаты спортсмена">
-    <RadzenRow>
-        <RadzenColumn Size="6">
+    <RadzenRow Style="margin-bottom: 1rem;">
+        <RadzenColumn Size="12">
             <RadzenStack Gap="1rem">
-                <p><strong>ID спортсмена:</strong> @Model.AthleteId</p>
-                <p><strong>Имя спортсмена:</strong> @Model.Athlete?.FullName</p>
+                <p><strong>Имя спортсмена:</strong> @Athlete.FullName</p>
                 <p><strong>ID мероприятия:</strong> @Model.ContestId</p>
-            </RadzenStack>
-        </RadzenColumn>
-
-        <RadzenColumn Size="6">
-            <RadzenStack Gap="2rem">
-                <div>
-                    <h4>Баллы</h4>
-                    <RadzenListBox TValue="int" Data="@Model.Scores"
-                                   Style="width: 100%; height: 150px;"
-                                   AllowVirtualization="false"
-                                   Multiple="false" />
-                </div>
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
@@ -29,13 +16,52 @@
     <RadzenRow>
         <RadzenColumn Size="12">
             <RadzenCard Style="margin-top: 1rem;">
-                <h3>Элементы спортсмена</h3>
+                <h3>Результаты</h3>
                 <RadzenStack Gap="1rem">
-                    <p><strong>Элемент 1:</strong> @Model.Athlete?.AthleteElements?.Element1</p>
-                    <p><strong>Элемент 2:</strong> @Model.Athlete?.AthleteElements?.Element2</p>
-                    <p><strong>Элемент 3:</strong> @Model.Athlete?.AthleteElements?.Element3</p>
-                    <p><strong>Элемент 4:</strong> @Model.Athlete?.AthleteElements?.Element4</p>
-                    <p><strong>Элемент 5:</strong> @Model.Athlete?.AthleteElements?.Element5</p>
+                    <RadzenRow>
+                        <RadzenColumn Size="6">
+                            <p><strong>Элемент 1:</strong> @Athlete.AthleteElements?.Element1</p>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <p><strong>Балл:</strong> @Model.Scores.ElementAtOrDefault(0)</p>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="6">
+                            <p><strong>Элемент 2:</strong> @Athlete.AthleteElements?.Element2</p>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <p><strong>Балл:</strong> @Model.Scores.ElementAtOrDefault(1)</p>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="6">
+                            <p><strong>Элемент 3:</strong> @Athlete.AthleteElements?.Element3</p>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <p><strong>Балл:</strong> @Model.Scores.ElementAtOrDefault(2)</p>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="6">
+                            <p><strong>Элемент 4:</strong> @Athlete.AthleteElements?.Element4</p>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <p><strong>Балл:</strong> @Model.Scores.ElementAtOrDefault(3)</p>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="6">
+                            <p><strong>Элемент 5:</strong> @Athlete.AthleteElements?.Element5</p>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <p><strong>Балл:</strong> @Model.Scores.ElementAtOrDefault(4)</p>
+                        </RadzenColumn>
+                    </RadzenRow>
                 </RadzenStack>
             </RadzenCard>
         </RadzenColumn>

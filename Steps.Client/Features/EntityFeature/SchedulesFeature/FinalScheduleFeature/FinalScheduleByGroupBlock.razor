@@ -2,10 +2,11 @@
 @using Steps.Client.Features.EntityFeature.TestResultFeature.Dialogs
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
+@using Steps.Client.Features.EntityFeature.TestResultFeature.Services
 @using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels
 
 @inject FinalSchedulerManager FinalSchedulerManager
-@inject DialogService DialogService
+@inject TestResultsDialogManager TestResultsDialogManager
 @implements IDisposable
 
 
@@ -49,19 +50,13 @@
         await FinalSchedulerManager.ChangePage(arg.Skip, arg.Top);
     }
 
-    private void OnRowSelect(FinalScheduledCellViewModel athlete)
+    private async Task OnRowSelect(FinalScheduledCellViewModel athlete)
     {
-        ShowResultModal(athlete.AthleteId);
+        await ShowResultModal(athlete.AthleteId);
     }
 
-    private void ShowResultModal(Guid athleteId)
+    private async Task ShowResultModal(Guid athleteId)
     {
-        DialogService.Open<CreateTestResultDialog>("Ввод результатов",
-            new Dictionary<string, object>()
-                {
-                { "ContestId", GroupBlock?.ContestId ?? Guid.Empty },
-                { "AthleteId", athleteId }
-                },
-            new DialogOptions() { Width = "700px", Height = "auto" });
+        await TestResultsDialogManager.ShowCreateDialog(GroupBlock.ContestId, athleteId);
     }
 }

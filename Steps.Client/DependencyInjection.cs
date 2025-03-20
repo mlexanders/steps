@@ -66,6 +66,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IPreSchedulesService, PreSchedulesService>();
         
         services.AddTransient<FinalSchedulerManager>();
+        services.AddTransient<FinalShedulerDialogManager>();
         services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
 
         services.AddTransient<TestResultsDialogManager>();

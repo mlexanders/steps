@@ -6,10 +6,13 @@ using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
 using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Dialogs;
+using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.FinalScheduleFeature;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Components;
+using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
+using Steps.Client.Services.Api;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -26,7 +29,9 @@ public partial class ContestCard : BaseNotificate
     [Inject] protected ContestManager ContestManager { get; set; } = null!;
     [Inject] protected UsersManager UsersManager { get; set; } = null!;
     [Inject] protected IGroupBlocksService GroupBlocksService { get; set; } = null!;
-    [Inject] protected DialogService DialogService { get; set; } = null!;
+    [Inject] protected FinalShedulerDialogManager FinalShedulerDialogManager { get; set; } = null!;
+    [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
+    [Inject] protected TestResultsDialogManager TestResultsDialogManager { get; set; } = null!;
 
     [Parameter] public ContestViewModel Model { get; set; } = null!;
 
@@ -82,25 +87,13 @@ public partial class ContestCard : BaseNotificate
     {
         var groupBlocks = await GroupBlocksService.GetByContestId(Model.Id);
 
-        var selectedGroupBlock = await DialogService.OpenAsync<SelectGroupBlockDialog>(
-            "Выбор группового блока",
-            new Dictionary<string, object> { { "GroupBlocks", groupBlocks.Value } },
-            new DialogOptions { Width = "500px", Height = "400px" });
-
-        if (selectedGroupBlock is GroupBlockViewModel groupBlock)
-        {
-            await DialogService.OpenAsync<FinalScheduleByGroupBlock>(
-                "Финальное расписание",
-                new Dictionary<string, object> { { "GroupBlock", groupBlock } },
-                new DialogOptions { Width = "800px", Height = "600px" });
-        }
+        var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
+        
+        await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialog(selectedGroupBlock);
     }
 
     private async Task OpenCounterDialog()
     {
-        await DialogService.OpenAsync<TestResultManage>(
-            "Проставленные результаты",
-            new Dictionary<string, object> { { "ContestId", Model.Id } },
-            new DialogOptions { Width = "800px", Height = "600px" });
+        await TestResultsDialogManager.ShowManageDialog(Model.Id);
     }
 }

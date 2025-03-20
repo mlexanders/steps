@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Steps.Client.Features.Common;
-using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Domain.Entities;
-using Steps.Shared;
 using Steps.Shared.Contracts.TestResults.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
@@ -19,9 +16,9 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
             Manager = TestResultsManager;
             DialogManager = TestResultsDialogManager;
 
-            var specification = new Specification<TestResult>().Include(x => x.Include(x => x.Athlete).ThenInclude(x => x.AthleteElements));
+            // var specification = new Specification<TestResult>().Include(x => x.Include(x => x.Athlete).ThenInclude(x => x.AthleteElements));
 
-            Manager.UseSpecification(specification);
+            // Manager.UseSpecification(specification);
 
             base.OnInitialized();
         }

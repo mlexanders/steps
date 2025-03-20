@@ -6,6 +6,7 @@ using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
+using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
@@ -20,6 +21,7 @@ using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
+using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.Users;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;
 using PreSchedulesService = Steps.Client.Services.Api.Scheduled.PreSchedulesService;
@@ -65,6 +67,10 @@ public static class AddIdentityDependencyInjection
         
         services.AddTransient<FinalSchedulerManager>();
         services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
+
+        services.AddTransient<TestResultsDialogManager>();
+        services.AddTransient<TestResultsManager>();
+        services.AddTransient<ITestResultsService, TestResultsService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

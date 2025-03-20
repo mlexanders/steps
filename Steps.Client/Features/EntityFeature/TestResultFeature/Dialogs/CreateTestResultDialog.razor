@@ -10,27 +10,22 @@
 <RadzenTemplateForm TItem="CreateTestResultViewModel" Data="_createTestResultViewModel">
     <ChildContent>
         <RadzenFieldset Text="Оценки за элементы">
-            <!-- Элемент 1 -->
             <RadzenLabel Text="@_elementNames.ElementAtOrDefault(0)" Style="display: block; margin-bottom: 5px;" />
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
-            <!-- Элемент 2 -->
             <RadzenLabel Text="@_elementNames.ElementAtOrDefault(1)" Style="display: block; margin-bottom: 5px;" />
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
-            <!-- Элемент 3 -->
             <RadzenLabel Text="@_elementNames.ElementAtOrDefault(2)" Style="display: block; margin-bottom: 5px;" />
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
-            <!-- Элемент 4 -->
             <RadzenLabel Text="@_elementNames.ElementAtOrDefault(3)" Style="display: block; margin-bottom: 5px;" />
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
-            <!-- Элемент 5 -->
             <RadzenLabel Text="@_elementNames.ElementAtOrDefault(4)" Style="display: block; margin-bottom: 5px;" />
             <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />

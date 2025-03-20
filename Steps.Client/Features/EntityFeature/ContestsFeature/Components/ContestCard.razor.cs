@@ -8,6 +8,7 @@ using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.FinalScheduleFeature;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
+using Steps.Client.Features.EntityFeature.TestResultFeature.Components;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
@@ -93,5 +94,13 @@ public partial class ContestCard : BaseNotificate
                 new Dictionary<string, object> { { "GroupBlock", groupBlock } },
                 new DialogOptions { Width = "800px", Height = "600px" });
         }
+    }
+
+    private async Task OpenCounterDialog()
+    {
+        await DialogService.OpenAsync<TestResultManage>(
+            "Проставленные результаты",
+            new Dictionary<string, object> { { "ContestId", Model.Id } },
+            new DialogOptions { Width = "800px", Height = "600px" });
     }
 }

@@ -32,6 +32,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ContestConfiguration());
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
+        modelBuilder.ApplyConfiguration(new TestResultConfiguration());
         
         AthleteElementsSeed.SeedCheer(modelBuilder);
         AthleteElementsSeed.SeedBaby(modelBuilder);

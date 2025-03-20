@@ -50,6 +50,15 @@
                   Click="() => CloseCollectingEntries()" Style="margin-bottom: 10px;" />
 }
 
+@if (Model.Status is ContestStatus.Closed)
+{
+    <RadzenButton Text="Судить" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                  Click="() => OpenJudgeDialog()" Style="margin-bottom: 10px;" />
+
+    <RadzenButton Text="Результаты" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                  Click="() => OpenCounterDialog()" Style="margin-bottom: 10px;" />
+}
+
 
 <RadzenText Text="Групповые блоки:"></RadzenText>
 <GroupBlocksManage Contest="Model" />

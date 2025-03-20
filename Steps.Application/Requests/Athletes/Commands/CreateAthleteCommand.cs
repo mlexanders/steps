@@ -30,8 +30,9 @@ namespace Steps.Application.Requests.Athletes.Commands
             var athleteElementsRepository = _unitOfWork.GetRepository<AthleteElements>();
 
             var athleteElements = await athleteElementsRepository.GetFirstOrDefaultAsync(
-                        x => x.AgeCategory == athlete.AgeCategory.ToString()
-                        && x.Degree == athlete.Degree.ToString(), null, null, false, false);
+                        predicate: x => x.AgeCategory == athlete.AgeCategory.ToString()
+                        && x.Degree == athlete.Degree.ToString(),
+                        trackingType: TrackingType.Tracking);
 
             // athlete.AthleteElementsId = athleteElements.Id;
             // athlete.AthleteElements = athleteElements;

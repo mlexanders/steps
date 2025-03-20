@@ -12,6 +12,9 @@ public class TestResult : Entity
 
     public Guid JudgeId { get; set; }
     public virtual User Judge { get; set; } = null!;
+    
+    public Guid RatingId { get; set; }
+    public Rating Rating { get; set; } = null!;
 
     public List<int> Scores { get; set; } = [];
 }

@@ -10,5 +10,9 @@ public class TestResultConfiguration : IEntityTypeConfiguration<TestResult>
     {
         builder.HasIndex(p => new { p.AthleteId, p.ContestId })
             .IsUnique();
+
+        builder.HasOne(p => p.Rating)
+            .WithOne()
+            .HasForeignKey<TestResult>(p => p.RatingId);
     }
 }

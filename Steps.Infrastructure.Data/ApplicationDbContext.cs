@@ -33,6 +33,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ContestConfiguration());
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
         modelBuilder.ApplyConfiguration(new TestResultConfiguration());
+        modelBuilder.ApplyConfiguration(new RatingConfiguration());
         
         AthleteElementsSeed.SeedCheer(modelBuilder);
         AthleteElementsSeed.SeedBaby(modelBuilder);

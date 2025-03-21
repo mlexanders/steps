@@ -2,12 +2,6 @@
 @using Steps.Shared.Contracts.TestResults.ViewModels
 @inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, Steps.Shared.Contracts.TestResults.ViewModels.TestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.CreateTestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.UpdateTestResultViewModel>
 
-@code {
-    protected override Task<Specification<TestResult>?> GetSpecification()
-    {
-        throw new NotImplementedException();
-    }
-}
 
 <RadzenCard>
     <RadzenDataGrid TItem="TestResultViewModel" Data="@_testResults" AllowPaging="true"
@@ -29,3 +23,9 @@
     </RadzenDataGrid>
 </RadzenCard>
 
+@code {
+    protected override async Task<Specification<TestResult>?> GetSpecification()
+    {
+        return null;
+    }
+}

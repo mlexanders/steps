@@ -20,6 +20,7 @@ using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.Ratings;
 using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
@@ -78,6 +79,10 @@ public static class AddIdentityDependencyInjection
         
         services.AddSingleton<IAthleteElementsRoutes, AthleteElemensRoute>();
         services.AddTransient<IAthleteElementsService, AthleteElementsService>();
+        
+        services.AddTransient<IRatingService, RatingService>();
+        services.AddTransient<RatingService>();
+
     }
 
     public static void AddIdentity(this IServiceCollection services)

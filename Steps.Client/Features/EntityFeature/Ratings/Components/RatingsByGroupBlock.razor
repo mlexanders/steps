@@ -1,8 +1,7 @@
 ﻿@using Steps.Client.Services.Api
 @using Steps.Domain.Definitions
-@using Steps.Shared
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Utils
+@using Steps.Shared.Contracts.Ratings
 
 @inject RatingService RatingService
 @inject IJSRuntime JS
@@ -85,8 +84,8 @@
         try
         {
             await Task.Yield();
-            await LoadDiploma(ratings);
-            await RatingService.Complete(ratings);
+            var result = await RatingService.Complete(ratings);
+            await LoadDiploma(result?.Value);
         }
         finally
         {
@@ -94,34 +93,19 @@
         }
     }
 
-    private async Task LoadDiploma(List<Rating> ratings)
+    private async Task LoadDiploma(DiplomasViewModel? resultValue)
     {
-        
-        var service = new DiplomaGenerator();
-        var data = new List<(string a, string b, string c)>();
-        foreach (var rate in ratings)
-        {
-            var fio = rate.Athlete.FullName.Split(' ');
-            var name = fio.Length > 1 ? fio[1] : " ";
-            var surname = fio.Length > 1 ? fio[0] : " ";
 
-            data.Add((name, surname, rate.TotalScore.ToString()));
+        if (resultValue?.FileBytes is null)
+        {
+            return;
         }
 
-        // Console.WriteLine($"images: {(DateTime.UtcNow-start).TotalSeconds} s.");
-        var start = DateTime.UtcNow;
-        var pdfBytes = service.CreatePdf(data);
-        Console.WriteLine($"CreatePdf: {(DateTime.UtcNow-start).TotalSeconds} s.");
-
-        var fileStream = new MemoryStream(pdfBytes);
-        
-        var degreeName = ratings.First().CertificateDegree.GetDisplayName();
-        
-        var fileName = $"{degreeName}_{DateTime.UtcNow.AddHours(3).ToString("d-t")}";
+        var fileStream = new MemoryStream(resultValue.FileBytes);
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
 
-        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        await JS.InvokeVoidAsync("downloadFileFromStream", resultValue.FileName, streamRef);
     }
 
 }

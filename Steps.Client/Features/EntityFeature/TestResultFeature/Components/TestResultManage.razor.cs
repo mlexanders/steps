@@ -41,9 +41,9 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
                 _hubConnection.Reconnected += async connectionId =>
                 {
                     Console.WriteLine("Переподключение к SignalR... Загружаем данные заново.");
-                    await LoadData(); // Повторно загружаем данные после восстановления связи
                 };
 
+                    await LoadData(); // Повторно загружаем данные после восстановления связи
             }
             catch (Exception ex)
             {
@@ -97,11 +97,11 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
                 StateHasChanged();
             });
 
-            _hubConnection.On<Guid>("RemoveAthlete", athleteId =>
-            {
-                _testResults.RemoveAll(r => r.AthleteId == athleteId);
-                StateHasChanged();
-            });
+            //_hubConnection.On<Guid>("RemoveAthlete", athleteId =>
+            //{
+            //    _testResults.RemoveAll(r => r.AthleteId == athleteId);
+            //    StateHasChanged();
+            //});
 
             try
             {

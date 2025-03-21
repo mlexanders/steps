@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Steps.Application.Interfaces.Base;
 using Steps.Application.Services;
@@ -8,6 +9,7 @@ using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
+using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.TestResults.ViewModels;
 using Steps.Shared.Exceptions;
 

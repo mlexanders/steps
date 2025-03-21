@@ -33,6 +33,7 @@ public partial class ContestCard : BaseNotificate
     [Inject] protected FinalShedulerDialogManager FinalShedulerDialogManager { get; set; } = null!;
     [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
     [Inject] protected TestResultsDialogManager TestResultsDialogManager { get; set; } = null!;
+    [Inject] protected DialogService DialogService { get; set; } = null!;
 
     [Parameter] public ContestViewModel Model { get; set; } = null!;
 

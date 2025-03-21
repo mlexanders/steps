@@ -3,6 +3,7 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Steps.Application.Interfaces.Base;
+using Steps.Application.Services;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -20,14 +21,16 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
     private readonly IMapper _mapper;
     private readonly ISecurityService _securityService;
     private readonly IHubContext<TestResultHub> _hubContext;
+    private readonly IRedisService _redisService;
 
     public CreateTestResultCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        ISecurityService securityService, IHubContext<TestResultHub> hubContext)
+        ISecurityService securityService, IHubContext<TestResultHub> hubContext, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _securityService = securityService;
         _hubContext = hubContext;
+        _redisService = redisService;
     }
 
     public async Task<Result<TestResultViewModel>> Handle(CreateTestResultCommand request,
@@ -62,9 +65,12 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
             try
             {
                 await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
-
-                //await _hubContext.Clients.All.SendAsync("RemoveAthlete", athleteId);
-                return; // Успех, выходим из метода
+                
+                await _hubContext.Clients.All.SendAsync("RemoveAthlete", athleteId);
+                
+                await _redisService.MarkAthleteAsRemoved(athleteId);
+                
+                return;
             }
             catch (Exception ex)
             {
@@ -73,7 +79,7 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
                 if (i < retries - 1)
                 {
                     Console.WriteLine("Повторная попытка через 2 секунды...");
-                    await Task.Delay(2000); // Ждём 2 секунды перед повторной попыткой
+                    await Task.Delay(2000);
                 }
                 else
                 {

@@ -89,7 +89,7 @@ public partial class ContestCard : BaseNotificate
 
         var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
         
-        await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialog(selectedGroupBlock);
+        await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialogJudge(selectedGroupBlock);
     }
 
     private async Task OpenCounterDialog()

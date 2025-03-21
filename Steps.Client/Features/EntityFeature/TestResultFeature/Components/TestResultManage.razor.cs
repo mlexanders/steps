@@ -36,14 +36,9 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
                 Manager = TestResultsManager;
                 DialogManager = TestResultsDialogManager;
                 
-                await SetupSignalR(); // Настраиваем SignalR
-
-                _hubConnection.Reconnected += async connectionId =>
-                {
-                    Console.WriteLine("Переподключение к SignalR... Загружаем данные заново.");
-                };
-
-                    await LoadData(); // Повторно загружаем данные после восстановления связи
+                await SetupSignalR();
+                
+                await LoadData();
             }
             catch (Exception ex)
             {
@@ -81,8 +76,8 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
                 {
                     options.SkipNegotiation = true;
                     options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
-                }) // URL хаба
-                .WithAutomaticReconnect() // Автоматическое переподключение
+                })
+                .WithAutomaticReconnect()
                 .Build();
 
             _hubConnection.On<TestResultViewModel>("ReceiveTestResult", result =>
@@ -96,12 +91,6 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
                 _testResults.Add(result);
                 StateHasChanged();
             });
-
-            //_hubConnection.On<Guid>("RemoveAthlete", athleteId =>
-            //{
-            //    _testResults.RemoveAll(r => r.AthleteId == athleteId);
-            //    StateHasChanged();
-            //});
 
             try
             {

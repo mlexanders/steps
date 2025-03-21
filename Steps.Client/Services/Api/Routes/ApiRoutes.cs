@@ -29,7 +29,10 @@ public static class ApiRoutes
 
     public class TeamsRoute() : BaseApiRoutes("Teams");
 
-    public class AthletesRoute() : BaseApiRoutes("Athletes");
+    public class AthletesRoute() : BaseApiRoutes("Athletes"), IAthletesRoutes
+    {
+        public string GetRemovedAthletes() => $"{BasePath}/GetRemovedAthletes";
+    }
 
     public class AthleteElemensRoute() : BaseApiRoutes("AthleteElements"), IAthleteElementsRoutes
     {

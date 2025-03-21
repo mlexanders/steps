@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Steps.Shared.Contracts.Athletes;
 
 namespace Steps.Shared.Contracts.TestResults
 {
     public class TestResultHub : Hub
     {
+        
         public async Task SendTestResult(TestResultViewModel result)
         {
             await Clients.All.SendAsync("ReceiveTestResult", result);

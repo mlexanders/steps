@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using StackExchange.Redis;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
@@ -59,6 +60,7 @@ public static class AddIdentityDependencyInjection
 
         services.AddSingleton<IUserRoutes, UsersRoute>();
         services.AddSingleton<IEntryRoutes, EntriesRoute>();
+        services.AddSingleton<IAthletesRoutes, AthletesRoute>();
         
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();

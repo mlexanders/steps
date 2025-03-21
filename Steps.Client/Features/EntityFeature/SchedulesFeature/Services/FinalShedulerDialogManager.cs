@@ -35,11 +35,11 @@ public class FinalShedulerDialogManager : IDialogManager<FinalScheduledCellViewM
         throw new NotImplementedException();
     }
 
-    public async Task<bool> ShowFinalScheduleByGroupBlockDialog(GroupBlockViewModel model)
+    public async Task<bool> ShowFinalScheduleByGroupBlockDialogJudge(GroupBlockViewModel model)
     {
         var options = new Dictionary<string, object> { { "GroupBlock", model } };
         
-        var result = await _dialogService.OpenAsync<FinalScheduleByGroupBlock>(
+        var result = await _dialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
             "Финальное расписание",
             options,
             new DialogOptions { Width = "800px", Height = "600px" });

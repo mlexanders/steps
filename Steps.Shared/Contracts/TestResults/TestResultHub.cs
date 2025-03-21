@@ -21,5 +21,10 @@ namespace Steps.Shared.Contracts.TestResults
         {
             await Clients.All.SendAsync("RemoveAthlete", athleteId);
         }
+        
+        public async Task NotifyRatingsUpdated()
+        {
+            await Clients.All.SendAsync("RatingsUpdated");
+        }
     }
 }

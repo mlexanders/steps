@@ -85,6 +85,8 @@ public partial class ContestCard : BaseNotificate
         ShowResultMessage(result);
     }
 
+    
+    //todo: я же вроде менял, проверить коммиты
     private async Task OpenJudgeDialog()
     {
         var groupBlocks = await GroupBlocksService.GetByContestId(Model.Id);
@@ -96,7 +98,7 @@ public partial class ContestCard : BaseNotificate
 
         if (selectedGroupBlock is GroupBlockViewModel groupBlock)
         {
-            await DialogService.OpenAsync<FinalScheduleByGroupBlock>(
+            await DialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
                 "Финальное расписание",
                 new Dictionary<string, object> { { "GroupBlock", groupBlock } },
                 new DialogOptions { Width = "800px", Height = "600px" });

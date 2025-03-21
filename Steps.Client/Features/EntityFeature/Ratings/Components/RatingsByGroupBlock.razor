@@ -1,4 +1,6 @@
-﻿@using Steps.Client.Services.Api
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using Steps.Client.Services.Api
 @using Steps.Domain.Definitions
 @using Steps.Shared
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
@@ -6,6 +8,7 @@
 
 @inject RatingService RatingService
 @inject IJSRuntime JS
+@inject NavigationManager Navigation
 
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
@@ -53,6 +56,8 @@
 @code {
     private Dictionary<CertificateDegree, List<Rating>>? _ratings;
     private bool _isLoading;
+    
+    private HubConnection? _hubConnection { get; set; }
 
     [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
 
@@ -63,6 +68,18 @@
             return;
         }
 
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:5000/testResultHub")
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On("RatingsUpdated", async () =>
+        {
+            await Load(); // Метод обновления рейтингов
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync();
         await Load();
     }
 
@@ -124,4 +141,11 @@
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
 }

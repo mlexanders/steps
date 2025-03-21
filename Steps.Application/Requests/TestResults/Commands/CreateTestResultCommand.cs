@@ -118,6 +118,8 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
                 
                 await _hubContext.Clients.All.SendAsync("RemoveAthlete", athleteId);
                 
+                await _hubContext.Clients.All.SendAsync("RatingsUpdated");
+                
                 await _redisService.MarkAthleteAsRemoved(athleteId);
                 
                 return;

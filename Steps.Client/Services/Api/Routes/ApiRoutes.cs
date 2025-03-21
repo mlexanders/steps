@@ -1,6 +1,7 @@
 ﻿using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.Ratings;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 
 namespace Steps.Client.Services.Api.Routes;
@@ -78,4 +79,11 @@ public static class ApiRoutes
     }
 
     public class TestResultsRoute() : BaseApiRoutes("TestResults");
+
+    public class RatingsRoute 
+    {
+        public string GetRatingByBlock (Guid id) => $"Ratings/{nameof(IRatingService.GetRatingByBlock)}/{id}";
+
+        public string CreateDiplomas = $"Ratings/{nameof(IRatingService.Complete)}";
+    }
 }

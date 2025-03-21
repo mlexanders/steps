@@ -1,0 +1,127 @@
+﻿@using Steps.Client.Services.Api
+@using Steps.Domain.Definitions
+@using Steps.Shared
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Utils
+
+@inject RatingService RatingService
+@inject IJSRuntime JS
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+        
+        <RadzenTabsItem Text="Высшая">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.Higher)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="1">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.First)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="2">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.Second)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="3">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.Third)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="4">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.Fourth)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="За участие">
+            <RatingManage Ratings="@GetByDegree(CertificateDegree.Participant)" OnPrintRatings="@OnPrint"/>
+        </RadzenTabsItem>
+
+    </Tabs>
+</RadzenTabs>
+
+
+<script>
+    window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+        const arrayBuffer = await contentStreamReference.arrayBuffer();
+        const blob = new Blob([arrayBuffer]);
+        const url = URL.createObjectURL(blob);
+        const anchorElement = document.createElement('a');
+        anchorElement.href = url;
+        anchorElement.download = fileName ?? '';
+        anchorElement.click();
+        anchorElement.remove();
+        URL.revokeObjectURL(url);
+    }
+</script>
+@code {
+    private Dictionary<CertificateDegree, List<Rating>>? _ratings;
+    private bool _isLoading;
+
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (GroupBlock is null)
+        {
+            return;
+        }
+
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var result = await RatingService.GetRatingByBlock(GroupBlock.Id);
+        var ratings = result?.Value?.NotCompleted ?? [];
+        _ratings = ratings.GroupBy(r => r.CertificateDegree).ToDictionary(kvp => kvp.Key, kvp => kvp.ToList());
+    }
+
+    private List<Rating> GetByDegree(CertificateDegree d)
+    {
+        return _ratings?.TryGetValue(d, out var a) == true ? a : [];
+    }
+
+
+    private async Task OnPrint(List<Rating> ratings)
+    {
+        _isLoading = true;
+        try
+        {
+            await Task.Yield();
+            await LoadDiploma(ratings);
+            await RatingService.Complete(ratings);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task LoadDiploma(List<Rating> ratings)
+    {
+        
+        var service = new DiplomaGenerator();
+        var data = new List<(string a, string b, string c)>();
+        foreach (var rate in ratings)
+        {
+            var fio = rate.Athlete.FullName.Split(' ');
+            var name = fio.Length > 1 ? fio[1] : " ";
+            var surname = fio.Length > 1 ? fio[0] : " ";
+
+            data.Add((name, surname, rate.TotalScore.ToString()));
+        }
+
+        // Console.WriteLine($"images: {(DateTime.UtcNow-start).TotalSeconds} s.");
+        var start = DateTime.UtcNow;
+        var pdfBytes = service.CreatePdf(data);
+        Console.WriteLine($"CreatePdf: {(DateTime.UtcNow-start).TotalSeconds} s.");
+
+        var fileStream = new MemoryStream(pdfBytes);
+        
+        var degreeName = ratings.First().CertificateDegree.GetDisplayName();
+        
+        var fileName = $"{degreeName}_{DateTime.UtcNow.AddHours(3).ToString("d-t")}";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+}

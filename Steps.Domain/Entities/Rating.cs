@@ -15,4 +15,5 @@ public class Rating : Entity
     public int TotalScore { get; set; }
     public CertificateDegree CertificateDegree { get; set; }
     public AgeCategory AgeCategory { get; set; }
+    public bool IsComplete { get; set; }
 }

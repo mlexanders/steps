@@ -14,11 +14,11 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
             .HasForeignKey<Rating>(p => p.TestResultId);
         
         builder.HasOne<Contest>()
-            .WithOne()
-            .HasForeignKey<Rating>(p => p.ContestId);
+            .WithMany()
+            .HasForeignKey(p => p.ContestId);
         
         builder.HasOne<GroupBlock>()
-            .WithOne()
-            .HasForeignKey<Rating>(p => p.GroupBlockId);
+            .WithMany()
+            .HasForeignKey(p => p.GroupBlockId);
     }
 }

@@ -5,9 +5,10 @@ namespace Steps.Shared.Contracts.Ratings;
 public interface IRatingService
 {
     Task<Result<RatingViewModel>> GetRatingByBlock(Guid groupBlockId);
+    Task<Result<DiplomasViewModel>> Complete(List<Rating> ratings);
 }
 
-public class RatingViewModel
+public class DiplomasViewModel
 {
-    public List<Rating> NotCompleted { get; set; } = [];
+    public string Url { get; set; }
 }

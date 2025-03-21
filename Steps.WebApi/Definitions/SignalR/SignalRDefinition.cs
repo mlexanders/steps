@@ -12,7 +12,8 @@ namespace Steps.Services.WebApi.Definitions.SignalR
 
         public override void Use(WebApplication app)
         {
-            app.MapHub<TestResultHub>("/testResultsHub");
+            app.UseRouting();
+            app.MapHub<TestResultHub>("/testResultHub");
         }
     }
 }

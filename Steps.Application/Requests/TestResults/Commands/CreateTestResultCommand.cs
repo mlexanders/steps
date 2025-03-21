@@ -19,13 +19,15 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ISecurityService _securityService;
+    private readonly IHubContext<TestResultHub> _hubContext;
 
     public CreateTestResultCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        ISecurityService securityService)
+        ISecurityService securityService, IHubContext<TestResultHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _securityService = securityService;
+        _hubContext = hubContext;
     }
 
     public async Task<Result<TestResultViewModel>> Handle(CreateTestResultCommand request,
@@ -48,8 +50,36 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
 
         var viewModel = _mapper.Map<TestResultViewModel>(entry.Entity);
 
-        // await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
+        await SendTestResultWithRetry(viewModel, model.AthleteId);
 
         return Result<TestResultViewModel>.Ok(viewModel).SetMessage("Баллы сохранены");
+    }
+
+    private async Task SendTestResultWithRetry(TestResultViewModel viewModel, Guid athleteId, int retries = 3)
+    {
+        for (int i = 0; i < retries; i++)
+        {
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
+
+                //await _hubContext.Clients.All.SendAsync("RemoveAthlete", athleteId);
+                return; // Успех, выходим из метода
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка отправки в SignalR: {ex.Message}");
+
+                if (i < retries - 1)
+                {
+                    Console.WriteLine("Повторная попытка через 2 секунды...");
+                    await Task.Delay(2000); // Ждём 2 секунды перед повторной попыткой
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка после всех попыток. Данные не отправлены.");
+                }
+            }
+        }
     }
 }

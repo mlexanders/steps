@@ -11,8 +11,7 @@
 
 <RadzenCard>
     <RadzenDataGrid TItem="TestResultViewModel" Data="@_testResults" AllowPaging="true"
-                    PageSize="10" EmptyText="Результатов пока нет"
-                    IsLoading="@_isLoading" Count="@_totalCount"
+                    PageSize="10" EmptyText="Результатов пока нет" Count="@_totalCount"
                     LoadData="@OnChangePage" RowSelect="@OnRowSelect">
 
         <HeaderTemplate>

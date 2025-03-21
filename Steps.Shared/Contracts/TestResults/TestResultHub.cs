@@ -10,9 +10,14 @@ namespace Steps.Shared.Contracts.TestResults
 {
     public class TestResultHub : Hub
     {
-        public async Task SendTestResult(TestResultViewModel testResult)
+        public async Task SendTestResult(TestResultViewModel result)
         {
-            await Clients.All.SendAsync("ReceiveTestResult", testResult);
+            await Clients.All.SendAsync("ReceiveTestResult", result);
+        }
+
+        public async Task RemoveAthlete(Guid athleteId)
+        {
+            await Clients.All.SendAsync("RemoveAthlete", athleteId);
         }
     }
 }

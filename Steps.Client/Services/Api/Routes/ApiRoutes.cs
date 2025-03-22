@@ -30,7 +30,17 @@ public static class ApiRoutes
 
     public class TeamsRoute() : BaseApiRoutes("Teams");
 
-    public class AthletesRoute() : BaseApiRoutes("Athletes");
+    public class AthletesRoute() : BaseApiRoutes("Athletes"), IAthletesRoutes
+    {
+        public string GetRemovedAthletes() => $"{BasePath}/GetRemovedAthletes";
+    }
+
+    public class AthleteElemensRoute() : BaseApiRoutes("AthleteElements"), IAthleteElementsRoutes
+    {
+        public string GetAthleteElements(string degree, string ageCategory, string? type) =>
+            $"{BasePath}/GetAthleteElements?degree={Uri.EscapeDataString(degree)}&ageCategory={Uri.EscapeDataString(ageCategory)}" +
+            (string.IsNullOrEmpty(type) ? "" : $"&type={Uri.EscapeDataString(type)}");
+    }
 
     public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
     {

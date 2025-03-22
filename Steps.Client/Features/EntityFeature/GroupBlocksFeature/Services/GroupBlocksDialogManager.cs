@@ -1,5 +1,6 @@
 ﻿using Radzen;
 using Steps.Client.Features.Common;
+using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Dialogs;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Dialogs;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 
@@ -42,5 +43,16 @@ public class GroupBlocksDialogManager : IDialogManager<GroupBlockViewModel>
         var result = await _dialogService
             .OpenAsync<DeleteTeamDialog>("Вы уверены, что хотите удалить эту команду?", options);
         return result ?? false;
+    }
+
+    public async Task<GroupBlockViewModel> ShowSelectGroupBlockDialog(List<GroupBlockViewModel> groupBlocks)
+    {
+        var options = new Dictionary<string, object> { { "GroupBlocks", groupBlocks } };
+        
+        var result = await _dialogService.OpenAsync<SelectGroupBlockDialog>(
+            "Выбор группового блока",
+            options);
+        
+        return result;
     }
 }

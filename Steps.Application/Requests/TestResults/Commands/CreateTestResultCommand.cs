@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Steps.Application.Interfaces.Base;
+using Steps.Application.Services;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
+using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.TestResults.ViewModels;
 using Steps.Shared.Exceptions;
 
@@ -19,13 +22,17 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ISecurityService _securityService;
+    private readonly IHubContext<TestResultHub> _hubContext;
+    private readonly IRedisService _redisService;
 
     public CreateTestResultCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        ISecurityService securityService)
+        ISecurityService securityService, IHubContext<TestResultHub> hubContext, IRedisService redisService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _securityService = securityService;
+        _hubContext = hubContext;
+        _redisService = redisService;
     }
 
     public async Task<Result<TestResultViewModel>> Handle(CreateTestResultCommand request,
@@ -54,6 +61,8 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
         await _unitOfWork.SaveChangesAsync();
 
         var viewModel = _mapper.Map<TestResultViewModel>(entry.Entity);
+
+        await SendTestResultWithRetry(viewModel, model.AthleteId);
 
         return Result<TestResultViewModel>.Ok(viewModel).SetMessage("Баллы сохранены");
     }
@@ -97,5 +106,38 @@ public class CreateTestResultCommandHandler : IRequestHandler<CreateTestResultCo
             total >= limits.Fourth ? CertificateDegree.Fourth :
             total < limits.Fourth ? CertificateDegree.Participant :
             throw new ArgumentOutOfRangeException(nameof(total), "Invalid total score.");
+    }
+
+    private async Task SendTestResultWithRetry(TestResultViewModel viewModel, Guid athleteId, int retries = 3)
+    {
+        for (int i = 0; i < retries; i++)
+        {
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveTestResult", viewModel);
+                
+                await _hubContext.Clients.All.SendAsync("RemoveAthlete", athleteId);
+                
+                await _hubContext.Clients.All.SendAsync("RatingsUpdated");
+                
+                await _redisService.MarkAthleteAsRemoved(athleteId);
+                
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка отправки в SignalR: {ex.Message}");
+
+                if (i < retries - 1)
+                {
+                    Console.WriteLine("Повторная попытка через 2 секунды...");
+                    await Task.Delay(2000);
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка после всех попыток. Данные не отправлены.");
+                }
+            }
+        }
     }
 }

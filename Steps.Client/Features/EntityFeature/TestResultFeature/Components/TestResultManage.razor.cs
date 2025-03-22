@@ -21,15 +21,13 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
         
         [Inject] protected NavigationManager Navigation { get; set; } = null!;
 
-        //[Inject] protected IHubContext<TestResultHub> HubContext { get; set; } = null!;
-
         [Parameter] public Guid ContestId { get; set; }
+
+        private HubConnection? _hubConnection { get; set; }
 
         private List<TestResultViewModel> _testResults = new();
         private bool _isLoading = true;
         private int _totalCount = 0;
-
-        //private HubConnection? _hubConnection;
 
         protected override async Task OnInitializedAsync()
         {
@@ -37,30 +35,70 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
             {
                 Manager = TestResultsManager;
                 DialogManager = TestResultsDialogManager;
-
-                var specification = new Specification<TestResult>()
-                    .Where(r => r.ContestId == ContestId);
-            
-                var result = await TestResultsManager.Read(specification);
-
-                if (result.IsSuccess && result.Value != null)
-                {
-                    _testResults = result.Value.Items
-                        .Select(r => new TestResultViewModel
-                        {
-                            AthleteId = r.AthleteId,
-                            Scores = r.Scores
-                        })
-                        .ToList();
-
-                    _totalCount = _testResults.Count;
-                }
-
-                _isLoading = false;
+                
+                await SetupSignalR();
+                
+                await LoadData();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка инициализации: {ex.Message}");
+            }
+        }
+
+        private async Task LoadData()
+        {
+            var specification = new Specification<TestResult>()
+                .Where(r => r.ContestId == ContestId);
+
+            var result = await TestResultsManager.Read(specification);
+
+            if (result.IsSuccess && result.Value != null)
+            {
+                _testResults = result.Value.Items
+                    .Select(r => new TestResultViewModel
+                    {
+                        AthleteId = r.AthleteId,
+                        Scores = r.Scores
+                    })
+                    .ToList();
+
+                _totalCount = _testResults.Count;
+            }
+
+            _isLoading = false;
+        }
+
+        private async Task SetupSignalR()
+        {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("http://localhost:5000/testResultHub"), options =>
+                {
+                    options.SkipNegotiation = true;
+                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
+                })
+                .WithAutomaticReconnect()
+                .Build();
+
+            _hubConnection.On<TestResultViewModel>("ReceiveTestResult", result =>
+            {
+                var existing = _testResults.FirstOrDefault(r => r.AthleteId == result.AthleteId);
+                if (existing != null)
+                {
+                    _testResults.Remove(existing);
+                }
+
+                _testResults.Add(result);
+                StateHasChanged();
+            });
+
+            try
+            {
+                await _hubConnection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка подключения к SignalR: {ex.Message}");
             }
         }
 
@@ -71,30 +109,12 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
             await DialogManager.ShowCardDialog(item);
         }
 
-        //private async Task SetupSignalR()
-        //{
-        //    _hubConnection = new HubConnectionBuilder()
-        //        .WithUrl(Navigation.ToAbsoluteUri("/testResultsHub")) //todo: нужно ip 
-        //        .Build();
-
-        //    _hubConnection.On<TestResultViewModel>("ReceiveTestResult", result =>
-        //    {
-        //        if (result.ContestId == ContestId)
-        //        {
-        //            Manager.Data.Add(result);
-        //            StateHasChanged();
-        //        }
-        //    });
-
-        //    await _hubConnection.StartAsync();
-        //}
-
-        //public async ValueTask DisposeAsync()
-        //{
-        //    if (_hubConnection != null)
-        //    {
-        //        await _hubConnection.DisposeAsync();
-        //    }
-        //}
+        public async ValueTask DisposeAsync()
+        {
+            if (_hubConnection is not null)
+            {
+                await _hubConnection.DisposeAsync();
+            }
+        }
     }
 }

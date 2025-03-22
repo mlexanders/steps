@@ -1,23 +1,26 @@
 ﻿@using Microsoft.AspNetCore.SignalR.Client
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
 @using Steps.Client.Features.EntityFeature.TestResultFeature.Services
+@using Steps.Client.Services.Api
+@using Steps.Client.Services.Api.Base
 @using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels
 
 @inject FinalSchedulerManager FinalSchedulerManager
 @inject TestResultsDialogManager TestResultsDialogManager
+@inject AthleteManager AthleteManager
 @implements IDisposable
-
 
 <RadzenText Text="Финальное расписание:"/>
 <RadzenCard>
-    <RadzenDataGrid TItem="FinalScheduledCellViewModel" Data="FinalSchedulerManager.Data" AllowPaging="true"
+    <RadzenDataGrid TItem="FinalScheduledCellViewModel" Data="@FilteredAthletes" AllowPaging="true"
                     SelectionMode="DataGridSelectionMode.Single" Style="min-width: 700px"
                     AllowSorting="true" AllowFiltering="true" AllowColumnResize="true"
                     PageSize="FinalSchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
                     IsLoading="@FinalSchedulerManager.IsLoading" Count="@FinalSchedulerManager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage" RowSelect="@OnRowSelect">
         <Columns>
             <ScheduleColumns TView="FinalScheduledCellViewModel"/>
         </Columns>
@@ -26,27 +29,55 @@
 
 @code {
     [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
-
-    private FinalScheduledCellViewModel? _selectedAthlete;
+    private List<Guid>? _removedAthletes = new();
+    private HubConnection? _hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        if (GroupBlock is null)
-        {
-            return;
-        }
+        if (GroupBlock is null) return;
 
         FinalSchedulerManager.ChangedList += StateHasChanged;
         await FinalSchedulerManager.Initialize(groupBlockId: GroupBlock.Id);
+
+        var removedAthletes = await AthleteManager.GetRemovedAthletes();
+        _removedAthletes = removedAthletes?.Value != null ? new List<Guid>(removedAthletes.Value) : new List<Guid>();
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:5000/testResultHub")
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<Guid>("RemoveAthlete", athleteId =>
+        {
+            _removedAthletes.Add(athleteId);
+            InvokeAsync(StateHasChanged);
+        });
+
+        await _hubConnection.StartAsync();
     }
+
+    private IEnumerable<FinalScheduledCellViewModel> FilteredAthletes =>
+        FinalSchedulerManager.Data.Where(a => !_removedAthletes.Contains(a.AthleteId));
 
     public void Dispose()
     {
         FinalSchedulerManager.ChangedList -= StateHasChanged;
+        _hubConnection?.DisposeAsync();
     }
 
     private async Task OnChangePage(LoadDataArgs arg)
     {
         await FinalSchedulerManager.ChangePage(arg.Skip, arg.Top);
     }
+
+    private async Task OnRowSelect(FinalScheduledCellViewModel athlete)
+    {
+        await ShowResultModal(athlete.AthleteId);
+    }
+
+    private async Task ShowResultModal(Guid athleteId)
+    {
+        await TestResultsDialogManager.ShowCreateDialog(GroupBlock.ContestId, athleteId);
+    }
 }
+

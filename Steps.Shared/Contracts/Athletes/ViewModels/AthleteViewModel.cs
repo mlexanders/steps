@@ -12,5 +12,6 @@ public class AthleteViewModel : IHaveId
     public DateTime BirthDate { get; set; }
     public AthleteType AthleteType { get; set; }
     public AgeCategory AgeCategory { get; set; }
+    public Degree Degree { get; set; }
     public Guid TeamId { get; set; }
 }

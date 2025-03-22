@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Steps.Application.Interfaces.Base;
 using Steps.Application.Requests.Athletes.Commands;
 using Steps.Application.Requests.Athletes.Queries;
 using Steps.Domain.Entities;
@@ -49,6 +50,12 @@ namespace Steps.Services.WebApi.Controllers
         public Task<Result> Delete(Guid id)
         {
             throw new NotImplementedException();
+        }
+        
+        [HttpGet("[action]")]
+        public async Task<Result<List<Guid>>> GetRemovedAthletes()
+        {
+            return await _mediator.Send(new GetRemovedAthletes());
         }
     }
 }

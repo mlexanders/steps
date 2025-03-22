@@ -26,7 +26,7 @@ public class
     {
         var rating = await _unitOfWork.GetRepository<Rating>().GetAllAsync(
                          predicate: r => r.GroupBlockId.Equals(request.GroupBlockId)
-                                         && r.IsComplete,
+                                         && !r.IsComplete,
                          include: x =>
                              x.Include(s => s.Athlete),
                          trackingType: TrackingType.NoTracking)

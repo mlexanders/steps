@@ -5,7 +5,7 @@ namespace Steps.Domain.Definitions;
 
 public enum CertificateDegree
 {
-     [Display(Name = "Участние")]
+     [Display(Name = "Участие")]
      Participant,
 
      [Display(Name = "Высшая")]

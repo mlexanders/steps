@@ -3,9 +3,9 @@ using Steps.Client.Services.Api.Routes;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts;
+using Steps.Shared.Contracts.AthleteElements;
+using Steps.Shared.Contracts.AthleteElements.ViewModels;
 using Steps.Shared.Contracts.Athletes.ViewModels;
-using Steps.Shared.Contracts.AthletesElements;
-using Steps.Shared.Contracts.AthletesElements.ViewModels;
 
 namespace Steps.Client.Services.Api;
 

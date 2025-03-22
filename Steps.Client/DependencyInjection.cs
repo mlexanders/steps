@@ -14,8 +14,8 @@ using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Api.Scheduled;
 using Steps.Client.Services.Authentication;
+using Steps.Shared.Contracts.AthleteElements;
 using Steps.Shared.Contracts.Athletes;
-using Steps.Shared.Contracts.AthletesElements;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
@@ -70,7 +70,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IPreSchedulesService, PreSchedulesService>();
         
         services.AddTransient<FinalSchedulerManager>();
-        services.AddTransient<FinalShedulerDialogManager>();
+        services.AddTransient<FinalSchedulerDialogManager>();
         services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
 
         services.AddTransient<TestResultsDialogManager>();

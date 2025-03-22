@@ -1,6 +1,6 @@
 ﻿using Steps.Domain.Base;
 
-namespace Steps.Shared.Contracts.AthletesElements.ViewModels;
+namespace Steps.Shared.Contracts.AthleteElements.ViewModels;
 
 public class AthleteElementsViewModel : IHaveId
 {

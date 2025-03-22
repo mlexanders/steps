@@ -6,11 +6,11 @@ using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 
-public class FinalShedulerDialogManager : IDialogManager<FinalScheduledCellViewModel>
+public class FinalSchedulerDialogManager : IDialogManager<FinalScheduledCellViewModel>
 {
     private readonly DialogService _dialogService;
 
-    public FinalShedulerDialogManager(DialogService dialogService)
+    public FinalSchedulerDialogManager(DialogService dialogService)
     {
         _dialogService = dialogService;
     }

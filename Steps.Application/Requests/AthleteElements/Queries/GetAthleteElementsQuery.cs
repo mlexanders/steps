@@ -3,8 +3,8 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Domain.Entities;
 using Steps.Shared;
+using Steps.Shared.Contracts.AthleteElements.ViewModels;
 using Steps.Shared.Contracts.Athletes.ViewModels;
-using Steps.Shared.Contracts.AthletesElements.ViewModels;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.AthleteElements.Queries;

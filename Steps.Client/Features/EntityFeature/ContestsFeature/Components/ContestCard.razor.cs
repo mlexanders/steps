@@ -85,32 +85,18 @@ public partial class ContestCard : BaseNotificate
         ShowResultMessage(result);
     }
 
-    
-    //todo: я же вроде менял, проверить коммиты
     private async Task OpenJudgeDialog()
     {
         var groupBlocks = await GroupBlocksService.GetByContestId(Model.Id);
 
-        var selectedGroupBlock = await DialogService.OpenAsync<SelectGroupBlockDialog>(
-            "Выбор группового блока",
-            new Dictionary<string, object> { { "GroupBlocks", groupBlocks.Value } },
-            new DialogOptions { Width = "500px", Height = "400px" });
+        var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
 
-        if (selectedGroupBlock is GroupBlockViewModel groupBlock)
-        {
-            await DialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
-                "Финальное расписание",
-                new Dictionary<string, object> { { "GroupBlock", groupBlock } },
-                new DialogOptions { Width = "800px", Height = "600px" });
-        }
+        await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialogJudge(selectedGroupBlock);
     }
 
     private async Task OpenCounterDialog()
     {
-        await DialogService.OpenAsync<TestResultManage>(
-            "Проставленные результаты",
-            new Dictionary<string, object> { { "ContestId", Model.Id } },
-            new DialogOptions { Width = "800px", Height = "600px" });
+        await TestResultsDialogManager.ShowManageDialog(Model.Id);
     }
     
     private async Task OpenDiplomaDialog()
@@ -119,18 +105,9 @@ public partial class ContestCard : BaseNotificate
 
         if (groupBlocks.Value != null)
         {
-            var selectedGroupBlock = await DialogService.OpenAsync<SelectGroupBlockDialog>(
-                "Выбор группового блока",
-                new Dictionary<string, object> { { "GroupBlocks", groupBlocks.Value } },
-                new DialogOptions { Width = "500px", Height = "400px" });
+            var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
 
-            if (selectedGroupBlock is GroupBlockViewModel groupBlock)
-            {
-                await DialogService.OpenAsync<RatingsByGroupBlock>(
-                    "Проставленные результаты",
-                    new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock} },
-                    new DialogOptions { Width = "800px", Height = "600px" });
-            }
+            await TestResultsDialogManager.ShowResults(selectedGroupBlock);
         }
     }
 }

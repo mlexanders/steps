@@ -93,11 +93,6 @@ public partial class ContestCard : BaseNotificate
 
         await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialogJudge(selectedGroupBlock);
     }
-
-    private async Task OpenCounterDialog()
-    {
-        await TestResultsDialogManager.ShowManageDialog(Model.Id);
-    }
     
     private async Task OpenDiplomaDialog()
     {

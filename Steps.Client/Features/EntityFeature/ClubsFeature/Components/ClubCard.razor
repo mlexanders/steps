@@ -4,44 +4,52 @@
 @using Steps.Shared.Contracts.Clubs.ViewModels
 
 
-<RadzenPanel AllowCollapse="true" class="rz-my-10 rz-mx-auto" Style="width: 700px;">
+<RadzenPanel AllowCollapse="true" class="rz-my-10 rz-mx-auto" Style="width: 90%">
     <HeaderTemplate>
-        <RadzenCard Variant="Variant.Filled" class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
-            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem"
-                         class="rz-p-4">
-                <RadzenStack Gap="0">
-                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">
+        <RadzenCard Variant="Variant.Filled" class="rz-my-3 rz-mx-auto" Style="width: 80%">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1.5rem" class="rz-p-4">
+                <RadzenStack Gap="0.5rem" Style="width: 100%">
+                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-1 rz-text-muted">
                         Название
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1"><b>@(Model.Name)</b></RadzenText>
+                    <RadzenText TextStyle="TextStyle.H6" class="rz-mb-3">
+                        @Model.Name
+                    </RadzenText>
 
-                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">
+                    <RadzenText TextStyle="TextStyle.Overline" class="rz-mb-1 rz-text-muted">
                         Владелец
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1"><b>
-                            @if (_owner is null)
-                            {
-                                <RadzenBadge Shade="Shade.Darker" Text="" Style="width: 100px"/>
-                            }
-                            else
-                            {
-                                <RadzenBadge Shade="Shade.Darker" Variant="Variant.Outlined" Text="@_owner.Login"/>
-                            }
-                        </b></RadzenText>
+                    <div>
+                        @if (_owner is null)
+                        {
+                            <RadzenBadge Shade="Shade.Light" Text="Не назначен"
+                                         Style="width: 120px; padding: 0.25rem 0.5rem" />
+                        }
+                        else
+                        {
+                            <RadzenBadge Shade="Shade.Darker" Variant="Variant.Outlined"
+                                         Text="@_owner.Login"
+                                         Style="padding: 0.25rem 0.75rem" />
+                        }
+                    </div>
                 </RadzenStack>
             </RadzenStack>
         </RadzenCard>
-
     </HeaderTemplate>
+
     <ChildContent>
-        <TeamsManageByClub Club="@Model"/>
+        <div class="rz-mt-4" style="width: 100%">
+            <TeamsManageByClub Club="@Model" />
+        </div>
     </ChildContent>
-    <SummaryTemplate>
-        <RadzenCard class="rz-mt-4">
-            кол-во
-            @* <b>@orders.Count() Orders</b> *@
+
+    @* <SummaryTemplate>
+        <RadzenCard class="rz-mt-3 rz-p-3" Style="background-color: var(--rz-base-100); width: 100%">
+            <RadzenText TextStyle="TextStyle.Caption">
+                Всего команд: <b>@(Model.Teams?.Count ?? 0)</b>
+            </RadzenText>
         </RadzenCard>
-    </SummaryTemplate>
+    </SummaryTemplate> *@
 </RadzenPanel>
 
 

@@ -11,11 +11,6 @@
                     RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
-            @if (!IsReadonly)
-            {
-                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать заявку"
-                              Click="@OnCreate"/>
-            }
             <RadzenText Text="*Отображаются только ваши заявки"/>
         </HeaderTemplate>
 

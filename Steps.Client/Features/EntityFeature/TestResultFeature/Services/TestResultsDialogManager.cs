@@ -1,7 +1,9 @@
 ﻿using Radzen;
 using Steps.Client.Features.Common;
+using Steps.Client.Features.EntityFeature.Ratings.Components;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Components;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Dialogs;
+using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.TestResults.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.TestResultFeature.Services;
@@ -52,6 +54,16 @@ public class TestResultsDialogManager : IDialogManager<TestResultViewModel>
             new Dictionary<string, object> { { "ContestId", contestId } },
             new DialogOptions { Width = "600px", CloseDialogOnOverlayClick = true });
         
+        return result ?? false;
+    }
+
+    public async Task<bool> ShowResults(GroupBlockViewModel selectedGroupBlock)
+    {
+        var result = await _dialogService.OpenAsync<RatingsByGroupBlock>(
+                    "Проставленные результаты",
+                    new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock } },
+                    new DialogOptions { Width = "800px", Height = "600px" });
+
         return result ?? false;
     }
 }

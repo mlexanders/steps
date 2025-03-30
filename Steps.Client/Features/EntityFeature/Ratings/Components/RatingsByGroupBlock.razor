@@ -7,7 +7,7 @@
 
 @inject RatingService RatingService
 @inject IJSRuntime JS
-@inject NavigationManager Navigation
+
 
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
@@ -100,8 +100,8 @@
         _isLoading = true;
         try
         {
-            await Task.Yield();
             var result = await RatingService.Complete(ratings);
+            await Task.Yield();
             await LoadDiploma(result?.Value);
         }
         finally

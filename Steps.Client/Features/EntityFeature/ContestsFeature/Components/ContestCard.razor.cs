@@ -91,16 +91,14 @@ public partial class ContestCard : BaseNotificate
     {
         var groupBlocks = await GroupBlocksService.GetByContestId(Model.Id);
 
-        var selectedGroupBlock = await DialogService.OpenAsync<SelectGroupBlockDialog>(
-            "Выбор группового блока",
-            new Dictionary<string, object> { { "GroupBlocks", groupBlocks.Value } },
-            new DialogOptions { Width = "500px", Height = "400px" });
+        var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(
+            groupBlocks.Value);
 
-        if (selectedGroupBlock is GroupBlockViewModel groupBlock)
+        if (selectedGroupBlock != null)
         {
             await DialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
                 "Финальное расписание",
-                new Dictionary<string, object> { { "GroupBlock", groupBlock } },
+                new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock } },
                 new DialogOptions { Width = "800px", Height = "600px" });
         }
     }
@@ -119,12 +117,10 @@ public partial class ContestCard : BaseNotificate
 
         if (groupBlocks.Value != null)
         {
-            var selectedGroupBlock = await DialogService.OpenAsync<SelectGroupBlockDialog>(
-                "Выбор группового блока",
-                new Dictionary<string, object> { { "GroupBlocks", groupBlocks.Value } },
-                new DialogOptions { Width = "500px", Height = "400px" });
+            var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(
+                groupBlocks.Value);
 
-            if (selectedGroupBlock is GroupBlockViewModel groupBlock)
+            if (selectedGroupBlock != null)
             {
                 await DialogService.OpenAsync<RatingsByGroupBlock>(
                     "Проставленные результаты",

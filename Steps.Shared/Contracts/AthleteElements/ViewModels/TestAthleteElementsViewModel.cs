@@ -2,7 +2,7 @@
 
 namespace Steps.Shared.Contracts.AthleteElements.ViewModels;
 
-public class AthleteElementsViewModel : IHaveId
+public class TestAthleteElementsViewModel : IHaveId
 {
     public Guid Id { get; set; }
     public string Degree { get; set; }

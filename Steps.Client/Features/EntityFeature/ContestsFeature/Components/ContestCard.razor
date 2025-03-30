@@ -84,13 +84,15 @@
                 <RadzenRow>
                     <RadzenColumn Size="12">
                         <RadzenStack Gap="0.5rem">
-                            <RadzenButton Text="Создать заявку" 
-                                        Icon="add" 
-                                        ButtonStyle="ButtonStyle.Primary"
-                                        Click="() => OpenCreateEntryDialog()" />
+                            
 
                             @if (Model.Status is ContestStatus.Open)
                             {
+                                <RadzenButton Text="Создать заявку" 
+                                              Icon="add" 
+                                              ButtonStyle="ButtonStyle.Primary"
+                                              Click="() => OpenCreateEntryDialog()" />
+                                
                                 <RadzenButton Text="Завершить сбор заявок" 
                                             Icon="close" 
                                             ButtonStyle="ButtonStyle.Warning"

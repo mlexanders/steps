@@ -1,9 +1,8 @@
 ﻿using Steps.Domain.Base;
-using Steps.Domain.Definitions;
 
 namespace Steps.Domain.Entities;
 
-public class AthleteElements : Entity
+public class TestAthleteElement : Entity
 {
     public string Degree { get; set; }
     public string? Type { get; set; }

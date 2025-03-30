@@ -15,28 +15,28 @@
     <ChildContent>
         <RadzenFieldset Text="Оценки за элементы">
 
-            <RadzenLabel Text="@ElementNames.ElementAtOrDefault(0)" Style="display: block; margin-bottom: 5px;" />
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(0)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
 
-            <RadzenLabel Text="@ElementNames.ElementAtOrDefault(1)" Style="display: block; margin-bottom: 5px;" />
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(1)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
 
-            <RadzenLabel Text="@ElementNames.ElementAtOrDefault(2)" Style="display: block; margin-bottom: 5px;" />
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(2)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
 
-            <RadzenLabel Text="@ElementNames.ElementAtOrDefault(3)" Style="display: block; margin-bottom: 5px;" />
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(3)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
 
 
-            <RadzenLabel Text="@ElementNames.ElementAtOrDefault(4)" Style="display: block; margin-bottom: 5px;" />
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(4)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
                            Style="width: 100%" />
         </RadzenFieldset>
 
@@ -50,7 +50,7 @@
         Scores = new List<int> { 0, 0, 0, 0, 0 }
     };
 
-    private ObservableCollection<string> ElementNames = new(["1", "2", "3", "4", "5"]);
+    private ObservableCollection<string> Elements = new(["1", "2", "3", "4", "5"]);
 
     [Parameter] public Guid ContestId { get; set; }
     [Parameter] public Guid AthleteId { get; set; }
@@ -61,16 +61,27 @@
         _createTestResultViewModel.AthleteId = AthleteId;
         
         var athlete = await AthleteManager.Read(AthleteId);
+        if (!athlete.IsSuccess || athlete.Value == null)
+        {
+            ShowResultMessage(athlete);
+            return;
+        }
         
         var athleteElements = await AthleteElementsService.GetAthleteElements(athlete.Value.Degree.ToString(),
             athlete.Value.AgeCategory.ToString(), athlete.Value.AthleteType.ToString());
 
-        ElementNames.Clear();
-        ElementNames.Add(athleteElements.Value.Element1);
-        ElementNames.Add(athleteElements.Value.Element2);
-        ElementNames.Add(athleteElements.Value.Element3);
-        ElementNames.Add(athleteElements.Value.Element4);
-        ElementNames.Add(athleteElements.Value.Element5);
+        if (!athleteElements.IsSuccess || athleteElements.Value == null)
+        {
+            ShowResultMessage(athleteElements);
+            return;
+        }
+
+        Elements.Clear();
+        Elements.Add(athleteElements.Value.Element1);
+        Elements.Add(athleteElements.Value.Element2);
+        Elements.Add(athleteElements.Value.Element3);
+        Elements.Add(athleteElements.Value.Element4);
+        Elements.Add(athleteElements.Value.Element5);
     }
 
     private async Task Create()

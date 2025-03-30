@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using StackExchange.Redis;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
@@ -77,8 +76,8 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<TestResultsManager>();
         services.AddTransient<ITestResultsService, TestResultsService>();
         
-        services.AddSingleton<IAthleteElementsRoutes, AthleteElemensRoute>();
-        services.AddTransient<IAthleteElementsService, AthleteElementsService>();
+        services.AddSingleton<IAthleteElementsRoutes, TestAthleteElementsRoute>();
+        services.AddTransient<IAthleteElementsService, TestAthleteElementsService>();
         
         services.AddTransient<IRatingService, RatingService>();
         services.AddTransient<RatingService>();

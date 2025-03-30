@@ -24,11 +24,16 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
             Manager = TestResultsManager;
             DialogManager = TestResultsDialogManager;
 
-            // var specification = new Specification<TestResult>().Include(x => x.Include(x => x.Athlete).ThenInclude(x => x.AthleteElements));
+            // var specification = new Specification<TestResult>().Include(x => x.Include(x => x.Athlete).ThenInclude(x => x.TestAthleteElement));
 
             // Manager.UseSpecification(specification);
 
             base.OnInitialized();
+        }
+        
+        protected override async Task<Specification<TestResult>?> GetSpecification()
+        {
+            return null;
         }
     }
 }

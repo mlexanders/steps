@@ -27,15 +27,6 @@ namespace Steps.Application.Requests.Athletes.Commands
             var athlete = _mapper.Map<Athlete>(model);
 
             var athleteRepository = _unitOfWork.GetRepository<Athlete>();
-            var athleteElementsRepository = _unitOfWork.GetRepository<Domain.Entities.AthleteElements>();
-
-            var athleteElements = await athleteElementsRepository.GetFirstOrDefaultAsync(
-                        predicate: x => x.AgeCategory == athlete.AgeCategory.ToString()
-                        && x.Degree == athlete.Degree.ToString(),
-                        trackingType: TrackingType.Tracking);
-
-            // athlete.AthleteElementsId = athleteElements.Id;
-            // athlete.AthleteElements = athleteElements;
 
             var entry = await athleteRepository.InsertAsync(athlete, cancellationToken);
             await _unitOfWork.SaveChangesAsync();

@@ -1,0 +1,103 @@
+﻿@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Athletes.ViewModels
+
+<RadzenCard>
+    <ChildContent>
+        <div class="athlete-info">
+            <RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Wrap="FlexWrap.Wrap">
+                    <RadzenIcon Icon="person" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>ФИО:</strong> @Model.FullName
+                    </div>
+                </RadzenStack>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenIcon Icon="calendar_month" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>Дата рождения:</strong> @Model.BirthDate.ToString("dd.MM.yyyy")
+                        (@(DateTime.Now.Year - Model.BirthDate.Year) лет)
+                    </div>
+                </RadzenStack>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenIcon Icon="sports" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>Тип:</strong> @GetAthleteTypeName(Model.AthleteType)
+                    </div>
+                </RadzenStack>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenIcon Icon="elderly" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>Возрастная категория:</strong> @GetAgeCategoryName(Model.AgeCategory)
+                    </div>
+                </RadzenStack>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenIcon Icon="military_tech" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>Разряд:</strong> @GetDegreeName(Model.Degree)
+                    </div>
+                </RadzenStack>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenIcon Icon="groups" Style="color: var(--rz-secondary); font-size: 1.2rem;"/>
+                    <div>
+                        <strong>Команда:</strong> 
+                        @if (Model.TeamId != Guid.Empty)
+                        {
+                            <RadzenBadge Text="@($"ID: {Model.TeamId}")" 
+                                        Style="margin-left: 0.5rem; background: var(--rz-primary); color: white;"/>
+                        }
+                        else
+                        {
+                            <span>Не указана</span>
+                        }
+                    </div>
+                </RadzenStack>
+            </RadzenStack>
+        </div>
+    </ChildContent>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public AthleteViewModel Model { get; set; }
+
+    private string GetAthleteTypeName(AthleteType type)
+    {
+        return type switch
+        {
+            AthleteType.Cheer => "Чир",
+            AthleteType.CheerFreestyle => "Чир фристайл",
+            _ => "Не указан"
+        };
+    }
+
+    private string GetAgeCategoryName(AgeCategory category)
+    {
+        return category switch
+        {
+            AgeCategory.Baby => "Малыши (3-4 года)",
+            AgeCategory.YoungerChildren => "Младшие дети (5-7 лет)",
+            AgeCategory.BoysGirls => "Дети (8-11 лет)",
+            AgeCategory.Youth => "Юниоры (12-14 лет)",
+            AgeCategory.Juniors => "Старшие юниоры (15-18 лет)",
+            _ => "Не указана"
+        };
+    }
+
+    private string GetDegreeName(Degree degree)
+    {
+        return degree switch
+        {
+            Degree.Higher => "Высший",
+            Degree.First => "Первый",
+            Degree.Second => "Второй",
+            Degree.Third => "Третий",
+            Degree.Fourth => "Четвертый",
+            _ => "Без разряда"
+        };
+    }
+}

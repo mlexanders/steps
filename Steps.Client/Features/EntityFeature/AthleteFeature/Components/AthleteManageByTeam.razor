@@ -9,7 +9,7 @@
                     PageSize="Manager.PageSize" EmptyText="Участников в клубе еще нет"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
                     LoadData="@OnChangePage"
-                    SelectionMode="DataGridSelectionMode.Single" bind-Value="@_selected"
+                    SelectionMode="DataGridSelectionMode.Single"
                     RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>

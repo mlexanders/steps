@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.EntityFrameworkCore;
-using Radzen;
 using Steps.Client.Features.Common;
-using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
-using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Domain.Entities;
 using Steps.Shared;
-using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.TestResults.ViewModels;
 
 namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
@@ -44,6 +38,11 @@ namespace Steps.Client.Features.EntityFeature.TestResultFeature.Components
             {
                 Console.WriteLine($"Ошибка инициализации: {ex.Message}");
             }
+        }
+        
+        protected override async Task<Specification<TestResult>?> GetSpecification()
+        {
+            return null;
         }
 
         private async Task LoadData()

@@ -3,16 +3,14 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Domain.Entities;
 using Steps.Shared;
-using Steps.Shared.Contracts.Athletes.ViewModels;
-using Steps.Shared.Contracts.AthletesElements.ViewModels;
-using Steps.Shared.Exceptions;
+using Steps.Shared.Contracts.AthleteElements.ViewModels;
 
 namespace Steps.Application.Requests.AthleteElements.Queries;
 
 public record GetAthleteElementsQuery(string Degree, string AgeCategory, string? Type)
-    : IRequest<Result<AthleteElementsViewModel>>;
+    : IRequest<Result<TestAthleteElementsViewModel>>;
     
-public class GetAthleteElementsQueryHandler : IRequestHandler<GetAthleteElementsQuery, Result<AthleteElementsViewModel>>
+public class GetAthleteElementsQueryHandler : IRequestHandler<GetAthleteElementsQuery, Result<TestAthleteElementsViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -23,11 +21,11 @@ public class GetAthleteElementsQueryHandler : IRequestHandler<GetAthleteElements
         _mapper = mapper;
     }
 
-    public async Task<Result<AthleteElementsViewModel>> Handle(GetAthleteElementsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TestAthleteElementsViewModel>> Handle(GetAthleteElementsQuery request, CancellationToken cancellationToken)
     {
-        var repository = _unitOfWork.GetRepository<Domain.Entities.AthleteElements>();
+        var repository = _unitOfWork.GetRepository<TestAthleteElement>();
 
-        var athleteElements = new Domain.Entities.AthleteElements();
+        var athleteElements = new TestAthleteElement();
 
         if (request.AgeCategory == "Baby")
         {
@@ -42,8 +40,8 @@ public class GetAthleteElementsQueryHandler : IRequestHandler<GetAthleteElements
                 trackingType: TrackingType.Tracking);
         }
 
-        var mapped = _mapper.Map<AthleteElementsViewModel>(athleteElements);
+        var mapped = _mapper.Map<TestAthleteElementsViewModel>(athleteElements);
 
-        return Result<AthleteElementsViewModel>.Ok(mapped);
+        return Result<TestAthleteElementsViewModel>.Ok(mapped);
     }
 }

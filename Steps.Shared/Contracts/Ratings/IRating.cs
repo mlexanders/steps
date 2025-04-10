@@ -10,5 +10,6 @@ public interface IRatingService
 
 public class DiplomasViewModel
 {
-    public string Url { get; set; }
+    public string FileName { get; set; }
+    public byte[] FileBytes { get; set; }
 }

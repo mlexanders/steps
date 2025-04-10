@@ -11,33 +11,67 @@
 }
 else
 {
-    @if (!_isEditing)
-    {
-        <RadzenText Text="Предварительное расписание:"/>
-        <RadzenCard>
-            <RadzenDataGrid TItem="PreScheduledCellViewModel" Data="PreSchedulerManager.Data" AllowPaging="true"
-                            SelectionMode="DataGridSelectionMode.Single" 
-                            PageSize="PreSchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
-                            IsLoading="@PreSchedulerManager.IsLoading" Count="@PreSchedulerManager.TotalCount"
-                            LoadData="@OnChangePage">
-                <HeaderTemplate>
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Изменить порядок"
-                                  Click="OnEditing"/>
-                </HeaderTemplate>
+    <RadzenStack Gap="1rem">
+        @if (!_isEditing)
+        {
+            <RadzenStack Gap="0.5rem">
+                <RadzenRow>
+                    <RadzenColumn Size="12">
+                        <RadzenStack Gap="0.5rem">
+                            <RadzenText Text="Предварительное расписание" Style="font-size: 1.1rem; font-weight: 500;" />
+                            
+                            <RadzenCard>
+                                <RadzenDataGrid TItem="PreScheduledCellViewModel" 
+                                               Data="PreSchedulerManager.Data" 
+                                               AllowPaging="true"
+                                               SelectionMode="DataGridSelectionMode.Single" 
+                                               PageSize="PreSchedulerManager.PageSize" 
+                                               EmptyText="Участников в этом блоке нет"
+                                               IsLoading="@PreSchedulerManager.IsLoading" 
+                                               Count="@PreSchedulerManager.TotalCount"
+                                               LoadData="@OnChangePage"
+                                               Style="width: 100%;"
+                                               AllowColumnResize="true"
+                                               AllowColumnReorder="true"
+                                               AllowSort="true"
+                                               ShowPagingSummary="true"
+                                               PagerHorizontalAlign="HorizontalAlign.Left"
+                                               PageSizeOptions="new[] { 10, 15, 20, 30, 50 }">
+                                    <HeaderTemplate>
+                                        <RadzenStack Gap="0.5rem">
+                                            <RadzenButton ButtonStyle="ButtonStyle.Primary" 
+                                                        Icon="edit" 
+                                                        Text="Изменить порядок"
+                                                        Click="OnEditing"/>
+                                        </RadzenStack>
+                                    </HeaderTemplate>
 
-                <Columns>
-                    <ScheduleColumns TView="PreScheduledCellViewModel"/>
-                </Columns>
-            </RadzenDataGrid>
-        </RadzenCard>
-    }
-    else
-    {
-        <OrderingSchedule GroupBlock="GroupBlock" @bind-Editing="_isEditing"/>
-    }
+                                    <Columns>
+                                        <ScheduleColumns TView="PreScheduledCellViewModel"/>
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </RadzenCard>
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        }
+        else
+        {
+            <OrderingSchedule GroupBlock="GroupBlock" @bind-Editing="_isEditing"/>
+        }
 
-    <RadzenText Text="Явка на мероприятие:"/>
-    <MarkingAthleteByGroupBlock GroupBlock="GroupBlock"></MarkingAthleteByGroupBlock>
+        <RadzenStack Gap="0.5rem">
+            <RadzenRow>
+                <RadzenColumn Size="12">
+                    <RadzenStack Gap="0.5rem">
+                        <RadzenText Text="Явка на мероприятие" Style="font-size: 1.1rem; font-weight: 500;" />
+                        <MarkingAthleteByGroupBlock GroupBlock="GroupBlock"/>
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+    </RadzenStack>
 }
 
 @code {

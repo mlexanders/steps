@@ -20,8 +20,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Contest> Contests { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
     
-  
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasCollation("case_insensitive", locale: "und-u-ks-primary", provider: "icu", deterministic: false);
@@ -35,8 +33,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new TestResultConfiguration());
         modelBuilder.ApplyConfiguration(new RatingConfiguration());
         
-        AthleteElementsSeed.SeedCheer(modelBuilder);
-        AthleteElementsSeed.SeedBaby(modelBuilder);
-        AthleteElementsSeed.SeedCheerFreestyle(modelBuilder);
+        TestAthleteElementsSeed.SeedCheer(modelBuilder);
+        TestAthleteElementsSeed.SeedBaby(modelBuilder);
+        TestAthleteElementsSeed.SeedCheerFreestyle(modelBuilder);
     }
 }

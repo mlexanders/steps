@@ -1,4 +1,4 @@
-﻿namespace Steps.Shared.Contracts.AthletesElements.ViewModels;
+﻿namespace Steps.Shared.Contracts.AthleteElements.ViewModels;
 
 public class CreateAthleteElementsViewModel
 {

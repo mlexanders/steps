@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities;
-using Steps.Shared.Contracts.AthletesElements.ViewModels;
+using Steps.Shared.Contracts.AthleteElements.ViewModels;
 
 namespace Steps.Application.Mappers;
 
-public class AthleteElementsMapperConfiguration : Profile
+public class TestAthleteElementsMapperConfiguration : Profile
 {
-    public AthleteElementsMapperConfiguration()
+    public TestAthleteElementsMapperConfiguration()
     {
-        CreateMap<AthleteElementsViewModel, AthleteElements>()
+        CreateMap<TestAthleteElementsViewModel, TestAthleteElement>()
             .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.Degree, x => x.MapFrom(m => m.Degree))
             .ForMember(x => x.AgeCategory, x => x.MapFrom(m => m.AgeCategory))
@@ -19,7 +19,7 @@ public class AthleteElementsMapperConfiguration : Profile
             .ForMember(x => x.Element4, x => x.MapFrom(m => m.Element4))
             .ForMember(x => x.Element5, x => x.MapFrom(m => m.Element5));
 
-        CreateMap<AthleteElements, AthleteElementsViewModel>()
+        CreateMap<TestAthleteElement, TestAthleteElementsViewModel>()
             .ForMember(x => x.Id, x => x.Ignore())
             .ForMember(x => x.Degree, x => x.MapFrom(m => m.Degree))
             .ForMember(x => x.AgeCategory, x => x.MapFrom(m => m.AgeCategory))

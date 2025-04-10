@@ -1,10 +1,9 @@
-﻿using Steps.Domain.Entities;
-using Steps.Shared.Contracts.AthletesElements.ViewModels;
+﻿using Steps.Shared.Contracts.AthleteElements.ViewModels;
 
-namespace Steps.Shared.Contracts.AthletesElements;
+namespace Steps.Shared.Contracts.AthleteElements;
 
-public interface IAthleteElementsService : ICrudService<AthleteElements, AthleteElementsViewModel,
+public interface IAthleteElementsService : ICrudService<Domain.Entities.TestAthleteElement, TestAthleteElementsViewModel,
     CreateAthleteElementsViewModel, UpdateAthleteElementsViewModel>
 {
-    Task<Result<AthleteElementsViewModel>> GetAthleteElements(string degree, string ageCategory, string? type);
+    Task<Result<TestAthleteElementsViewModel>> GetAthleteElements(string degree, string ageCategory, string? type);
 }

@@ -30,7 +30,7 @@ public partial class ContestCard : BaseNotificate
     [Inject] protected ContestManager ContestManager { get; set; } = null!;
     [Inject] protected UsersManager UsersManager { get; set; } = null!;
     [Inject] protected IGroupBlocksService GroupBlocksService { get; set; } = null!;
-    [Inject] protected FinalShedulerDialogManager FinalShedulerDialogManager { get; set; } = null!;
+    [Inject] protected FinalSchedulerDialogManager FinalSchedulerDialogManager { get; set; } = null!;
     [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
     [Inject] protected TestResultsDialogManager TestResultsDialogManager { get; set; } = null!;
     [Inject] protected DialogService DialogService { get; set; } = null!;
@@ -85,13 +85,30 @@ public partial class ContestCard : BaseNotificate
         ShowResultMessage(result);
     }
 
+    
+    //todo: я же вроде менял, проверить коммиты
     private async Task OpenJudgeDialog()
     {
         var groupBlocks = await GroupBlocksService.GetByContestId(Model.Id);
 
-        var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
+        var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(
+            groupBlocks.Value);
 
-        await FinalShedulerDialogManager.ShowFinalScheduleByGroupBlockDialogJudge(selectedGroupBlock);
+        if (selectedGroupBlock != null)
+        {
+            await DialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
+                "Финальное расписание",
+                new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock } },
+                new DialogOptions { Width = "800px", Height = "600px" });
+        }
+    }
+
+    private async Task OpenCounterDialog()
+    {
+        await DialogService.OpenAsync<TestResultManage>(
+            "Проставленные результаты",
+            new Dictionary<string, object> { { "ContestId", Model.Id } },
+            new DialogOptions { Width = "800px", Height = "600px" });
     }
     
     private async Task OpenDiplomaDialog()
@@ -100,9 +117,16 @@ public partial class ContestCard : BaseNotificate
 
         if (groupBlocks.Value != null)
         {
-            var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(groupBlocks.Value);
+            var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(
+                groupBlocks.Value);
 
-            await TestResultsDialogManager.ShowResults(selectedGroupBlock);
+            if (selectedGroupBlock != null)
+            {
+                await DialogService.OpenAsync<RatingsByGroupBlock>(
+                    "Проставленные результаты",
+                    new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock} },
+                    new DialogOptions { Width = "800px", Height = "600px" });
+            }
         }
     }
 }

@@ -10,22 +10,23 @@ namespace Steps.Application.Requests.Ratings;
 
 public record GetRatingByBlockQuery(Guid GroupBlockId) : IRequest<Result<RatingViewModel>>;
 
-public class GetPagedFinalScheduledCellsByGroupBlockIdQueryHandler : IRequestHandler<GetRatingByBlockQuery, Result<RatingViewModel>>
+public class
+    GetPagedFinalScheduledCellsByGroupBlockIdQueryHandler : IRequestHandler<GetRatingByBlockQuery,
+    Result<RatingViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public GetPagedFinalScheduledCellsByGroupBlockIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetPagedFinalScheduledCellsByGroupBlockIdQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
-    public async Task<Result<RatingViewModel>> Handle(GetRatingByBlockQuery request, CancellationToken cancellationToken)
+    public async Task<Result<RatingViewModel>> Handle(GetRatingByBlockQuery request,
+        CancellationToken cancellationToken)
     {
-
         var rating = await _unitOfWork.GetRepository<Rating>().GetAllAsync(
-                         predicate: r => r.GroupBlockId.Equals(request.GroupBlockId),
+                         predicate: r => r.GroupBlockId.Equals(request.GroupBlockId)
+                                         && !r.IsComplete,
                          include: x =>
                              x.Include(s => s.Athlete),
                          trackingType: TrackingType.NoTracking)
@@ -35,7 +36,7 @@ public class GetPagedFinalScheduledCellsByGroupBlockIdQueryHandler : IRequestHan
         {
             NotCompleted = rating.ToList()
         };
-        
+
         return Result<RatingViewModel>.Ok(ratingViewModel);
     }
 }

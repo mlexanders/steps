@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using StackExchange.Redis;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Services;
 using Steps.Client.Features.EntityFeature.ClubsFeature.Services;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
@@ -14,8 +13,8 @@ using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Api.Scheduled;
 using Steps.Client.Services.Authentication;
+using Steps.Shared.Contracts.AthleteElements;
 using Steps.Shared.Contracts.Athletes;
-using Steps.Shared.Contracts.AthletesElements;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
@@ -70,15 +69,15 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IPreSchedulesService, PreSchedulesService>();
         
         services.AddTransient<FinalSchedulerManager>();
-        services.AddTransient<FinalShedulerDialogManager>();
+        services.AddTransient<FinalSchedulerDialogManager>();
         services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
 
         services.AddTransient<TestResultsDialogManager>();
         services.AddTransient<TestResultsManager>();
         services.AddTransient<ITestResultsService, TestResultsService>();
         
-        services.AddSingleton<IAthleteElementsRoutes, AthleteElemensRoute>();
-        services.AddTransient<IAthleteElementsService, AthleteElementsService>();
+        services.AddSingleton<IAthleteElementsRoutes, TestAthleteElementsRoute>();
+        services.AddTransient<IAthleteElementsService, TestAthleteElementsService>();
         
         services.AddTransient<IRatingService, RatingService>();
         services.AddTransient<RatingService>();

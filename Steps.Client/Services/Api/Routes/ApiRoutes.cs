@@ -35,7 +35,7 @@ public static class ApiRoutes
         public string GetRemovedAthletes() => $"{BasePath}/GetRemovedAthletes";
     }
 
-    public class TestAthleteElementsRoute() : BaseApiRoutes("TestAthleteElement"), IAthleteElementsRoutes
+    public class TestAthleteElementsRoute() : BaseApiRoutes("TestAthleteElements"), IAthleteElementsRoutes
     {
         public string GetAthleteElements(string degree, string ageCategory, string? type) =>
             $"{BasePath}/GetAthleteElements?degree={Uri.EscapeDataString(degree)}&ageCategory={Uri.EscapeDataString(ageCategory)}" +

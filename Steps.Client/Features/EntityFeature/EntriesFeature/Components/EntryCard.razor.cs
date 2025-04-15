@@ -48,7 +48,8 @@ public partial class EntryCard
         ShowResultMessage(result);
         await EntriesManager.LoadPage();
     }
-
+    
+    //TODO: добавить просмотр спортсмена
     protected async Task CheckAthlete()
     {
 

@@ -44,7 +44,7 @@ public class ContestDialogManager : IDialogManager<ContestViewModel>
         };
 
         var result = await _dialogService.OpenAsync<CreateContestDialog>("Создание мероприятия", options: dialogOptions);
-        return result ?? false;
+        return result;
     }
 
     public async Task<bool> ShowUpdateDialog(ContestViewModel model)

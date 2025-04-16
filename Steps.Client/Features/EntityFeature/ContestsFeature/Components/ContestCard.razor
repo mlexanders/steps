@@ -3,32 +3,28 @@
 @using Steps.Shared.Utils
 @inherits Steps.Client.Features.Common.BaseNotificate
 
-<RadzenCard>
-    <RadzenStack Gap="2rem">
+<RadzenCard Style="max-height: 75vh; overflow-y: auto;">
+    <RadzenStack Gap="1rem">
         <RadzenFieldset Text="Основная информация">
             <RadzenRow>
-                <RadzenColumn Size="12">
-                    <RadzenStack Gap="1rem">
-                        <RadzenRow>
-                            <RadzenColumn Size="6">
-                                <RadzenStack Gap="0.5rem">
-                                    <p><strong>Название:</strong> @Model.Name</p>
-                                    @if (!string.IsNullOrEmpty(Model.Description))
-                                    {
-                                        <p><strong>Описание:</strong> @Model.Description</p>
-                                    }
-                                </RadzenStack>
-                            </RadzenColumn>
-                            <RadzenColumn Size="6">
-                                <RadzenStack Gap="0.5rem">
-                                    <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy HH:mm")</p>
-                                    <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy HH:mm")</p>
-                                    <p><strong>Статус:</strong> <RadzenBadge BadgeStyle="@GetStatusStyle(Model.Status)" Text="@Model.Status.GetDisplayName()" /></p>
-                                    <p><strong>Тип:</strong> <RadzenBadge BadgeStyle="@GetTypeStyle(Model.Type)" Text="@Model.Type.GetDisplayName()" /></p>
-                                </RadzenStack>
-                            </RadzenColumn>
-                        </RadzenRow>
-                    </RadzenStack>
+                <RadzenColumn Size="6">
+                    <p><strong>Название:</strong> @Model.Name</p>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p><strong>Описание:</strong> @Model.Description</p>
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="6">
+                    <p><strong>Дата начала:</strong> @Model.StartDate</p>
+                    <p><strong>Дата окончания:</strong> @Model.EndDate</p>
+                    <p>
+                        <strong>Статус:</strong>
+                        <RadzenBadge BadgeStyle="@GetStatusStyle(Model.Status)" Text="@Model.Status.GetDisplayName()" />
+                    </p>
+                    <p>
+                        <strong>Тип:</strong>
+                        <RadzenBadge BadgeStyle="@GetTypeStyle(Model.Type)" Text="@Model.Type.GetDisplayName()" />
+                    </p>
                 </RadzenColumn>
             </RadzenRow>
         </RadzenFieldset>
@@ -36,97 +32,59 @@
         <RadzenFieldset Text="Участники">
             <RadzenRow>
                 <RadzenColumn Size="6">
-                    <RadzenStack Gap="1rem">
-                        <div>
-                            <h4>Судьи</h4>
-                            @if (Judges.Any())
-                            {
-                                <RadzenListBox TValue="Guid" Data="@Judges"
-                                             TextProperty="Login"
-                                             ValueProperty="Id"
-                                             Style="width: 100%; height: 150px;"
-                                             AllowVirtualization="false"
-                                             Multiple="false" />
-                            }
-                            else
-                            {
-                                <RadzenText Text="Судьи не назначены" Style="color: var(--rz-text-muted-color);" />
-                            }
-                        </div>
-                    </RadzenStack>
+                    <h4>Судьи</h4>
+                    @if (Judges.Any())
+                    {
+                        <RadzenListBox TValue="Guid" Data="@Judges" TextProperty="Login" ValueProperty="Id"
+                                       Style="width: 100%; height: 120px;" />
+                    }
+                    else
+                    {
+                        <RadzenText Text="Судьи не назначены" Style="color: var(--rz-text-muted-color);" />
+                    }
                 </RadzenColumn>
-
                 <RadzenColumn Size="6">
-                    <RadzenStack Gap="1rem">
-                        <div>
-                            <h4>Счетчики</h4>
-                            @if (Counters.Any())
-                            {
-                                <RadzenListBox TValue="Guid" Data="@Counters"
-                                             TextProperty="Login"
-                                             ValueProperty="Id"
-                                             Style="width: 100%; height: 150px;"
-                                             AllowVirtualization="false"
-                                             Multiple="false" />
-                            }
-                            else
-                            {
-                                <RadzenText Text="Счетчики не назначены" Style="color: var(--rz-text-muted-color);" />
-                            }
-                        </div>
-                    </RadzenStack>
+                    <h4>Счетчики</h4>
+                    @if (Counters.Any())
+                    {
+                        <RadzenListBox TValue="Guid" Data="@Counters" TextProperty="Login" ValueProperty="Id"
+                                       Style="width: 100%; height: 120px;" />
+                    }
+                    else
+                    {
+                        <RadzenText Text="Счетчики не назначены" Style="color: var(--rz-text-muted-color);" />
+                    }
                 </RadzenColumn>
             </RadzenRow>
         </RadzenFieldset>
 
         <RadzenFieldset Text="Действия">
-            <RadzenStack Gap="1rem">
-                <RadzenRow>
-                    <RadzenColumn Size="12">
-                        <RadzenStack Gap="0.5rem">
-                            
-
-                            @if (Model.Status is ContestStatus.Open)
-                            {
-                                <RadzenButton Text="Создать заявку" 
-                                              Icon="add" 
-                                              ButtonStyle="ButtonStyle.Primary"
-                                              Click="() => OpenCreateEntryDialog()" />
-                                
-                                <RadzenButton Text="Завершить сбор заявок" 
-                                            Icon="close" 
-                                            ButtonStyle="ButtonStyle.Warning"
-                                            Click="() => CloseCollectingEntries()" />
-                            }
-
-                            @if (Model.Status is ContestStatus.Closed)
-                            {
-                                <RadzenButton Text="Судить" 
-                                            Icon="gavel" 
-                                            ButtonStyle="ButtonStyle.Info"
-                                            Click="() => OpenJudgeDialog()" />
-
-                                <RadzenButton Text="Результаты" 
-                                            Icon="assessment" 
-                                            ButtonStyle="ButtonStyle.Success"
-                                            Click="() => OpenCounterDialog()" />
-
-                                <RadzenButton Text="Дипломы" 
-                                            Icon="emoji_events" 
-                                            ButtonStyle="ButtonStyle.Primary"
-                                            Click="() => OpenDiplomaDialog()" />
-                            }
-                        </RadzenStack>
-                    </RadzenColumn>
-                </RadzenRow>
+            <RadzenStack Gap="0.5rem">
+                @if (Model.Status is ContestStatus.Open)
+                {
+                    <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                                  Click="() => OpenCreateEntryDialog()" />
+                    <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                                  Click="() => CloseCollectingEntries()" />
+                }
+                @if (Model.Status is ContestStatus.Closed)
+                {
+                    <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
+                                  Click="() => OpenJudgeDialog()" />
+                    <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                  Click="() => OpenCounterDialog()" />
+                    <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                  Click="() => OpenDiplomaDialog()" />
+                }
             </RadzenStack>
-        </RadzenFieldset>
-
-        <RadzenFieldset Text="Групповые блоки">
-            <GroupBlocksManage Contest="Model" />
         </RadzenFieldset>
     </RadzenStack>
 </RadzenCard>
+
+<RadzenButton Text="Управление групповыми блоками"
+              Icon="open_in_new"
+              ButtonStyle="ButtonStyle.Secondary"
+              Click="() => OpenGroupBlocksDialog()" />
 
 @code {
     private BadgeStyle GetStatusStyle(ContestStatus status) => status switch

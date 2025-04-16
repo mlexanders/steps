@@ -21,6 +21,7 @@ using Steps.Shared.Contracts.Accounts.ViewModels;
 using Steps.Shared.Contracts.Contests.ViewModels;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
+using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 
@@ -128,5 +129,10 @@ public partial class ContestCard : BaseNotificate
                     new DialogOptions { Width = "800px", Height = "600px" });
             }
         }
+    }
+
+    private async Task OpenGroupBlocksDialog()
+    {
+        await GroupBlocksDialogManager.ShowGroupBlocksDialogManage(Model);
     }
 }

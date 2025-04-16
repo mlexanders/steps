@@ -17,13 +17,33 @@ public class ContestDialogManager : IDialogManager<ContestViewModel>
     public async Task<bool> ShowCardDialog(ContestViewModel model)
     {
         var options = new Dictionary<string, object> { { "Model", model } };
-        var result = await _dialogService.OpenAsync<ContestCardDialog>("Мероприятие", options);
+        var dialogOptions = new DialogOptions
+        {
+            Width = "60vw",
+            Height = "auto",
+            ShowTitle = true,
+            Resizable = false,
+            Draggable = true,
+            CloseDialogOnOverlayClick = false
+        };
+
+        var result = await _dialogService.OpenAsync<ContestCardDialog>("Мероприятие", options, dialogOptions);
         return result ?? false;
     }
 
     public async Task<bool> ShowCreateDialog()
     {
-        var result = await _dialogService.OpenAsync<CreateContestDialog>("Создание мероприятия");
+        var dialogOptions = new DialogOptions
+        {
+            Width = "60vw",
+            Height = "auto",
+            ShowTitle = true,
+            Resizable = false,
+            Draggable = true,
+            CloseDialogOnOverlayClick = false
+        };
+
+        var result = await _dialogService.OpenAsync<CreateContestDialog>("Создание мероприятия", options: dialogOptions);
         return result ?? false;
     }
 

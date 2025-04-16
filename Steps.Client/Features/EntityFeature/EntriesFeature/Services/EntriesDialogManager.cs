@@ -38,6 +38,7 @@ public class EntriesDialogManager : IDialogManager<EntryViewModel>
             "Создание заявки",
             new Dictionary<string, object> { { "ContestId", contestId } }
         );
+
         return result ?? false;
     }
 

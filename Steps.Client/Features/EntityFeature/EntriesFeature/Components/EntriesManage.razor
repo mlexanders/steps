@@ -4,37 +4,61 @@
 @inherits Steps.Client.Features.Common.ManageBaseComponent<Entry, Steps.Shared.Contracts.Entries.ViewModels.EntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.CreateEntryViewModel, Steps.Shared.Contracts.Entries.ViewModels.UpdateEntryViewModel>
 
 <RadzenCard>
-    <RadzenDataGrid TItem="EntryViewModel" Data="Manager.Data" AllowPaging="true"
-                    PageSize="Manager.PageSize" EmptyText="Заявки еще не созданы"
-                    IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
-                    LoadData="@OnChangePage"
-                    RowSelect="@(e => DialogManager.ShowCardDialog(e))">
+    <RadzenTabs>
+        <Tabs>
+            <RadzenTabsItem Text="Принятые">
+                <RadzenDataGrid TItem="EntryViewModel" Data="@AcceptedEntries"
+                                AllowPaging="true"
+                                PageSize="Manager.PageSize"
+                                EmptyText="Нет принятых заявок"
+                                IsLoading="@Manager.IsLoading"
+                                RowSelect="@(e => DialogManager.ShowCardDialog(e))">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="EntryViewModel" Property="Number" Title="Номер" />
+                        <RadzenDataGridColumn TItem="EntryViewModel" Property="ContestName" Title="Мероприятие" />
+                        @if (!IsReadonly)
+                        {
+                            <RadzenDataGridColumn Width="16%" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
+                                <Template Context="c">
+                                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium"
+                                                  Click="@(() => OnUpdate(c))" @onclick:stopPropagation="true" />
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" Shade="Shade.Lighter"
+                                                  Click="@(() => OnDelete(c))" @onclick:stopPropagation="true" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        }
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
 
-        <HeaderTemplate>
-            <RadzenText Text="*Отображаются только ваши заявки"/>
-        </HeaderTemplate>
-
-        <Columns>
-            <RadzenDataGridColumn TItem="EntryViewModel" Property="@nameof(EntryViewModel.Number)" Title="Номер"/>
-            <RadzenDataGridColumn TItem="EntryViewModel" Property="@nameof(EntryViewModel.ContestName)" Title="Мероприятие"/>
-
-            @if (!IsReadonly)
-            {
-                <RadzenDataGridColumn Width="16%" Context="c" Filterable="false" Sortable="false"
-                                      TextAlign="TextAlign.Right" Frozen="true"
-                                      FrozenPosition="FrozenColumnPosition.Right">
-                    <Template Context="c">
-                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat"
-                                      Size="ButtonSize.Medium" class="rz-my-1 rz-ms-1"
-                                      Click="@(() => OnUpdate(c))" @onclick:stopPropagation="true"/>
-
-                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat"
-                                      Size="ButtonSize.Medium" Shade="Shade.Lighter" class="rz-my-1 rz-ms-1"
-                                      Click="@(() => OnDelete(c))" @onclick:stopPropagation="true"/>
-                    </Template>
-                </RadzenDataGridColumn>
-            }
-
-        </Columns>
-    </RadzenDataGrid>
+            <RadzenTabsItem Text="Непринятые">
+                <RadzenDataGrid TItem="EntryViewModel" Data="@RejectedEntries"
+                                AllowPaging="true"
+                                PageSize="Manager.PageSize"
+                                EmptyText="Нет непринятых заявок"
+                                IsLoading="@Manager.IsLoading"
+                                RowSelect="@(e => DialogManager.ShowCardDialog(e))">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="EntryViewModel" Property="Number" Title="Номер" />
+                        <RadzenDataGridColumn TItem="EntryViewModel" Property="ContestName" Title="Мероприятие" />
+                        @if (!IsReadonly)
+                        {
+                            <RadzenDataGridColumn Width="16%" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
+                                <Template Context="c">
+                                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium"
+                                                  Click="@(() => OnUpdate(c))" @onclick:stopPropagation="true" />
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" Shade="Shade.Lighter"
+                                                  Click="@(() => OnDelete(c))" @onclick:stopPropagation="true" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        }
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
 </RadzenCard>

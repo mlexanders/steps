@@ -84,6 +84,7 @@ public partial class ContestCard : BaseNotificate
     {
         var result = await ContestManager.CloseContest(Model.Id);
         ShowResultMessage(result);
+        StateHasChanged();
     }
 
     

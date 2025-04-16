@@ -81,10 +81,13 @@
     </RadzenStack>
 </RadzenCard>
 
-<RadzenButton Text="Управление групповыми блоками"
+@if (Model.Status is ContestStatus.Closed)
+{
+    <RadzenButton Text="Управление групповыми блоками"
               Icon="open_in_new"
               ButtonStyle="ButtonStyle.Secondary"
-              Click="() => OpenGroupBlocksDialog()" />
+              Click="() => OpenGroupBlocksDialog()" />    
+}
 
 @code {
     private BadgeStyle GetStatusStyle(ContestStatus status) => status switch

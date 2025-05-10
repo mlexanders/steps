@@ -20,6 +20,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Contest> Contests { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
     
+    public DbSet<ScheduleFile> ScheduleFiles { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasCollation("case_insensitive", locale: "und-u-ks-primary", provider: "icu", deterministic: false);

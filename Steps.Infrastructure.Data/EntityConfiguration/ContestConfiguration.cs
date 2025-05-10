@@ -17,6 +17,10 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
 
+        builder.HasOne(c => c.ScheduleFile)
+            .WithMany()
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasMany(c => c.Entries)
             .WithOne(e => e.Contest)
             .HasForeignKey(e => e.ContestId)

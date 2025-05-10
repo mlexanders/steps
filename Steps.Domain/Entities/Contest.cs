@@ -16,4 +16,7 @@ public class Contest : Entity
     public List<User>? Counters { get; set; } = [];
     
     public List<Entry>? Entries { get; set; } = [];
+    
+    public Guid? ScheduleFileId { get; set; }
+    public ScheduleFile? ScheduleFile { get; set; }
 }

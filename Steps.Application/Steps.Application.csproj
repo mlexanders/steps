@@ -15,6 +15,7 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
         <PackageReference Include="MediatR" Version="12.4.1" />
         <PackageReference Include="Npgsql" Version="9.0.2" />
+        <PackageReference Include="NPOI" Version="2.7.3" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
         <PackageReference Include="PdfPig" Version="0.1.10" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
@@ -45,6 +46,7 @@
       <Folder Include="Requests\Contests\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
       <Folder Include="Requests\Entries\Validators\" />
+      <Folder Include="Requests\ScheduleFile\Queries\" />
       <Folder Include="Requests\Users\Commands\" />
       <Folder Include="Requests\Users\Validators\" />
       <Folder Include="Requests\Contests\Validators\" />

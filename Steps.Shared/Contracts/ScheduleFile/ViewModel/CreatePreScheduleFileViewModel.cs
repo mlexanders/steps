@@ -2,5 +2,5 @@
 
 public class CreatePreScheduleFileViewModel
 {
-    
+    public List<Guid> GroupBlockIds { get; set; }
 }

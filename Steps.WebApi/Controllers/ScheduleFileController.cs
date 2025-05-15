@@ -1,7 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Steps.Application.Requests.Entries.Commands;
+using Steps.Application.Requests.ScheduleFile.Commands;
 using Steps.Shared;
+using Steps.Shared.Contracts.Entries.ViewModels;
 using Steps.Shared.Contracts.ScheduleFile;
 using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 
@@ -22,7 +25,7 @@ public class ScheduleFileController : ControllerBase, IScheduleFileService
     [HttpPost("[action]")]
     public async Task<Result> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel)
     {
-        throw new NotImplementedException();
+        return await _mediator.Send(new CreatePreScheduleFileCommand(createPreScheduleFileViewModel));
     }
     
     [HttpPost("[action]")]

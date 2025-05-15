@@ -24,14 +24,9 @@ public class CreatePreScheduleFileCommandHandler : IRequestHandler<CreatePreSche
         _scheduleFileService = scheduleFileService;
     }
 
-    public async Task<Result> Handle(CreatePreScheduleFileCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreatePreScheduleFileCommand request, CancellationToken cancellationToken)
     {
-        foreach (var groupBlockId in request.Model.GroupBlockIds)
-        {
-            await _scheduleFileService.GeneratePreScheduleFile(groupBlockId);
-        }
-        
+        await _scheduleFileService.GeneratePreScheduleFile(request.Model.GroupBlockIds);
         return Result.Ok().SetMessage("Файл сформирован");
     }
 }

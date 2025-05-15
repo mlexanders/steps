@@ -15,6 +15,7 @@ public static class DependencyInjection
     {
         builder.Services.AddTransient<CommonExceptionHandler>();
         builder.Services.AddTransient<SchedulesService>();
+        builder.Services.AddTransient<ScheduleFileService>();
         builder.Services.AddSingleton<IRedisService, RedisService>();
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
 

@@ -23,7 +23,7 @@ public class ScheduleFileController : ControllerBase, IScheduleFileService
     }
 
     [HttpPost("[action]")]
-    public async Task<Result> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel)
+    public async Task<Result<ScheduleFileViewModel>> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel)
     {
         return await _mediator.Send(new CreatePreScheduleFileCommand(createPreScheduleFileViewModel));
     }

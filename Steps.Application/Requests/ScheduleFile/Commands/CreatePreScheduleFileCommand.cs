@@ -10,9 +10,9 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.ScheduleFile.Commands;
 
-public record CreatePreScheduleFileCommand(CreatePreScheduleFileViewModel Model) : IRequest<Result>;
+public record CreatePreScheduleFileCommand(CreatePreScheduleFileViewModel Model) : IRequest<Result<ScheduleFileViewModel>>;
 
-public class CreatePreScheduleFileCommandHandler : IRequestHandler<CreatePreScheduleFileCommand, Result>
+public class CreatePreScheduleFileCommandHandler : IRequestHandler<CreatePreScheduleFileCommand, Result<ScheduleFileViewModel>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ScheduleFileService _scheduleFileService;
@@ -24,9 +24,9 @@ public class CreatePreScheduleFileCommandHandler : IRequestHandler<CreatePreSche
         _scheduleFileService = scheduleFileService;
     }
 
-    public async Task<Result> Handle(CreatePreScheduleFileCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ScheduleFileViewModel>> Handle(CreatePreScheduleFileCommand request, CancellationToken cancellationToken)
     {
-        await _scheduleFileService.GeneratePreScheduleFile(request.Model.GroupBlockIds);
-        return Result.Ok().SetMessage("Файл сформирован");
+        var scheduleFile = await _scheduleFileService.GeneratePreScheduleFile(request.Model.GroupBlockIds);
+        return Result<ScheduleFileViewModel>.Ok(scheduleFile).SetMessage("Файл сформирован");
     }
 }

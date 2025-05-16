@@ -6,19 +6,24 @@ using Steps.Application.Requests.ScheduleFile.Commands;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared.Contracts.ScheduleFile;
 using Steps.Shared;
+using Steps.Domain.Entities;
+using Steps.Shared.Contracts.ScheduleFile.ViewModel;
+using AutoMapper;
 
 namespace Steps.Application.Services;
 
 public class ScheduleFileService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public ScheduleFileService(IUnitOfWork unitOfWork)
+    public ScheduleFileService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    public async Task GeneratePreScheduleFile(List<Guid> groupBlockIds)
+    public async Task<ScheduleFileViewModel> GeneratePreScheduleFile(List<Guid> groupBlockIds)
     {
         IWorkbook workbook = new XSSFWorkbook();
 
@@ -78,13 +83,45 @@ public class ScheduleFileService
         }
 
         string fileName = $"PreSchedule_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-        string filePath = Path.Combine(Path.GetTempPath(), fileName);
 
-        using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        byte[] fileData;
+        using (var memoryStream = new MemoryStream())
         {
-            workbook.Write(fileStream);
+            workbook.Write(memoryStream);
+            fileData = memoryStream.ToArray();
         }
 
-        Console.WriteLine($"Файл сохранен: {filePath}");
+        var scheduleFile = new ScheduleFile
+        {
+            FileName = fileName,
+            Data = fileData
+        };
+
+        var scheduleFileRepository = _unitOfWork.GetRepository<ScheduleFile>();
+        await scheduleFileRepository.InsertAsync(scheduleFile);
+
+        var contest = groupBlockIds.Select(gbId =>
+            _unitOfWork.GetRepository<GroupBlock>()
+                .GetFirstOrDefaultAsync(predicate: g => g.Id == gbId, include: source => source.Include(x => x.Contest), trackingType: TrackingType.Tracking)
+                .Result?.Contest)
+            .FirstOrDefault(c => c != null);
+
+        if (contest != null)
+        {
+            contest.ScheduleFileId = scheduleFile.Id;
+            var contestRepository = _unitOfWork.GetRepository<Contest>();
+            contestRepository.Update(contest);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        string filePath = Path.Combine(Path.GetTempPath(), fileName);
+        await File.WriteAllBytesAsync(filePath, fileData);
+
+        Console.WriteLine($"Файл сохранен в БД и временную папку: {filePath}");
+
+        var scheduleFileViewModel = _mapper.Map<ScheduleFileViewModel>(scheduleFile);
+
+        return scheduleFileViewModel;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
+using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
@@ -32,6 +33,19 @@ public class PreSchedulerManager : SchedulerManagerBase<PreScheduledCell, PreSch
         try
         {
             var result = await _service.MarkAthlete(model);
+            return result;
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(e.Message);
+        }
+    }
+
+    public async Task<Result> GeneratePreScheduleFile(CreatePreScheduleFileViewModel model)
+    {
+        try
+        {
+            var result = await _service.GeneratePreScheduleFile(model);
             return result;
         }
         catch (Exception e)

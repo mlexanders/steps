@@ -9,7 +9,7 @@ public interface IScheduleFileService
     /// </summary>
     /// <param name="createPreScheduleFileViewModel"></param>
     /// <returns></returns>
-    Task<Result> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel);
+    Task<Result<ScheduleFileViewModel>> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel);
     
     /// <summary>
     /// Создание окончательного списка спортсменов

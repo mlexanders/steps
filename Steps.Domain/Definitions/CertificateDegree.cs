@@ -17,7 +17,7 @@ public enum CertificateDegree
      [Display(Name = "II")]
      Second,
      
-     [Display(Name = " III ")]
+     [Display(Name = "III")]
      Third,
      
      [Display(Name = "IV")]

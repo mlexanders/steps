@@ -5,6 +5,7 @@
 @using Steps.Shared.Contracts.Accounts.ViewModels
 @using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Domain.Base
+@using Steps.Shared.Utils
 
 @inject UsersManager UsersManager
 
@@ -33,8 +34,14 @@
                                        Component="@nameof(Contest.EndDate)"
                                        Text="Дата окончания должна быть в пределах года"/>
 
-                <RadzenDropDown @bind-Value="Contest.Type" Name="@nameof(Contest.Type)"
-                                Data="@_contestTypes" Placeholder="Выберите тип" Style="width: 100%"/>
+                <RadzenDropDown @bind-Value="@Contest.Type" TValue="ContestType"
+                                Data="@_contestTypes" Name="@nameof(Contest.Type)"
+                                Placeholder="Выберите тип" Style="width: 100%">
+                    <Template>
+                        @(((ContestType)context).GetDisplayName())
+                    </Template>
+                </RadzenDropDown>
+                
                 <RadzenRequiredValidator Component="@nameof(Contest.Type)" Text="Тип обязателен"
                                          Style="position: absolute"/>
             </RadzenStack>

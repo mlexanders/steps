@@ -41,7 +41,7 @@ public partial class GroupBlocksManage : BaseNotificate
         return $"{start} - {end}";
     }
 
-    private async Task GetTeams()
+    private async Task GetTeamsForCreateGroupBlocks()
     {
         var result = await GroupBlocksService.GetTeamsForCreateGroupBlocks(Contest.Id);
         if (result?.IsSuccess != true) ShowResultMessage(result);
@@ -65,8 +65,12 @@ public partial class GroupBlocksManage : BaseNotificate
 
     private async Task OnDeleteBlocks()
     {
-        var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
-        ShowResultMessage(result);
+        if (Contest != null)
+        {
+            var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
+            ShowResultMessage(result);
+        }
+
         await Init();
         StateHasChanged();
     }

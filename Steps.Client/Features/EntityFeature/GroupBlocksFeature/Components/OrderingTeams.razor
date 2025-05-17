@@ -8,7 +8,7 @@
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
                 FilterMode="FilterMode.Advanced"
                 AllowSorting="true" 
-                
+                EmptyText="Тут пока пусто"
                 PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@_items" ColumnWidth="180px" LogicalFilterOperator="LogicalFilterOperator.Or"
                 SelectionMode="DataGridSelectionMode.Single"
@@ -16,10 +16,10 @@
                 AllowVirtualization="true" Style="height:400px">
     <HeaderTemplate>
         <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Сохранить"
-                      Click="Save"/>
+                      Click="SaveAndClose"/>
 
         <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="" Text="Назад"
-                      Click="CloseEditing"/>
+                      Click="CloseWithoutChanges"/>
     </HeaderTemplate>
     <Columns>
         <TeamsColumns/>
@@ -73,7 +73,7 @@
         }
     }
 
-    private async Task CloseEditing()
+    private async Task CloseWithoutChanges()
     {
         IsComplete = true;
         if (IsCompleteChanged.HasDelegate)
@@ -82,12 +82,18 @@
         }
     }
 
-    private async Task Save()
+    private async Task SaveAndClose()
     {
+        IsComplete = true;
         Teams = _items.ToList();
         if (TeamsChanged.HasDelegate)
         {
+            IsComplete = true;
             await TeamsChanged.InvokeAsync(Teams);
+        }
+        if (IsCompleteChanged.HasDelegate)
+        {
+            await IsCompleteChanged.InvokeAsync(IsComplete);
         }
     }
 }

@@ -44,7 +44,7 @@ public class PreSchedulerManager : SchedulerManagerBase<PreScheduledCell, PreSch
         }
     }
 
-    public async Task<Result> GeneratePreScheduleFile(CreatePreScheduleFileViewModel model)
+    public async Task<Result<ScheduleFileViewModel>> GeneratePreScheduleFile(CreatePreScheduleFileViewModel model)
     {
         try
         {
@@ -53,7 +53,7 @@ public class PreSchedulerManager : SchedulerManagerBase<PreScheduledCell, PreSch
         }
         catch (Exception e)
         {
-            return Result.Fail(e.Message);
+            return Result<ScheduleFileViewModel>.Fail(e.Message);
         }
     }
 }

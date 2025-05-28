@@ -115,11 +115,6 @@ public class ScheduleFileService
 
         await _unitOfWork.SaveChangesAsync();
 
-        string filePath = Path.Combine(Path.GetTempPath(), fileName);
-        await File.WriteAllBytesAsync(filePath, fileData);
-
-        Console.WriteLine($"Файл сохранен в БД и временную папку: {filePath}");
-
         var scheduleFileViewModel = _mapper.Map<ScheduleFileViewModel>(scheduleFile);
 
         return scheduleFileViewModel;

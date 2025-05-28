@@ -9,17 +9,18 @@ namespace Steps.Client.Services.Api.Scheduled
     public class ScheduleFileService : IScheduleFileService
     {
         private readonly HttpClientService _httpClient;
-        private readonly ApiRoutes.PreSchedulesRoute _routes;
+        private readonly ApiRoutes.ScheduleFilesRoute _routes;
 
-        public ScheduleFileService(HttpClientService httpClient) : base(httpClient, new ApiRoutes.PreSchedulesRoute())
+        public ScheduleFileService(HttpClientService httpClient)
         {
             _httpClient = httpClient;
-            _routes = new ApiRoutes.PreSchedulesRoute();
+            _routes = new ApiRoutes.ScheduleFilesRoute();
         }
 
         public Task<Result<ScheduleFileViewModel>> CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel)
         {
-            throw new NotImplementedException();
+            return _httpClient.PostAsync<Result<ScheduleFileViewModel>, CreatePreScheduleFileViewModel>(
+                _routes.CreatePreScheduleFile(createPreScheduleFileViewModel), createPreScheduleFileViewModel);
         }
 
         public Task<Result> CreateScheduleFile(CreateScheduleFileViewModel createScheduleFileViewModel)

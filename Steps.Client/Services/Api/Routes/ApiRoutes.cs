@@ -2,6 +2,7 @@
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Ratings;
+using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 
 namespace Steps.Client.Services.Api.Routes;
@@ -86,6 +87,11 @@ public static class ApiRoutes
 
         public string GetPagedScheduled =>
             $"{BasePath}/{nameof(IPreSchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
+    }
+    
+    public class ScheduleFilesRoute() : IScheduleFileRoutes
+    {
+        public string CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel) => $"ScheduleFile/CreatePreScheduleFile";
     }
 
     public class TestResultsRoute() : BaseApiRoutes("TestResults");

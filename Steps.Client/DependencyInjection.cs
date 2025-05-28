@@ -20,6 +20,7 @@ using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.Ratings;
+using Steps.Shared.Contracts.ScheduleFile;
 using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
@@ -64,6 +65,8 @@ public static class AddIdentityDependencyInjection
         
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();
+        
+        services.AddTransient<IScheduleFileService, ScheduleFileService>();
                 
         services.AddTransient<PreSchedulerManager>();
         services.AddTransient<IPreSchedulesService, PreSchedulesService>();

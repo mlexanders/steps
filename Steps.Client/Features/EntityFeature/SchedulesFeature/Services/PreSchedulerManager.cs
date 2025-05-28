@@ -1,5 +1,6 @@
 ﻿using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
+using Steps.Shared.Contracts.ScheduleFile;
 using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
@@ -12,10 +13,12 @@ namespace Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 public class PreSchedulerManager : SchedulerManagerBase<PreScheduledCell, PreScheduledCellViewModel, GetPagedPreScheduledCells>
 {
     private readonly IPreSchedulesService _service;
+    private readonly IScheduleFileService _serviceScheduleFileService;
 
-    public PreSchedulerManager(IPreSchedulesService service) : base(service)
+    public PreSchedulerManager(IPreSchedulesService service, IScheduleFileService serviceScheduleFileService) : base(service)
     {
         _service = service;
+        _serviceScheduleFileService = serviceScheduleFileService;
     }
 
     /// <summary>
@@ -45,7 +48,7 @@ public class PreSchedulerManager : SchedulerManagerBase<PreScheduledCell, PreSch
     {
         try
         {
-            var result = await _service.GeneratePreScheduleFile(model);
+            var result = await _serviceScheduleFileService.CreatePreScheduleFile(model);
             return result;
         }
         catch (Exception e)

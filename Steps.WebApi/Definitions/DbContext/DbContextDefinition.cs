@@ -16,8 +16,7 @@ public class DbContextDefinition : AppDefinition
     {
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(
-            builder.Configuration.GetConnectionString("DefaultConnection"),
-            b => b.MigrationsAssembly("Steps.Services.WebApi") // Указываем, где искать миграции
+            builder.Configuration.GetConnectionString("DefaultConnection")
         ));
 
 

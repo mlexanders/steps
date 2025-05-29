@@ -5,4 +5,5 @@ namespace Steps.Client.Services.Api.Routes;
 public interface IScheduleFileRoutes
 {
     string CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel);
+    string CreateFinalScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel);
 }

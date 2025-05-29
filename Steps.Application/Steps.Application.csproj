@@ -46,7 +46,6 @@
       <Folder Include="Requests\Contests\Validators\" />
       <Folder Include="Requests\Clubs\Queries\" />
       <Folder Include="Requests\Entries\Validators\" />
-      <Folder Include="Requests\ScheduleFile\Queries\" />
       <Folder Include="Requests\Users\Commands\" />
       <Folder Include="Requests\Users\Validators\" />
       <Folder Include="Requests\Contests\Validators\" />

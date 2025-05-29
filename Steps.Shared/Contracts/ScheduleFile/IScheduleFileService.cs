@@ -14,7 +14,7 @@ public interface IScheduleFileService
     /// <summary>
     /// Создание окончательного списка спортсменов
     /// </summary>
-    /// <param name="createScheduleFileViewModel"></param>
+    /// <param name="createFinalScheduleFileViewModel"></param>
     /// <returns></returns>
-    Task<Result> CreateScheduleFile(CreateScheduleFileViewModel createScheduleFileViewModel);
+    Task<Result<ScheduleFileViewModel>> CreateScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel);
 }

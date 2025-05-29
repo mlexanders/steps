@@ -23,9 +23,10 @@ namespace Steps.Client.Services.Api.Scheduled
                 _routes.CreatePreScheduleFile(createPreScheduleFileViewModel), createPreScheduleFileViewModel);
         }
 
-        public Task<Result> CreateScheduleFile(CreateScheduleFileViewModel createScheduleFileViewModel)
+        public Task<Result<ScheduleFileViewModel>> CreateScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel)
         {
-            throw new NotImplementedException();
+            return _httpClient.PostAsync<Result<ScheduleFileViewModel>, CreateFinalScheduleFileViewModel>(
+                _routes.CreateFinalScheduleFile(createFinalScheduleFileViewModel), createFinalScheduleFileViewModel);
         }
     }
 }

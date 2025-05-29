@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steps.Application.Requests.Entries.Commands;
+using Steps.Application.Requests.GroupBlocks.Commands;
 using Steps.Application.Requests.ScheduleFile.Commands;
 using Steps.Shared;
 using Steps.Shared.Contracts.Entries.ViewModels;
@@ -29,8 +30,8 @@ public class ScheduleFileController : ControllerBase, IScheduleFileService
     }
     
     [HttpPost("[action]")]
-    public async Task<Result> CreateScheduleFile(CreateScheduleFileViewModel createScheduleFileViewModel)
+    public async Task<Result<ScheduleFileViewModel>> CreateScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel)
     {
-        throw new NotImplementedException();
+        return await _mediator.Send(new CreateFinalScheduleFileCommand(createFinalScheduleFileViewModel));
     }
 }

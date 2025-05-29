@@ -14,13 +14,10 @@ public record CreatePreScheduleFileCommand(CreatePreScheduleFileViewModel Model)
 
 public class CreatePreScheduleFileCommandHandler : IRequestHandler<CreatePreScheduleFileCommand, Result<ScheduleFileViewModel>>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ScheduleFileService _scheduleFileService;
 
-    public CreatePreScheduleFileCommandHandler(IUnitOfWork unitOfWork,
-        ScheduleFileService scheduleFileService)
+    public CreatePreScheduleFileCommandHandler(ScheduleFileService scheduleFileService)
     {
-        _unitOfWork = unitOfWork;
         _scheduleFileService = scheduleFileService;
     }
 

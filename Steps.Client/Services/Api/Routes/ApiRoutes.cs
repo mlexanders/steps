@@ -92,6 +92,7 @@ public static class ApiRoutes
     public class ScheduleFilesRoute() : IScheduleFileRoutes
     {
         public string CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel) => $"ScheduleFile/CreatePreScheduleFile";
+        public string CreateFinalScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel) => $"ScheduleFile/CreateFinalScheduleFile";
     }
 
     public class TestResultsRoute() : BaseApiRoutes("TestResults");

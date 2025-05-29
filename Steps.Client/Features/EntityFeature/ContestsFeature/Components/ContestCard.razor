@@ -13,6 +13,23 @@
                     {
                         <p><strong>Описание:</strong> @Model.Description</p>
                     }
+                    @if (Model.ScheduleFile?.Data != null && Model.ScheduleFile.Data.Length > 0)
+                    {
+                        <p>
+                            <strong>Файл расписания:</strong>
+                            <RadzenIcon Icon="insert_drive_file" Style="vertical-align: middle; margin-right: 0.5rem;" />
+                            <RadzenButton Text="Скачать" Icon="download" ButtonStyle="ButtonStyle.Secondary"
+                                          Click="DownloadScheduleFileAsync"
+                                          Size="ButtonSize.Small" />
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Файл расписания:</strong>
+                            <RadzenText Text="ещё не сформировано" />
+                        </p>
+                    }
                 </RadzenColumn>
                 <RadzenColumn Size="6">
                     <p><strong>Дата начала:</strong> @Model.StartDate</p>
@@ -88,6 +105,28 @@
               ButtonStyle="ButtonStyle.Secondary"
               Click="() => OpenGroupBlocksDialog()" />    
 }
+
+<script>
+    function downloadFile(filename, base64String) {
+        const byteCharacters = atob(base64String);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+
 
 @code {
     private BadgeStyle GetStatusStyle(ContestStatus status) => status switch

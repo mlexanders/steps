@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Contests;
@@ -28,6 +29,7 @@ public class GetByTimeIntervalQueryHandler : IRequestHandler<GetByTimeIntervalQu
         var contests = await _unitOfWork.GetRepository<Contest>()
             .GetAllAsync(
                 predicate: c => c.StartDate > criteria.Start && c.EndDate < criteria.End,
+                include: c=> c.Include(c => c.ScheduleFile),
                 selector: c => _mapper.Map<ContestViewModel>(c),
                 trackingType: TrackingType.NoTracking);
         

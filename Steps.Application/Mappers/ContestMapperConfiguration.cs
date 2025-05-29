@@ -17,8 +17,8 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.Judges, o => o.Ignore())
             .ForMember(x => x.Counters, o => o.Ignore())
             .ForMember(x => x.Entries, o => o.Ignore())
-            .ForMember(x => x.ScheduleFile, o => o.Ignore())
-            .ForMember(x => x.ScheduleFileId, o => o.Ignore())
+            .ForMember(x => x.ScheduleFile, o => o.MapFrom(m => m.ScheduleFile))
+            .ForMember(x => x.ScheduleFileId, o => o.MapFrom(m => m.ScheduleFileId))
             .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate))
             .ForMember(x => x.Type, o => o.MapFrom(m => m.Type));
 
@@ -29,7 +29,9 @@ public class ContestMapperConfiguration : Profile
             .ForMember(x => x.StartDate, o => o.MapFrom(m => m.StartDate))
             .ForMember(x => x.JudjesIds, o => o.MapFrom(m => m.Judges.Select(j => j.Id).ToList()))
             .ForMember(x => x.CountersIds, o => o.MapFrom(m => m.Counters.Select(c => c.Id).ToList()))
-            .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate));
+            .ForMember(x => x.EndDate, o => o.MapFrom(m => m.EndDate))
+            .ForMember(x => x.ScheduleFile, o => o.MapFrom(m => m.ScheduleFile))
+            .ForMember(x => x.ScheduleFileId, o => o.MapFrom(m => m.ScheduleFileId));
 
         //CreateContestViewModel
         CreateMap<CreateContestViewModel, Contest>()

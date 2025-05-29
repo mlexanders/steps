@@ -109,6 +109,7 @@ public class ScheduleFileService
         if (contest != null)
         {
             contest.ScheduleFileId = scheduleFile.Id;
+            contest.ScheduleFile = scheduleFile;
             var contestRepository = _unitOfWork.GetRepository<Contest>();
             contestRepository.Update(contest);
         }

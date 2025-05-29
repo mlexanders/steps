@@ -15,4 +15,7 @@ public class ContestViewModel : IHaveId
     public List<Guid> JudjesIds { get; set; }
     public List<Guid> CountersIds { get; set; }
     public ContestType Type { get; set; }
+    
+    public Guid? ScheduleFileId { get; set; }
+    public Domain.Entities.ScheduleFile? ScheduleFile { get; set; }
 }

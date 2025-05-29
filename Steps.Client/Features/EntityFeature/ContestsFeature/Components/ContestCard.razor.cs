@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 using Radzen;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.ContestsFeature.Services;
@@ -35,6 +36,7 @@ public partial class ContestCard : BaseNotificate
     [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
     [Inject] protected TestResultsDialogManager TestResultsDialogManager { get; set; } = null!;
     [Inject] protected DialogService DialogService { get; set; } = null!;
+    [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
 
     [Parameter] public ContestViewModel Model { get; set; } = null!;
 
@@ -135,5 +137,14 @@ public partial class ContestCard : BaseNotificate
     private async Task OpenGroupBlocksDialog()
     {
         await GroupBlocksDialogManager.ShowGroupBlocksDialogManage(Model);
+    }
+    
+    private async Task DownloadScheduleFileAsync()
+    {
+        if (Model.ScheduleFile?.Data != null && Model.ScheduleFile.Data.Length > 0)
+        {
+            var base64String = Convert.ToBase64String(Model.ScheduleFile.Data);
+            await JSRuntime.InvokeVoidAsync("downloadFile", Model.ScheduleFile.FileName ?? "Schedule.xlsx", base64String);
+        }
     }
 }

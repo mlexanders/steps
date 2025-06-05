@@ -19,7 +19,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
         <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />

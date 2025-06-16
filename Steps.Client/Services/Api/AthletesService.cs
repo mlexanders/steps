@@ -1,5 +1,4 @@
-﻿using StackExchange.Redis;
-using Steps.Client.Services.Api.Base;
+﻿using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Domain.Entities;
 using Steps.Shared;

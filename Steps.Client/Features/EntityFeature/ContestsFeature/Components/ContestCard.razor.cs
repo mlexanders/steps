@@ -23,6 +23,7 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components;
+using Steps.Domain.Base;
 
 namespace Steps.Client.Features.EntityFeature.ContestsFeature.Components;
 
@@ -39,6 +40,9 @@ public partial class ContestCard : BaseNotificate
     [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
 
     [Parameter] public ContestViewModel Model { get; set; } = null!;
+    [CascadingParameter] public IUser? User { get; set; }
+    
+    private Role? UserRole => User?.Role;
 
     private List<UserViewModel> Judges { get; set; } = new();
     private List<UserViewModel> Counters { get; set; } = new();

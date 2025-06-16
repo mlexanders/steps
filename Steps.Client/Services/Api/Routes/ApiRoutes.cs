@@ -99,7 +99,7 @@ public static class ApiRoutes
 
     public class RatingsRoute 
     {
-        public string GetRatingByBlock (Guid id) => $"Ratings/{nameof(IRatingService.GetRatingByBlock)}/{id}";
+        public string GetRatingByBlock (Guid id) => $"Ratings/{nameof(IRatingService.GetRatingsByBlock)}/{id}";
 
         public string CreateDiplomas = $"Ratings/{nameof(IRatingService.Complete)}";
     }

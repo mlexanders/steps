@@ -21,7 +21,7 @@ public class RatingsController : ControllerBase, IRatingService
     }
 
     [HttpGet("[action]/{groupBlockId:guid}")]
-    public Task<Result<RatingViewModel>> GetRatingByBlock(Guid groupBlockId)
+    public Task<Result<RatingViewModel>> GetRatingsByBlock(Guid groupBlockId)
     {
         return _mediator.Send(new GetRatingByBlockQuery(groupBlockId));
     }

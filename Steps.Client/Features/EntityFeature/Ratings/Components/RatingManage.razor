@@ -1,8 +1,4 @@
-﻿@using Radzen
-@using Radzen
-
-
-
+﻿
 <RadzenDataGrid @ref="_grid" AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
             AllowSorting="true" Data="@Ratings" ColumnWidth="200px"
             SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selected >

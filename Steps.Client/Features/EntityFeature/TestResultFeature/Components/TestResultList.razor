@@ -1,7 +1,6 @@
-﻿@using Steps.Shared
-@using Steps.Shared.Contracts.TestResults.ViewModels
-@inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, Steps.Shared.Contracts.TestResults.ViewModels.TestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.CreateTestResultViewModel, Steps.Shared.Contracts.TestResults.ViewModels.UpdateTestResultViewModel>
+﻿@using Steps.Shared.Contracts.TestResults.ViewModels
 
+@inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, TestResultViewModel, CreateTestResultViewModel, UpdateTestResultViewModel>
 
 <RadzenCard>
     <RadzenDataGrid TItem="TestResultViewModel" Data="@_testResults" AllowPaging="true"
@@ -22,7 +21,3 @@
         </Columns>
     </RadzenDataGrid>
 </RadzenCard>
-
-@code {
-
-}

@@ -7,6 +7,7 @@
 @using Steps.Shared.Contracts.ScheduleFile.ViewModel
 
 @inject PreSchedulerManager PreSchedulerManager
+@inject FinalSchedulerManager FinalSchedulerManager
 @inject IJSRuntime JSRuntime
 
 @inherits BaseNotificate
@@ -19,7 +20,7 @@
                   Icon="edit"
                   Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
                   Disabled="_isDownloading"
-                  Click="CreatePreScheduleFile"/>
+                  Click="CreateScheduleFile"/>
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
             @foreach (var block in _blocks)

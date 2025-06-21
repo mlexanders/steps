@@ -13,13 +13,23 @@
                     {
                         <p><strong>Описание:</strong> @Model.Description</p>
                     }
-                    @if (Model.ScheduleFile?.Data != null && Model.ScheduleFile.Data.Length > 0)
+                    @if (Model.PreScheduleFile?.Data != null && Model.PreScheduleFile.Data.Length > 0)
                     {
                         <p>
-                            <strong>Файл расписания:</strong>
+                            <strong>Предварительное расписание:</strong>
                             <RadzenIcon Icon="insert_drive_file" Style="vertical-align: middle; margin-right: 0.5rem;" />
                             <RadzenButton Text="Скачать" Icon="download" ButtonStyle="ButtonStyle.Secondary"
-                                          Click="DownloadScheduleFileAsync"
+                                          Click="DownloadPreScheduleFileAsync"
+                                          Size="ButtonSize.Small" />
+                        </p>
+                    }
+                    @if (Model.FinalScheduleFile?.Data != null && Model.FinalScheduleFile.Data.Length > 0)
+                    {
+                        <p>
+                            <strong>Финальное расписание:</strong>
+                            <RadzenIcon Icon="insert_drive_file" Style="vertical-align: middle; margin-right: 0.5rem;" />
+                            <RadzenButton Text="Скачать" Icon="download" ButtonStyle="ButtonStyle.Secondary"
+                                          Click="DownloadFinalScheduleFileAsync"
                                           Size="ButtonSize.Small" />
                         </p>
                     }

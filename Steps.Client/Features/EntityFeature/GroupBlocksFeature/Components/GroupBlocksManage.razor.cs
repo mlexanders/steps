@@ -75,19 +75,44 @@ public partial class GroupBlocksManage : BaseNotificate
         StateHasChanged();
     }
     
-    private async Task CreatePreScheduleFile()
+    private async Task CreateScheduleFile()
     {
         _isDownloading = true;
 
         try
         {
+            if (_blocks.Where(g => g.IsHaveFinalBlock == true).Any())
+            {
+                var createFinalScheduleFileViewModel = new CreateFinalScheduleFileViewModel
+                {
+                    GroupBlockIds = _blocks.Where(g => g.IsHaveFinalBlock == true)
+                        .Select(t => t.Id).ToList()
+                };
+                
+                var _result = await FinalSchedulerManager.GenerateScheduleFile(createFinalScheduleFileViewModel);
+    
+                if (_result.IsSuccess && _result.Value.Data != null)
+                {
+                    await JSRuntime.InvokeVoidAsync(
+                        "downloadFile", 
+                        _result.Value.FileName ?? "schedule.xlsx", 
+                        _result.Value.Data
+                    );
+                }
+                else
+                {
+                    NotificationService.Notify(NotificationSeverity.Error, "Ошибка", "Не удалось сгенерировать файл с финальным расписанием");
+                }
+            }
+            
             var createPreScheduleFileViewModel = new CreatePreScheduleFileViewModel
             {
-                GroupBlockIds = _blocks.Select(g => g.Id).ToList()
+                GroupBlockIds = _blocks
+                    .Select(g => g.Id).ToList()
             };
 
             var result = await PreSchedulerManager.GeneratePreScheduleFile(createPreScheduleFileViewModel);
-    
+
             if (result.IsSuccess && result.Value.Data != null)
             {
                 await JSRuntime.InvokeVoidAsync(

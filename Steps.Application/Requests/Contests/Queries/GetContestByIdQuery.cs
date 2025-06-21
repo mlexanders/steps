@@ -30,7 +30,7 @@ public class GetContestByIdQueryHandler : IRequestHandler<GetContestByIdQuery, R
                 selector: c => _mapper.Map<ContestViewModel>(c),
                 include: x => x.Include(a => a.Judges)
                     .Include(a => a.Counters)
-                    .Include(a => a.ScheduleFile),
+                    .Include(a => a.PreScheduleFile),
                 orderBy: c => c.OrderByDescending(o => o.StartDate),
                 trackingType: TrackingType.NoTracking);
 

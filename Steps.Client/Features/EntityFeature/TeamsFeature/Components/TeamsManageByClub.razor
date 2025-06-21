@@ -1,5 +1,6 @@
 ﻿@using Steps.Shared.Contracts.Teams.ViewModels
 @using Steps.Client.Features.Common
+@using Steps.Domain.Definitions
 
 @inherits ManageBaseComponent<Team, TeamViewModel, CreateTeamViewModel, UpdateTeamViewModel>
 
@@ -11,7 +12,7 @@
                     RowSelect="@(e => DialogManager.ShowCardDialog(e))">
 
         <HeaderTemplate>
-            @if (!IsReadonly)
+            @if (!IsReadonly && UserRole is Role.Organizer)
             {
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать команду"
                               Click="@OnCreate"/>

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.Clubs.ViewModels;
@@ -17,6 +19,10 @@ public partial class
 
     [Parameter] public bool IsReadonly { get; set; }
     [Parameter] [Required] public ClubViewModel? Club { get; set; } = null!;
+    
+    [CascadingParameter] public IUser? User { get; set; }
+    
+    private Role? UserRole => User?.Role;
 
     protected override Task OnInitializedAsync()
     {

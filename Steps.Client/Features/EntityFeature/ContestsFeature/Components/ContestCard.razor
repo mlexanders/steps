@@ -77,21 +77,66 @@
 
         <RadzenFieldset Text="Действия">
             <RadzenStack Gap="0.5rem">
-                @if (Model.Status is ContestStatus.Open)
+                @if (UserRole is Role.Organizer)
                 {
-                    <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                                  Click="() => OpenCreateEntryDialog()" />
-                    <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
-                                  Click="() => CloseCollectingEntries()" />
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenCreateEntryDialog()"/>
+                        <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                                      Click="() => CloseCollectingEntries()"/>
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
+                                      Click="() => OpenJudgeDialog()"/>
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
                 }
-                @if (Model.Status is ContestStatus.Closed)
+                @if (UserRole is Role.Counter)
                 {
-                    <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
-                                  Click="() => OpenJudgeDialog()" />
-                    <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
-                                  Click="() => OpenCounterDialog()" />
-                    <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
-                                  Click="() => OpenDiplomaDialog()" />
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenText Text="Ведется сбор заявок" Style="color: var(--rz-text-muted-color);" />
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
+                }
+                @if (UserRole is Role.Judge)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenText Text="Ведется сбор заявок" Style="color: var(--rz-text-muted-color);" />
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
+                                      Click="() => OpenJudgeDialog()"/>
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
+                }
+                @if (UserRole is Role.User)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenCreateEntryDialog()"/>
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenText Text="Сбор заявок завершен" Style="color: var(--rz-text-muted-color);" />
+                    }
                 }
             </RadzenStack>
         </RadzenFieldset>

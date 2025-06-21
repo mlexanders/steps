@@ -50,7 +50,7 @@ public class TestResultsDialogManager : IDialogManager<TestResultViewModel>
     
     public async Task<bool> ShowManageDialog(Guid contestId)
     {
-        var result = await _dialogService.OpenAsync<TestResultManage>("Проставленные результаты",
+        var result = await _dialogService.OpenAsync<TestResultList>("Проставленные результаты",
             new Dictionary<string, object> { { "ContestId", contestId } },
             new DialogOptions { Width = "600px", CloseDialogOnOverlayClick = true });
         

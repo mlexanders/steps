@@ -9,7 +9,4 @@ namespace Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 /// Менеджер для Финального расписания
 /// </summary>
 public class FinalSchedulerManager(IFinalSchedulesService service)
-    : SchedulerManagerBase<FinalScheduledCell, FinalScheduledCellViewModel, GetPagedFinalScheduledCells>(service)
-{
-    private readonly IFinalSchedulesService _service = service;
-}
+    : SchedulerManagerBase<FinalScheduledCell, FinalScheduledCellViewModel, GetPagedFinalScheduledCells>(service);

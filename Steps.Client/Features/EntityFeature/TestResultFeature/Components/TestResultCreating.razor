@@ -1,0 +1,28 @@
+﻿@using Steps.Client.Features.EntityFeature.SchedulesFeature.FinalScheduleFeature
+@using Steps.Client.Features.EntityFeature.TestResultFeature.Services
+@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels
+
+@inject TestResultsDialogManager TestResultsDialogManager
+
+<RadzenRow>
+    <RadzenText Text="Проставление баллов"/>
+</RadzenRow> 
+<FinalScheduleByGroupBlockForJudge @ref="@_finalScheduleByGroupBlockForJudge" GroupBlock="@GroupBlock" AllowRowSelectOnRowClick="@(true)" FinalScheduledCellChanged="@CreateTestResult"/>
+
+@code {
+
+    [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+    private FinalScheduleByGroupBlockForJudge? _finalScheduleByGroupBlockForJudge;
+
+    private async Task CreateTestResult(FinalScheduledCellViewModel? athlete)
+    {
+        if (GroupBlock is null || athlete is null) return;
+        var success = await TestResultsDialogManager.ShowCreateDialog(GroupBlock.ContestId, athlete.AthleteId);
+        if (success)
+        {
+            await _finalScheduleByGroupBlockForJudge!.Update();
+        }
+    }
+
+}

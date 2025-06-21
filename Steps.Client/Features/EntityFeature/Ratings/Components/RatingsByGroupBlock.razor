@@ -1,37 +1,38 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
-@using Steps.Client.Services.Api
+﻿@using Steps.Client.Services.Api
+@using Steps.Client.Services.Messaging
 @using Steps.Domain.Definitions
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@using Steps.Shared.Contracts.Messaging
 @using Steps.Shared.Contracts.Ratings
 
 @inject RatingService RatingService
+@inject TestResultCreatedMessaging TestResultCreatedMessaging
 @inject IJSRuntime JS
-
+@implements IAsyncDisposable
 
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
         
-        <RadzenTabsItem Text="Высшая">
+        <RadzenTabsItem Text="Высшая" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.Higher)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="1">
+        <RadzenTabsItem Text="1" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.First)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="2">
+        <RadzenTabsItem Text="2" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.Second)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
-        <RadzenTabsItem Text="3">
+        <RadzenTabsItem Text="3" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.Third)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="4">
+        <RadzenTabsItem Text="4" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.Fourth)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="За участие">
+        <RadzenTabsItem Text="За участие" Disabled="@_isLoading">
             <RatingManage Ratings="@GetByDegree(CertificateDegree.Participant)" OnPrintRatings="@OnPrint"/>
         </RadzenTabsItem>
 
@@ -56,8 +57,6 @@
     private Dictionary<CertificateDegree, List<Rating>>? _ratings;
     private bool _isLoading;
     
-    private HubConnection? _hubConnection { get; set; }
-
     [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,26 +66,33 @@
             return;
         }
 
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:5000/testResultHub")
-            .WithAutomaticReconnect()
-            .Build();
-
-        _hubConnection.On("RatingsUpdated", async () =>
-        {
-            await Load(); // Метод обновления рейтингов
-            StateHasChanged();
-        });
-
-        await _hubConnection.StartAsync();
         await Load();
+
+        TestResultCreatedMessaging.OnReceived += OnTestResultCreated;
+        await TestResultCreatedMessaging.StartAsync();
+    }
+
+    private Task OnTestResultCreated(TestResultCreatedMessage message)
+    {
+        return Load();
     }
 
     private async Task Load()
     {
-        var result = await RatingService.GetRatingByBlock(GroupBlock.Id);
-        var ratings = result?.Value?.NotCompleted ?? [];
-        _ratings = ratings.GroupBy(r => r.CertificateDegree).ToDictionary(kvp => kvp.Key, kvp => kvp.ToList());
+        if (GroupBlock == null) return;
+
+        _isLoading = true;
+        try
+        {
+            var result = await RatingService.GetRatingsByBlock(GroupBlock.Id);
+            var ratings = result?.Value?.NotCompleted ?? [];
+            _ratings = ratings.GroupBy(r => r.CertificateDegree).ToDictionary(kvp => kvp.Key, kvp => kvp.ToList());
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
     }
 
     private List<Rating> GetByDegree(CertificateDegree d)
@@ -102,7 +108,11 @@
         {
             var result = await RatingService.Complete(ratings);
             await Task.Yield();
+            
+            var taskUpdate = Load();
             await LoadDiploma(result?.Value);
+            
+            await taskUpdate;
         }
         finally
         {
@@ -127,9 +137,9 @@
 
     public async ValueTask DisposeAsync()
     {
-        if (_hubConnection is not null)
+        if (TestResultCreatedMessaging is not null)
         {
-            await _hubConnection.DisposeAsync();
+            await TestResultCreatedMessaging.DisposeAsync();
         }
     }
 }

@@ -1,23 +1,19 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
-@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
+﻿@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
-@using Steps.Client.Features.EntityFeature.TestResultFeature.Services
 @using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels
 
-@inject FinalSchedulerManager FinalSchedulerManager
-@inject TestResultsDialogManager TestResultsDialogManager
 @implements IDisposable
 
-
-<RadzenText Text="Финальное расписание:"/>
+<RadzenText Text="Участники в Финальном расписании:"/>
 <RadzenCard>
     <RadzenDataGrid TItem="FinalScheduledCellViewModel" Data="FinalSchedulerManager.Data" AllowPaging="true"
                     SelectionMode="DataGridSelectionMode.Single" Style="min-width: 700px"
                     AllowSorting="true" AllowFiltering="true" AllowColumnResize="true"
                     PageSize="FinalSchedulerManager.PageSize" EmptyText="Участников в этом блоке нет"
                     IsLoading="@FinalSchedulerManager.IsLoading" Count="@FinalSchedulerManager.TotalCount"
-                    LoadData="@OnChangePage">
+                    LoadData="@OnChangePage" AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick"
+                    RowSelect="@OnRowSelect">
         <Columns>
             <ScheduleColumns TView="FinalScheduledCellViewModel"/>
         </Columns>
@@ -25,7 +21,9 @@
 </RadzenCard>
 
 @code {
+    [Inject] protected FinalSchedulerManager FinalSchedulerManager { get; set; } = null!;
     [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
+    [Parameter] public bool AllowRowSelectOnRowClick { get; set; }
 
     private FinalScheduledCellViewModel? _selectedAthlete;
 
@@ -49,4 +47,10 @@
     {
         await FinalSchedulerManager.ChangePage(arg.Skip, arg.Top);
     }
+
+    protected virtual Task OnRowSelect(FinalScheduledCellViewModel? athlete)
+    {
+        return Task.CompletedTask;
+    }
+
 }

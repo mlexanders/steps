@@ -100,7 +100,7 @@ public partial class ContestCard : BaseNotificate
 
         if (selectedGroupBlock != null)
         {
-            await DialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
+            await DialogService.OpenAsync<TestResultCreating>(
                 "Финальное расписание",
                 new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock } },
                 new DialogOptions { Width = "800px", Height = "600px" });
@@ -109,7 +109,7 @@ public partial class ContestCard : BaseNotificate
 
     private async Task OpenCounterDialog()
     {
-        await DialogService.OpenAsync<TestResultManage>(
+        await DialogService.OpenAsync<TestResultList>(
             "Проставленные результаты",
             new Dictionary<string, object> { { "ContestId", Model.Id } },
             new DialogOptions { Width = "800px", Height = "600px" });

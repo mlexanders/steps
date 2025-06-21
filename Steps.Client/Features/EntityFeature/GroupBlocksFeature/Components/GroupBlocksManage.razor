@@ -1,13 +1,5 @@
 ﻿@using Steps.Client.Features.Common
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
-@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
-@using Steps.Domain.Entities.GroupBlocks
-@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Contracts.ScheduleFile.ViewModel
-
-@inject PreSchedulerManager PreSchedulerManager
-@inject IJSRuntime JSRuntime
 
 @inherits BaseNotificate
 
@@ -20,6 +12,11 @@
                   Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
                   Disabled="_isDownloading"
                   Click="CreatePreScheduleFile"/>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
             @foreach (var block in _blocks)
@@ -33,9 +30,9 @@
 }
 else
 {
-    <RadzenText> блоков нет</RadzenText>
+    <RadzenText TextStyle="TextStyle.H4">Список с предварительными блоками не создан</RadzenText>
     
-    <RadzenText> Выберите очередность выступления команд</RadzenText>
+    <RadzenText TextStyle="TextStyle.Subtitle2">Выберите очередность выступления команд и создайте предварительные блоки</RadzenText>
 
     if (_teams is null)
     {
@@ -47,7 +44,7 @@ else
         {
             <OrderingTeams @bind-IsComplete="@_isComplete" @bind-Teams="@_teams"/>
         }
-       else
+        else
         {
             <RadzenButton Text="Создать блоки" Click="@CreateBlocks"/>
         }

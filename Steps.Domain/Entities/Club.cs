@@ -10,5 +10,5 @@ public class Club : Entity
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 
     public Guid OwnerId { get; set; }
-    public virtual User Owner { get; set; }
+    public virtual User Owner { get; set; } = null!;
 }

@@ -2,7 +2,7 @@
 
 namespace Steps.Domain.Entities;
 
-public class TestResult : Entity
+public class TestResult : Entity, ITestResult
 {
     public Guid ContestId { get; set; }
     public virtual Contest Contest { get; set; } = null!;

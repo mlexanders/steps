@@ -6,7 +6,6 @@
 
 @if (_blocks is { Count: > 0 })
 {
-    <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
     <RadzenButton ButtonStyle="ButtonStyle.Primary"
                   Icon="edit"
                   Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
@@ -36,7 +35,7 @@ else
 
     if (_teams is null)
     {
-        <RadzenButton Text="Показать команды" Click="GetTeams"/>
+        <RadzenButton Text="Показать команды" Click="GetTeamsForCreateGroupBlocks"/>
     }
     else
     {

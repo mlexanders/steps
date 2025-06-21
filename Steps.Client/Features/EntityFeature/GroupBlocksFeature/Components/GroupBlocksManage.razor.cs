@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
+using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Shared.Contracts.Contests.ViewModels;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
@@ -16,7 +17,9 @@ public partial class GroupBlocksManage : BaseNotificate
 {
     [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
     [Inject] protected IGroupBlocksService GroupBlocksService { get; set; } = null!;
-
+    [Inject] protected PreSchedulerManager PreSchedulerManager { get; set; } = null!;
+    [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
+    
     [Parameter] [Required] public ContestViewModel? Contest { get; set; }
 
     private List<TeamViewModel>? _teams;
@@ -92,7 +95,7 @@ public partial class GroupBlocksManage : BaseNotificate
 
             var result = await PreSchedulerManager.GeneratePreScheduleFile(createPreScheduleFileViewModel);
     
-            if (result.IsSuccess && result.Value.Data != null)
+            if (result.IsSuccess && result.Value?.Data != null)
             {
                 await JSRuntime.InvokeVoidAsync(
                     "downloadFile", 

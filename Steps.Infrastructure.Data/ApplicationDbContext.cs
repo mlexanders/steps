@@ -15,11 +15,11 @@ public class ApplicationDbContext : DbContext
     public DbSet<Athlete> Athletes { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Entry> Entries { get; set; }
-    
     public DbSet<TestResult> TestResults { get; set; }
     public DbSet<Contest> Contests { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
-    
+    public DbSet<FinalScheduledCell> FinalScheduledCells { get; set; }
+    public DbSet<PreScheduledCell> PreScheduledCells { get; set; }
     public DbSet<ScheduleFile> ScheduleFiles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

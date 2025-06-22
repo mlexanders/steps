@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Steps.Application.Exceptions;
 using Steps.Application.Requests.Accounts.Commands;
 using Steps.Application.Tests;
 using Steps.Domain.Definitions;
@@ -42,7 +43,7 @@ public class RegisterUserCommandHandlerTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_UserAlreadyExists_ThrowsStepsBusinessException()
+    public async Task Handle_UserAlreadyExists_ThrowsAppHandledException()
     {
         // Arrange
         await SeedTestData();
@@ -58,11 +59,13 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<StepsBusinessException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<StepsBusinessException>(exception.InnerException);
+        Assert.Contains("Пользователь с таким email уже зарегистрирован", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_PasswordsDoNotMatch_ThrowsValidationException()
+    public async Task Handle_PasswordsDoNotMatch_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -77,11 +80,12 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.Contains("Пароли не совпадают", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_EmptyName_ThrowsValidationException()
+    public async Task Handle_EmptyName_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -96,11 +100,12 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.Contains("Введите имя", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_EmptyLogin_ThrowsValidationException()
+    public async Task Handle_EmptyLogin_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -115,11 +120,12 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.Contains("Неккоректный email", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_WeakPassword_ThrowsValidationException()
+    public async Task Handle_WeakPassword_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -134,11 +140,12 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.Contains("Пароли не совпадают", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_InvalidEmailFormat_ThrowsValidationException()
+    public async Task Handle_InvalidEmailFormat_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -153,7 +160,8 @@ public class RegisterUserCommandHandlerTest : TestBase
         var command = new RegisterUserCommand(registrationModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<FluentValidation.ValidationException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.Contains("Неккоректный email", exception.Message);
     }
 
     [Fact]

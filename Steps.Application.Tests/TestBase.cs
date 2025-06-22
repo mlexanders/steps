@@ -27,9 +27,13 @@ public abstract class TestBase : IDisposable
     {
         var builder = WebApplication.CreateBuilder();
         
-        // Добавляем InMemory базу данных
+        // Добавляем InMemory базу данных с отключенными предупреждениями о транзакциях
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}"));
+        {
+            options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
+                   .ConfigureWarnings(warnings => warnings.Ignore(
+                       Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning));
+        });
 
         // Добавляем UnitOfWork
         builder.Services.AddUnitOfWork<ApplicationDbContext>();

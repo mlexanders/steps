@@ -41,7 +41,7 @@ public class LoginRequestCommandHandlerTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_InvalidCredentials_ThrowsAppInvalidCredentialsException()
+    public async Task Handle_InvalidCredentials_ThrowsAppHandledException()
     {
         // Arrange
         await SeedTestData();
@@ -54,11 +54,13 @@ public class LoginRequestCommandHandlerTest : TestBase
         var command = new LoginRequestCommand(loginModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<AppInvalidCredentialsException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<AppInvalidCredentialsException>(exception.InnerException);
+        Assert.Contains("Неверный логин или пароль", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_UserNotFound_ThrowsAppUserNotFoundException()
+    public async Task Handle_UserNotFound_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -70,7 +72,9 @@ public class LoginRequestCommandHandlerTest : TestBase
         var command = new LoginRequestCommand(loginModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<AppUserNotFoundException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<AppUserNotFoundException>(exception.InnerException);
+        Assert.Contains("Пользователь c email: nonexistent@example.com не найден", exception.Message);
     }
 
     [Fact]

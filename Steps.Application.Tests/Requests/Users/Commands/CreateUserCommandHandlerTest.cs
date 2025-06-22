@@ -41,7 +41,7 @@ public class CreateUserCommandHandlerTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_UserAlreadyExists_ThrowsStepsBusinessException()
+    public async Task Handle_UserAlreadyExists_ThrowsAppHandledException()
     {
         // Arrange
         await SeedTestData();
@@ -53,7 +53,9 @@ public class CreateUserCommandHandlerTest : TestBase
         var command = new CreateUserCommand(createUserModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<StepsBusinessException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<StepsBusinessException>(exception.InnerException);
+        Assert.Contains("Пользователь с таким email уже зарегистрирован", exception.Message);
     }
 
     [Fact]
@@ -63,13 +65,13 @@ public class CreateUserCommandHandlerTest : TestBase
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
         var createUserModel = new CreateUserViewModel 
         { 
-            Login = ""
+            Login = null!
         };
         var command = new CreateUserCommand(createUserModel);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
-        Assert.Contains("Введите логин", exception.Message);
+        Assert.Contains("Заполните логин", exception.Message);
     }
 
     [Fact]
@@ -81,7 +83,7 @@ public class CreateUserCommandHandlerTest : TestBase
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
-        Assert.Contains("Model", exception.Message);
+        Assert.Contains("Все поля должны быть заполнены", exception.Message);
     }
 
     [Fact]

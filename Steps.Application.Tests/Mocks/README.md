@@ -143,8 +143,8 @@ await eventPublisher.PublishAsync(@event, CancellationToken.None);
 
 #### Методы
 
-##### `SendAsync(string message, string? recipient = null)`
-Отправляет простое уведомление.
+##### `Notify(INotification notification)`
+Отправляет уведомление.
 
 **Поведение:**
 - Выводит в консоль информацию об уведомлении
@@ -153,23 +153,9 @@ await eventPublisher.PublishAsync(@event, CancellationToken.None);
 
 **Пример использования:**
 ```csharp
-await notificationService.SendAsync("Пользователь создан", "admin@example.com");
-// В консоли появится: [NOTIFICATION SENT] To: admin@example.com, Message: Пользователь создан
-```
-
-##### `SendAsync(string message, object data, string? recipient = null)`
-Отправляет уведомление с данными.
-
-**Поведение:**
-- Выводит в консоль информацию об уведомлении и данных
-- Всегда возвращает успешный результат
-- Не выбрасывает исключения
-
-**Пример использования:**
-```csharp
-var userData = new { Id = Guid.NewGuid(), Login = "newuser@example.com" };
-await notificationService.SendAsync("Пользователь создан", userData, "admin@example.com");
-// В консоли появится: [NOTIFICATION SENT] To: admin@example.com, Message: Пользователь создан, Data: { Id = ..., Login = ... }
+var notification = new SomeNotification { Message = "Test" };
+await notificationService.Notify(notification);
+// В консоли появится: [NOTIFICATION SENT] MethodName: SomeNotification
 ```
 
 ## Регистрация моков
@@ -194,6 +180,19 @@ public YourTestClass()
 
     _scope = app.Services.CreateScope();
 }
+```
+
+## Настройка InMemory базы данных
+
+Для тестов используется InMemory база данных с отключенными предупреждениями о транзакциях:
+
+```csharp
+services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseInMemoryDatabase("TestDb")
+           .ConfigureWarnings(warnings => warnings.Ignore(
+               Microsoft.EntityFrameworkCore.Diagnostics.InMemoryEventId.TransactionIgnoredWarning));
+});
 ```
 
 ## Создание новых моков

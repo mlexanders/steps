@@ -13,6 +13,6 @@ public class NotificationServiceMock : INotificationService
     public Task Notify(INotification notification)
     {
         Console.WriteLine($"[NOTIFICATION SENT] MethodName: {notification.MethodName ?? "Default"}");
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 } 

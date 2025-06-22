@@ -1,5 +1,10 @@
 ﻿@using Steps.Shared.Contracts.Accounts.ViewModels
-<UserCardDialog Model="@Model"/>
+@using Steps.Client.Features.EntityFeature.UsersFeature.Components
+@using Steps.Client.Features.Common
+
+@inherits BaseModal
+
+<UserCard Model="Model"/>
 
 @code{
     [Parameter] public UserViewModel Model { get; set; } = null!;

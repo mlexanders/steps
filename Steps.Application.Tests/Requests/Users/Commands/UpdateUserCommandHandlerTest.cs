@@ -42,7 +42,7 @@ public class UpdateUserCommandHandlerTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_UserNotFound_ThrowsStepsBusinessException()
+    public async Task Handle_UserNotFound_ThrowsAppHandledException()
     {
         // Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -55,7 +55,9 @@ public class UpdateUserCommandHandlerTest : TestBase
         var command = new UpdateUserCommand(updateUserModel);
 
         // Act & Assert
-        await Assert.ThrowsAsync<StepsBusinessException>(() => mediator.Send(command));
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<StepsBusinessException>(exception.InnerException);
+        Assert.Contains("Пользователь не найден", exception.Message);
     }
 
     [Fact]
@@ -73,7 +75,7 @@ public class UpdateUserCommandHandlerTest : TestBase
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
-        Assert.Contains("Введите логин", exception.Message);
+        Assert.Contains("Заполните логин", exception.Message);
     }
 
     [Fact]
@@ -85,7 +87,7 @@ public class UpdateUserCommandHandlerTest : TestBase
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
-        Assert.Contains("Model", exception.Message);
+        Assert.Contains("Все поля должны быть заполнены", exception.Message);
     }
 
     [Fact]
@@ -103,7 +105,7 @@ public class UpdateUserCommandHandlerTest : TestBase
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
-        Assert.Contains("Id", exception.Message);
+        Assert.Contains("Выберите пользователя", exception.Message);
     }
 
     [Fact]

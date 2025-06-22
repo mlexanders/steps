@@ -3,9 +3,9 @@ using Steps.Application.Requests.Accounts.Commands;
 
 namespace Steps.Application.Requests.Accounts.Validators;
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
-    public CreateUserCommandValidator()
+    public RegisterUserCommandValidator()
     {
         RuleFor(x => x.Model).NotNull().DependentRules(() =>
         {

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Steps.Application.Requests.Users.Commands;
 using Steps.Application.Requests.Users.Queries;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -26,13 +27,13 @@ public class UsersController : IUsersService
     [HttpPost]
     public Task<Result<UserViewModel>> Create([FromBody] CreateUserViewModel model)
     {
-        throw new NotImplementedException();
+        return _mediator.Send(new CreateUserCommand(model));
     }
 
     [HttpPatch]
     public Task<Result<Guid>> Update([FromBody] UpdateUserViewModel model)
     {
-        throw new NotImplementedException();
+        return _mediator.Send(new UpdateUserCommand(model));
     }
 
     [HttpGet("{id:guid}")]

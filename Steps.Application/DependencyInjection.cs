@@ -1,4 +1,5 @@
-﻿using Steps.Application.Events.Base;
+﻿using Steps.Application.Events;
+using Steps.Application.Events.Base;
 using Steps.Application.Events.TestResults;
 using Steps.Application.ExceptionsHandling;
 using Steps.Application.Services;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
         
         builder.Services.AddTransient(typeof(IApplicationEventHandler<TestResultCreatedEvent>), typeof(TestResultCreatedApplicationEventHandler));
+        builder.Services.AddTransient(typeof(IApplicationEventHandler<UserCreatedEvent>), typeof(UserCreatedEventHandler));
 
         return builder;
     }

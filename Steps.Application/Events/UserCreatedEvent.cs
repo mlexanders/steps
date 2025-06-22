@@ -16,7 +16,7 @@ public class UserCreatedEventHandler : IApplicationEventHandler<UserCreatedEvent
 
     public Task Handle(UserCreatedEvent applicationEvent, CancellationToken cancellationToken)
     {
-        //TODO:
+        //TODO: mail send
         _logger.LogInformation($"User created: {applicationEvent.Entity.Login} \n {applicationEvent.Password}");
         return Task.CompletedTask;
     }

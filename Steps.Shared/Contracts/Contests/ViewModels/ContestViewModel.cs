@@ -16,6 +16,9 @@ public class ContestViewModel : IHaveId
     public List<Guid> CountersIds { get; set; }
     public ContestType Type { get; set; }
     
-    public Guid? ScheduleFileId { get; set; }
-    public Domain.Entities.ScheduleFile? ScheduleFile { get; set; }
+    public Guid? PreScheduleFileId { get; set; }
+    public Domain.Entities.ScheduleFile? PreScheduleFile { get; set; }
+    
+    public Guid? FinalScheduleFileId { get; set; }
+    public Domain.Entities.ScheduleFile? FinalScheduleFile { get; set; }
 }

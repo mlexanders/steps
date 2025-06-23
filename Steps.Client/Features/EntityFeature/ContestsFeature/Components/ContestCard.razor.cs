@@ -143,12 +143,21 @@ public partial class ContestCard : BaseNotificate
         await GroupBlocksDialogManager.ShowGroupBlocksDialogManage(Model);
     }
     
-    private async Task DownloadScheduleFileAsync()
+    private async Task DownloadPreScheduleFileAsync()
     {
-        if (Model.ScheduleFile?.Data != null && Model.ScheduleFile.Data.Length > 0)
+        if (Model.PreScheduleFile?.Data != null && Model.PreScheduleFile.Data.Length > 0)
         {
-            var base64String = Convert.ToBase64String(Model.ScheduleFile.Data);
-            await JSRuntime.InvokeVoidAsync("downloadFile", Model.ScheduleFile.FileName ?? "Schedule.xlsx", base64String);
+            var base64String = Convert.ToBase64String(Model.PreScheduleFile.Data);
+            await JSRuntime.InvokeVoidAsync("downloadFile", Model.PreScheduleFile.FileName ?? "Schedule.xlsx", base64String);
+        }
+    }
+    
+    private async Task DownloadFinalScheduleFileAsync()
+    {
+        if (Model.FinalScheduleFile?.Data != null && Model.FinalScheduleFile.Data.Length > 0)
+        {
+            var base64String = Convert.ToBase64String(Model.FinalScheduleFile.Data);
+            await JSRuntime.InvokeVoidAsync("downloadFile", Model.FinalScheduleFile.FileName ?? "Schedule.xlsx", base64String);
         }
     }
 }

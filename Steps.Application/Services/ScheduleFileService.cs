@@ -9,6 +9,7 @@ using Steps.Shared;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 using AutoMapper;
+using NPOI.SS.Util;
 
 namespace Steps.Application.Services;
 
@@ -25,14 +26,24 @@ public class ScheduleFileService
 
     public async Task<ScheduleFileViewModel> GeneratePreScheduleFile(List<Guid> groupBlockIds)
     {
-        IWorkbook workbook = new XSSFWorkbook();
+        using IWorkbook workbook = new XSSFWorkbook();
+        var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
+        int sheetNumber = 1;
 
-        int sheetNumber = 0;
+        ICellStyle headerStyle = workbook.CreateCellStyle();
+        IFont headerFont = workbook.CreateFont();
+        headerFont.IsBold = true;
+        headerStyle.SetFont(headerFont);
+
+        ICellStyle titleStyle = workbook.CreateCellStyle();
+        IFont titleFont = workbook.CreateFont();
+        titleFont.IsBold = true;
+        titleFont.FontHeightInPoints = 14;
+        titleStyle.SetFont(titleFont);
+        titleStyle.Alignment = HorizontalAlignment.Center;
 
         foreach (var groupBlockId in groupBlockIds)
         {
-            var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
-
             var groupBlock = await groupBlockRepository.GetFirstOrDefaultAsync(
                 predicate: g => g.Id == groupBlockId,
                 include: source => source
@@ -42,24 +53,58 @@ public class ScheduleFileService
                 trackingType: TrackingType.Tracking);
 
             if (groupBlock == null) continue;
+            if (groupBlock.PreSchedule.Any(x => x.IsConfirmed))
+            {
+                sheetNumber++;
+                continue;
+            }
 
             string sheetName = $"Блок {sheetNumber++}";
             ISheet sheet = workbook.CreateSheet(sheetName);
+            
+            sheet.PrintSetup.Landscape = true;
+            sheet.PrintSetup.PaperSize = (short)PaperSize.A4;
+            sheet.FitToPage = true;
+            sheet.PrintSetup.FitWidth = 1;
+            sheet.PrintSetup.FitHeight = 0;
+
+            IRow titleRow = sheet.CreateRow(0);
+            titleRow.HeightInPoints = 30;
+            ICell titleCell = titleRow.CreateCell(0);
+            titleCell.SetCellValue("СТУПЕНИ МАСТЕРСТВА (предварительное)");
+            titleCell.CellStyle = titleStyle;
+            sheet.AddMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+            IRow subtitleRow = sheet.CreateRow(1);
+            ICell subtitleCell = subtitleRow.CreateCell(0);
+            subtitleCell.SetCellValue($"Запуск в СК участников {sheetName}");
+            sheet.AddMergedRegion(new CellRangeAddress(1, 1, 0, 7));
+
+            IRow registrationRow = sheet.CreateRow(2);
+            ICell registrationCell = registrationRow.CreateCell(0);
+            registrationCell.SetCellValue($"Регистрация с {groupBlock.PreSchedule
+                .OrderBy(x => x.ExitTime)
+                .FirstOrDefault()?.ExitTime.ToString("HH:mm")}");
+            sheet.AddMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 
             var headers = new string[]
             {
-                "№", "Команда", "Имя спортсмена", "Дата рождения",
-                "Номинация", "Возрастная категория", "Ступень", "Время выхода"
+                "№п/п", "Название Команды, клуба", "ФИ спортсмена", 
+                "Дата рождения", "Номинация (ЧИР/ЧФ)", 
+                "Возрастная категория", "Ступень тестирования", 
+                "Время выхода на площадку (фристайл)"
             };
 
-            IRow headerRow = sheet.CreateRow(0);
+            IRow headerRow = sheet.CreateRow(3);
             for (int i = 0; i < headers.Length; i++)
             {
-                headerRow.CreateCell(i).SetCellValue(headers[i]);
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(headers[i]);
+                cell.CellStyle = headerStyle;
             }
 
-            int rowNum = 1;
-            foreach (var preScheduleCell in groupBlock.PreSchedule)
+            int rowNum = 4;
+            foreach (var preScheduleCell in groupBlock.PreSchedule.OrderBy(x => x.ExitTime))
             {
                 if (preScheduleCell.IsConfirmed) continue;
                 
@@ -68,23 +113,28 @@ public class ScheduleFileService
 
                 IRow row = sheet.CreateRow(rowNum++);
 
-                row.CreateCell(0).SetCellValue(rowNum - 1);
+                string ageCategory = MapAgeCategory(athlete.AgeCategory.ToString());
+                string degree = MapDegree(athlete.Degree.ToString());
+                string athleteType = athlete.AthleteType.ToString() == "Cheer" ? "ЧИР" : "ЧФ";
+
+                row.CreateCell(0).SetCellValue(rowNum - 4);
                 row.CreateCell(1).SetCellValue(athlete.Team?.Name ?? string.Empty);
                 row.CreateCell(2).SetCellValue(athlete.FullName ?? string.Empty);
                 row.CreateCell(3).SetCellValue(athlete.BirthDate.ToString("dd.MM.yyyy"));
-                row.CreateCell(4).SetCellValue(preScheduleCell.Athlete.AthleteType.ToString() ?? string.Empty);
-                row.CreateCell(5).SetCellValue(preScheduleCell.Athlete.AgeCategory.ToString() ?? string.Empty);
-                row.CreateCell(6).SetCellValue(preScheduleCell.Athlete.Degree.ToString() ?? string.Empty);
+                row.CreateCell(4).SetCellValue(athleteType);
+                row.CreateCell(5).SetCellValue(ageCategory);
+                row.CreateCell(6).SetCellValue(degree);
                 row.CreateCell(7).SetCellValue(preScheduleCell.ExitTime.ToString("HH:mm"));
             }
 
             for (int i = 0; i < headers.Length; i++)
             {
                 sheet.AutoSizeColumn(i);
+                sheet.SetColumnWidth(i, sheet.GetColumnWidth(i) + 1024);
             }
         }
 
-        string fileName = $"PreSchedule_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+        string fileName = $"Расписание_предварительное_СМ_{DateTime.Now:ddMMyyyy}.xlsx";
 
         byte[] fileData;
         using (var memoryStream = new MemoryStream())
@@ -112,33 +162,46 @@ public class ScheduleFileService
 
         if (contest != null)
         {
-            contest.ScheduleFileId = scheduleFile.Id;
-            contest.ScheduleFile = scheduleFile;
+            contest.PreScheduleFileId = scheduleFile.Id;
+            contest.PreScheduleFile = scheduleFile;
             var contestRepository = _unitOfWork.GetRepository<Contest>();
             contestRepository.Update(contest);
         }
 
         await _unitOfWork.SaveChangesAsync();
 
-        var scheduleFileViewModel = _mapper.Map<ScheduleFileViewModel>(scheduleFile);
-
-        return scheduleFileViewModel;
+        return _mapper.Map<ScheduleFileViewModel>(scheduleFile);
     }
     
     public async Task<ScheduleFileViewModel> GenerateFinalScheduleFile(List<Guid> groupBlockIds)
     {
-        IWorkbook workbook = new XSSFWorkbook();
+        using IWorkbook workbook = new XSSFWorkbook();
+        
+        ICellStyle headerStyle = workbook.CreateCellStyle();
+        IFont headerFont = workbook.CreateFont();
+        headerFont.IsBold = true;
+        headerStyle.SetFont(headerFont);
 
-        int sheetNumber = 0;
+        ICellStyle titleStyle = workbook.CreateCellStyle();
+        IFont titleFont = workbook.CreateFont();
+        titleFont.IsBold = true;
+        titleFont.FontHeightInPoints = 14;
+        titleStyle.SetFont(titleFont);
+        titleStyle.Alignment = HorizontalAlignment.Center;
+
+        ICellStyle subtitleStyle = workbook.CreateCellStyle();
+        IFont subtitleFont = workbook.CreateFont();
+        subtitleFont.FontHeightInPoints = 12;
+        subtitleStyle.SetFont(subtitleFont);
+
+        int sheetNumber = 1;
 
         foreach (var groupBlockId in groupBlockIds)
         {
-            var groupBlockRepository = _unitOfWork.GetRepository<GroupBlock>();
-
-            var groupBlock = await groupBlockRepository.GetFirstOrDefaultAsync(
+            var groupBlock = await _unitOfWork.GetRepository<GroupBlock>().GetFirstOrDefaultAsync(
                 predicate: g => g.Id == groupBlockId,
                 include: source => source
-                    .Include(x => x.PreSchedule)
+                    .Include(x => x.FinalSchedule)
                     .ThenInclude(x => x.Athlete).ThenInclude(x => x.Team)
                     .Include(x => x.Contest),
                 trackingType: TrackingType.Tracking);
@@ -147,44 +210,80 @@ public class ScheduleFileService
 
             string sheetName = $"Блок {sheetNumber++}";
             ISheet sheet = workbook.CreateSheet(sheetName);
+            
+            sheet.PrintSetup.Landscape = true;
+            sheet.PrintSetup.PaperSize = (short)PaperSize.A4;
+            sheet.FitToPage = true;
+            sheet.PrintSetup.FitWidth = 1;
+            sheet.PrintSetup.FitHeight = 0;
+
+            IRow titleRow = sheet.CreateRow(0);
+            titleRow.HeightInPoints = 30;
+            ICell titleCell = titleRow.CreateCell(0);
+            titleCell.SetCellValue("СТУПЕНИ МАСТЕРСТВА");
+            titleCell.CellStyle = titleStyle;
+            sheet.AddMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+            IRow timeRow = sheet.CreateRow(1);
+            ICell timeCell = timeRow.CreateCell(0);
+            timeCell.SetCellValue($"Запуск в СК участников {sheetName}");
+            timeCell.CellStyle = subtitleStyle;
+            sheet.AddMergedRegion(new CellRangeAddress(1, 1, 0, 7));
+
+            IRow regRow = sheet.CreateRow(2);
+            ICell regCell = regRow.CreateCell(0);
+            regCell.SetCellValue($"Регистрация с {groupBlock.FinalSchedule
+                .OrderBy(x => x.ExitTime)
+                .FirstOrDefault()?.ExitTime.ToString("HH:mm")}");
+            regCell.CellStyle = subtitleStyle;
+            sheet.AddMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 
             var headers = new string[]
             {
-                "№", "Команда", "Имя спортсмена", "Дата рождения",
-                "Номинация", "Возрастная категория", "Ступень", "Время выхода"
+                "№п/п", "Название Команды, клуба", "ФИ спортсмена", 
+                "Дата рождения", "Номинация (ЧИР/ЧФ)", 
+                "Возрастная категория", "Ступень тестирования", 
+                "Время выхода на площадку (фристайл)"
             };
 
-            IRow headerRow = sheet.CreateRow(0);
+            IRow headerRow = sheet.CreateRow(3);
             for (int i = 0; i < headers.Length; i++)
             {
-                headerRow.CreateCell(i).SetCellValue(headers[i]);
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(headers[i]);
+                cell.CellStyle = headerStyle;
             }
 
-            int rowNum = 1;
-            foreach (var finalScheduledCell in groupBlock.FinalSchedule)
+            int rowNum = 4;
+            foreach (var finalScheduledCell in groupBlock.FinalSchedule.OrderBy(x => x.ExitTime))
             {
                 var athlete = finalScheduledCell.Athlete;
                 if (athlete == null) continue;
 
                 IRow row = sheet.CreateRow(rowNum++);
 
-                row.CreateCell(0).SetCellValue(rowNum - 1);
+                string ageCategory = MapAgeCategory(athlete.AgeCategory.ToString());
+                string degree = MapDegree(athlete.Degree.ToString());
+                string athleteType = athlete.AthleteType.ToString() == "Cheer" ? "ЧИР" : "ЧФ";
+
+                row.CreateCell(0).SetCellValue(rowNum - 4);
                 row.CreateCell(1).SetCellValue(athlete.Team?.Name ?? string.Empty);
                 row.CreateCell(2).SetCellValue(athlete.FullName ?? string.Empty);
                 row.CreateCell(3).SetCellValue(athlete.BirthDate.ToString("dd.MM.yyyy"));
-                row.CreateCell(4).SetCellValue(finalScheduledCell.Athlete.AthleteType.ToString() ?? string.Empty);
-                row.CreateCell(5).SetCellValue(finalScheduledCell.Athlete.AgeCategory.ToString() ?? string.Empty);
-                row.CreateCell(6).SetCellValue(finalScheduledCell.Athlete.Degree.ToString() ?? string.Empty);
+                row.CreateCell(4).SetCellValue(athleteType);
+                row.CreateCell(5).SetCellValue(ageCategory);
+                row.CreateCell(6).SetCellValue(degree);
                 row.CreateCell(7).SetCellValue(finalScheduledCell.ExitTime.ToString("HH:mm"));
             }
 
             for (int i = 0; i < headers.Length; i++)
             {
                 sheet.AutoSizeColumn(i);
+                sheet.SetColumnWidth(i, sheet.GetColumnWidth(i) + 1024);
             }
         }
 
-        string fileName = $"PreSchedule_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+        string fileName = $"Расписание_финальное_СМ_{DateTime.Now:ddMMyyyy}.xlsx";
 
         byte[] fileData;
         using (var memoryStream = new MemoryStream())
@@ -199,27 +298,51 @@ public class ScheduleFileService
             Data = fileData
         };
 
-        var scheduleFileRepository = _unitOfWork.GetRepository<ScheduleFile>();
-        await scheduleFileRepository.InsertAsync(scheduleFile);
+        await _unitOfWork.GetRepository<ScheduleFile>().InsertAsync(scheduleFile);
 
         var contest = groupBlockIds.Select(gbId =>
             _unitOfWork.GetRepository<GroupBlock>()
-                .GetFirstOrDefaultAsync(predicate: g => g.Id == gbId, include: source => source.Include(x => x.Contest), trackingType: TrackingType.Tracking)
+                .GetFirstOrDefaultAsync(predicate: g => g.Id == gbId, 
+                    include: source => source.Include(x => x.Contest), 
+                    trackingType: TrackingType.Tracking)
                 .Result?.Contest)
             .FirstOrDefault(c => c != null);
 
         if (contest != null)
         {
-            contest.ScheduleFileId = scheduleFile.Id;
-            contest.ScheduleFile = scheduleFile;
-            var contestRepository = _unitOfWork.GetRepository<Contest>();
-            contestRepository.Update(contest);
+            contest.FinalScheduleFileId = scheduleFile.Id;
+            contest.FinalScheduleFile = scheduleFile;
+            _unitOfWork.GetRepository<Contest>().Update(contest);
         }
 
         await _unitOfWork.SaveChangesAsync();
 
-        var scheduleFileViewModel = _mapper.Map<ScheduleFileViewModel>(scheduleFile);
+        return _mapper.Map<ScheduleFileViewModel>(scheduleFile);
+    }
+    
+    private string MapAgeCategory(string category)
+    {
+        return category switch
+        {
+            "Baby" => "Б",
+            "YoungerChildren" => "МД",
+            "Youth" => "ЮД",
+            "Juniors" => "ЮЮ",
+            "BoysGirls" => "М",
+            _ => category
+        };
+    }
 
-        return scheduleFileViewModel;
+    private string MapDegree(string degree)
+    {
+        return degree switch
+        {
+            "First" => "I",
+            "Second" => "II",
+            "Third" => "III",
+            "Fourth" => "IV",
+            "Higher" => "В",
+            _ => degree
+        };
     }
 }

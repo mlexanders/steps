@@ -1,16 +1,20 @@
 ﻿@using Steps.Client.Features.Common
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
+@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
+
+@inject FinalSchedulerManager FinalSchedulerManager
 
 @inherits BaseNotificate
 
 
 @if (_blocks is { Count: > 0 })
 {
+    <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
     <RadzenButton ButtonStyle="ButtonStyle.Primary"
                   Icon="edit"
                   Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
                   Disabled="_isDownloading"
-                  Click="CreatePreScheduleFile"/>
+                  Click="CreateScheduleFile"/>
     <RadzenRow>
         <RadzenColumn>
             <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>

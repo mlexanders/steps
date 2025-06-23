@@ -17,7 +17,7 @@ public class ContestConfiguration : IEntityTypeConfiguration<Contest>
             .IsRequired()
             .HasMaxLength(EntityConfiguration.MaxNameLength);
 
-        builder.HasOne(c => c.ScheduleFile)
+        builder.HasOne(c => c.PreScheduleFile)
             .WithMany()
             .OnDelete(DeleteBehavior.SetNull);
 

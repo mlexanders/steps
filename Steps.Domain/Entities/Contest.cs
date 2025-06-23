@@ -17,6 +17,9 @@ public class Contest : Entity
     
     public List<Entry>? Entries { get; set; } = [];
     
-    public Guid? ScheduleFileId { get; set; }
-    public ScheduleFile? ScheduleFile { get; set; }
+    public Guid? PreScheduleFileId { get; set; }
+    public ScheduleFile? PreScheduleFile { get; set; }
+    
+    public Guid? FinalScheduleFileId { get; set; }
+    public ScheduleFile? FinalScheduleFile { get; set; }
 }

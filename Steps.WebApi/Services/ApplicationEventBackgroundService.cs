@@ -54,12 +54,12 @@ public class ApplicationEventBackgroundService : BackgroundService
 
         await foreach (var @event in reader.ReadAllAsync(token))
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var handler = scope.ServiceProvider.GetRequiredService<IApplicationEventHandler<TEvent>>();
 
             try
             {
+                using var scope = _serviceProvider.CreateScope();
+                var handler = scope.ServiceProvider.GetRequiredService<IApplicationEventHandler<TEvent>>();
+                    
                 await handler.Handle(@event, token);
             }
             catch (Exception ex)

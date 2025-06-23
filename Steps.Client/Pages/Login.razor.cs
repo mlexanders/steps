@@ -5,18 +5,15 @@ using Steps.Shared.Contracts.Accounts.ViewModels;
 
 namespace Steps.Client.Pages;
 
-public partial class Login : ComponentBase
+public partial class Login
 {
     private readonly LoginViewModel _model = new();
-    private string _error;
+    private string _error = string.Empty;
     private bool _errorVisible;
-    private string _info;
+    private string _info = string.Empty;
     private bool _infoVisible;
-
-    [Inject] private SecurityService SecurityService { get; set; }
-    [Inject] private NavigationManager NavigationManager { get; set; }
-
-    //TODO:
+    [Inject] private SecurityService SecurityService { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
     private async Task Submit(LoginArgs args)
     {
@@ -26,30 +23,40 @@ public partial class Login : ComponentBase
             Password = args.Password
         };
 
+        _errorVisible = false;
+        _infoVisible = false;
+
         try
         {
             var result = await SecurityService.Login(model);
             if (result.IsSuccess)
+            {
                 NavigationManager.NavigateTo("/");
-            _errorVisible = !result.IsSuccess;
-            _error = result.Message ?? result.Errors.FirstOrDefault()?.Message ?? "Ошибка авторизации";
+            }
+            else
+            {
+                _errorVisible = true;
+                _error = result.Message ?? result.Errors.FirstOrDefault()?.Message ?? "Ошибка авторизации";
+            }
         }
-        catch (HttpRequestException e)
+        catch (Exception ex)
         {
             _errorVisible = true;
-            _error = "Ошибка сети";
+            _error = $"Произошла ошибка";
         }
-        catch (Exception e)
+        finally
         {
-            _errorVisible = true;
-            _error = e.Message;
+            StateHasChanged();
         }
-
-        StateHasChanged();
     }
 
+    private async Task OnRegister()
+    {
+        NavigationManager.NavigateTo("/reg");
+    }
 
     private async Task OnResetPassword()
     {
+        // TODO: Реализовать сброс пароля
     }
 }

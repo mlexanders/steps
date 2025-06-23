@@ -99,9 +99,13 @@ public class HttpClientService
         {
             return GetErrorResponse<T>("Неавторизован");
         }
-        catch (Exception ex)
+        catch (HttpRequestException ex)
         {
-            return GetErrorResponse<T>(ex.Message);
+            return GetErrorResponse<T>("Ошибка подключения к серверу");
+        }
+        catch (TaskCanceledException)
+        {
+            return GetErrorResponse<T>("Превышено время ожидания ответа");
         }
     }
 

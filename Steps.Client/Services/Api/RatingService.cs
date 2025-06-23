@@ -17,7 +17,7 @@ public class RatingService : IRatingService
         _routes = new ApiRoutes.RatingsRoute();
     }
 
-    public Task<Result<RatingViewModel>> GetRatingByBlock(Guid groupBlockId)
+    public Task<Result<RatingViewModel>> GetRatingsByBlock(Guid groupBlockId)
     {
         var path = _routes.GetRatingByBlock(groupBlockId);
         return _httpClient.GetAsync<Result<RatingViewModel>>(path);

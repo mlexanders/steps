@@ -1,6 +1,6 @@
 ﻿using Radzen;
 using Steps.Client.Features.Common;
-using Steps.Client.Features.EntityFeature.SchedulesFeature.FinalScheduleFeature;
+using Steps.Client.Features.EntityFeature.TestResultFeature.Components;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
 using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels;
 
@@ -39,7 +39,7 @@ public class FinalSchedulerDialogManager : IDialogManager<FinalScheduledCellView
     {
         var options = new Dictionary<string, object> { { "GroupBlock", model } };
         
-        var result = await _dialogService.OpenAsync<FinalScheduleByGroupBlockJudge>(
+        var result = await _dialogService.OpenAsync<TestResultCreating>(
             "Финальное расписание",
             options,
             new DialogOptions { Width = "800px", Height = "600px" });

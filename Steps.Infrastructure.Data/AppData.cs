@@ -14,6 +14,6 @@ public static class AppData
         public const string LogoutPath = "/api/account/logout";
         public const string LoginPath = "/api/account/login";
         public const string AuthenticationType = CookieAuthenticationDefaults.AuthenticationScheme;
-        public static TimeSpan ExpireTimeSpan { get; } = TimeSpan.FromSeconds(60);
+        public static TimeSpan ExpireTimeSpan { get; } = TimeSpan.FromSeconds(1200); //TODO:
     }
 }

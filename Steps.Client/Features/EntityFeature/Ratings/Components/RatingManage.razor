@@ -1,7 +1,4 @@
-﻿@using Radzen
-@using Radzen
-
-
+﻿@using Steps.Shared.Utils
 
 <RadzenDataGrid @ref="_grid" AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
             AllowSorting="true" Data="@Ratings" ColumnWidth="200px"
@@ -25,7 +22,11 @@
 
 
         <RadzenDataGridColumn Property="@nameof(Rating.TotalScore)" Title="Баллы"/>
-        <RadzenDataGridColumn Property="@nameof(Rating.CertificateDegree)" Title="Степень"/>
+        <RadzenDataGridColumn Property="@nameof(Rating.CertificateDegree)" Title="Степень">
+            <Template Context="data">
+                @data.CertificateDegree.GetDisplayName()
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 

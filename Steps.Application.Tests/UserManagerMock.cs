@@ -9,9 +9,14 @@ namespace Steps.Application.Tests;
 
 public class UserManagerMock : IUserManager<User>
 {
-    public Task<Guid> CreateAsync(User user, string password)
+    public async Task<IUser> CreateAsync(User user, string password)
     {
-        return Task.FromResult(new Guid());
+        return new User();
+    }
+
+    public Task UpdateAsync(User user)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<IUser> Login(string email, string password)

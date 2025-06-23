@@ -4,6 +4,8 @@ using Microsoft.JSInterop;
 using Radzen;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
+using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
+using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Shared.Contracts.Contests.ViewModels;
 using Steps.Shared.Contracts.GroupBlocks;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
@@ -16,7 +18,9 @@ public partial class GroupBlocksManage : BaseNotificate
 {
     [Inject] protected GroupBlocksDialogManager GroupBlocksDialogManager { get; set; } = null!;
     [Inject] protected IGroupBlocksService GroupBlocksService { get; set; } = null!;
-
+    [Inject] protected PreSchedulerManager PreSchedulerManager { get; set; } = null!;
+    [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
+    
     [Parameter] [Required] public ContestViewModel? Contest { get; set; }
 
     private List<TeamViewModel>? _teams;
@@ -45,7 +49,7 @@ public partial class GroupBlocksManage : BaseNotificate
         return $"{start} - {end}";
     }
 
-    private async Task GetTeams()
+    private async Task GetTeamsForCreateGroupBlocks()
     {
         var result = await GroupBlocksService.GetTeamsForCreateGroupBlocks(Contest.Id);
         if (result?.IsSuccess != true) ShowResultMessage(result);
@@ -69,8 +73,12 @@ public partial class GroupBlocksManage : BaseNotificate
 
     private async Task OnDeleteBlocks()
     {
-        var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
-        ShowResultMessage(result);
+        if (Contest != null)
+        {
+            var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
+            ShowResultMessage(result);
+        }
+
         await Init();
         StateHasChanged();
     }
@@ -107,13 +115,12 @@ public partial class GroupBlocksManage : BaseNotificate
             
             var createPreScheduleFileViewModel = new CreatePreScheduleFileViewModel
             {
-                GroupBlockIds = _blocks
-                    .Select(g => g.Id).ToList()
+                GroupBlockIds = _blocks.Select(g => g.Id).ToList()
             };
 
             var result = await PreSchedulerManager.GeneratePreScheduleFile(createPreScheduleFileViewModel);
 
-            if (result.IsSuccess && result.Value.Data != null)
+            if (result.IsSuccess && result.Value?.Data != null)
             {
                 await JSRuntime.InvokeVoidAsync(
                     "downloadFile", 

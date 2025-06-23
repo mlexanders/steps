@@ -21,7 +21,7 @@ public class UserManager : IUserManager<User>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> CreateAsync(User model, string password)
+    public async Task<IUser> CreateAsync(User model, string password)
     {
         model.PasswordHash = _passwordHasher.HashPassword(password);
         var repository = _unitOfWork.GetRepository<User>();
@@ -33,7 +33,22 @@ public class UserManager : IUserManager<User>
 
         var entry = await repository.InsertAsync(model);
         await _unitOfWork.SaveChangesAsync();
-        return entry.Entity.Id;
+        return entry.Entity;
+    }
+
+    public async Task UpdateAsync(User user)
+    {
+        var repository = _unitOfWork.GetRepository<User>();
+        var updating = await repository.GetFirstOrDefaultAsync(
+           predicate: u => u.Id.Equals(user.Id),
+           trackingType: TrackingType.NoTracking);
+
+        if (updating is null)
+            throw new StepsBusinessException("Пользователь не найден");
+
+        user.PasswordHash =  updating.PasswordHash;
+        repository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IUser> Login(string email, string password)

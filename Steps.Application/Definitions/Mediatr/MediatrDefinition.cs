@@ -17,6 +17,7 @@ public class MediatrDefinition : AppDefinition
             cfg.RegisterServicesFromAssemblyContaining<MediatrDefinition>();
             cfg.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+            
             cfg.AddOpenRequestPostProcessor(typeof(UnitOfWorkPostProcessor<,>));
         });
         builder.Services.AddTransient(typeof(IRequestExceptionHandler<,,>), typeof(RequestExceptionHandler<,,>));

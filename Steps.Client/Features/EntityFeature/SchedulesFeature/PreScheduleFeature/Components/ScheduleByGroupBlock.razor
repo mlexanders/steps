@@ -18,29 +18,29 @@ else
                 <RadzenRow>
                     <RadzenColumn Size="12">
                         <RadzenStack Gap="0.5rem">
-                            <RadzenText Text="Предварительное расписание" Style="font-size: 1.1rem; font-weight: 500;" />
-                            
+                            <RadzenText Text="Предварительное расписание" Style="font-size: 1.1rem; font-weight: 500;"/>
+
                             <RadzenCard>
-                                <RadzenDataGrid TItem="PreScheduledCellViewModel" 
-                                               Data="PreSchedulerManager.Data" 
-                                               AllowPaging="true"
-                                               SelectionMode="DataGridSelectionMode.Single" 
-                                               PageSize="PreSchedulerManager.PageSize" 
-                                               EmptyText="Участников в этом блоке нет"
-                                               IsLoading="@PreSchedulerManager.IsLoading" 
-                                               Count="@PreSchedulerManager.TotalCount"
-                                               LoadData="@OnChangePage"
-                                               Style="width: 100%;"
-                                               AllowColumnResize="true"
-                                               AllowColumnReorder="true"
-                                               AllowSort="true"
-                                               ShowPagingSummary="true"
-                                               PagerHorizontalAlign="HorizontalAlign.Left"
-                                               PageSizeOptions="new[] { 10, 15, 20, 30, 50 }">
+                                <RadzenDataGrid TItem="PreScheduledCellViewModel"
+                                                Data="PreSchedulerManager.Data"
+                                                AllowPaging="true"
+                                                SelectionMode="DataGridSelectionMode.Single"
+                                                PageSize="PreSchedulerManager.PageSize"
+                                                EmptyText="Участников в этом блоке нет"
+                                                IsLoading="@PreSchedulerManager.IsLoading"
+                                                Count="@PreSchedulerManager.TotalCount"
+                                                LoadData="@OnChangePage"
+                                                Style="width: 100%;"
+                                                AllowColumnResize="true"
+                                                AllowColumnReorder="true"
+                                                AllowSort="true"
+                                                ShowPagingSummary="true"
+                                                PagerHorizontalAlign="HorizontalAlign.Left"
+                                                PageSizeOptions="new[] { 10, 15, 20, 30, 50 }">
                                     <HeaderTemplate>
                                         <RadzenStack Gap="0.5rem">
-                                            <RadzenButton ButtonStyle="ButtonStyle.Primary" 
-                                                          Icon="edit" 
+                                            <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                                                          Icon="edit"
                                                           Text="Изменить порядок"
                                                           Click="OnEditing"/>
                                         </RadzenStack>
@@ -65,14 +65,15 @@ else
             <RadzenRow>
                 <RadzenColumn Size="12">
                     <RadzenStack Gap="0.5rem">
-                        <RadzenText Text="Явка на мероприятие" Style="font-size: 1.1rem; font-weight: 500;" />
-                        <MarkingAthleteByGroupBlock GroupBlock="GroupBlock"/>
+                        <RadzenText Text="Явка на мероприятие" Style="font-size: 1.1rem; font-weight: 500;"/>
+                        <MarkingAthleteByGroupBlock @bind-GroupBlock="GroupBlock"/>
                     </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>
         </RadzenStack>
     </RadzenStack>
 }
+
 
 @code {
     private bool _isEditing;
@@ -81,11 +82,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        PreSchedulerManager.ChangePageSize(15); 
+        PreSchedulerManager.ChangePageSize(15);
         if (GroupBlock is null)
         {
             return;
         }
+
         await PreSchedulerManager.Initialize(GroupBlock.Id);
     }
 

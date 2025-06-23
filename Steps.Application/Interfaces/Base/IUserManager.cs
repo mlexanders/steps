@@ -4,7 +4,8 @@ namespace Steps.Application.Interfaces.Base;
 
 public interface IUserManager<TUser> where TUser : IUser
 {
-    Task<Guid> CreateAsync(TUser user, string password);
+    Task<IUser> CreateAsync(TUser user, string password);
+    Task UpdateAsync(TUser user);
     Task<IUser> Login(string email, string password);
     Task<IUser?> FindByEmailAsync(string email);
     Task<string> GenerateEmailConfirmationTokenAsync(TUser user);

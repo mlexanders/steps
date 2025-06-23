@@ -4,10 +4,10 @@ namespace Steps.Domain.Definitions;
 
 public enum ContestStatus
 {
-    [Display(Name = "Открыт набор заявок")]
+    [Display(Name = "Открыт приём заявок")]
     Open,
     
-    [Display(Name = "Закрыт набор заявок")]
+    [Display(Name = "Закрыт приём заявок")]
     Closed,
     
     [Display(Name = "Мероприятие завершено")]

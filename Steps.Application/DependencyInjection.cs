@@ -1,9 +1,7 @@
-﻿using FluentValidation;
-using Steps.Application.Behaviors;
-using Steps.Application.Behaviors.Base;
+﻿using Steps.Application.Events;
+using Steps.Application.Events.Base;
+using Steps.Application.Events.TestResults;
 using Steps.Application.ExceptionsHandling;
-using Steps.Application.Interfaces;
-using Steps.Application.Interfaces.Base;
 using Steps.Application.Services;
 using Steps.Utils.AppDefinition;
 
@@ -16,8 +14,10 @@ public static class DependencyInjection
         builder.Services.AddTransient<CommonExceptionHandler>();
         builder.Services.AddTransient<SchedulesService>();
         builder.Services.AddTransient<ScheduleFileService>();
-        builder.Services.AddSingleton<IRedisService, RedisService>();
         builder.Services.AddDefinitions(builder, typeof(DependencyInjection));
+        
+        builder.Services.AddTransient(typeof(IApplicationEventHandler<TestResultCreatedEvent>), typeof(TestResultCreatedApplicationEventHandler));
+        builder.Services.AddTransient(typeof(IApplicationEventHandler<UserCreatedEvent>), typeof(UserCreatedEventHandler));
 
         return builder;
     }

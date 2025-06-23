@@ -13,6 +13,7 @@ using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Api.Scheduled;
 using Steps.Client.Services.Authentication;
+using Steps.Client.Services.Messaging;
 using Steps.Shared.Contracts.AthleteElements;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
@@ -33,6 +34,9 @@ namespace Steps.Client;
 
 public static class AddIdentityDependencyInjection
 {
+    private const string BackendUrl = "http://localhost:5000/api/";
+    private const string Hub = $"http://localhost:5000/MessagingHub";
+
     public static void AddDependencyContainer(this IServiceCollection services)
     {
         services.AddTransient<AthleteDialogManager>();
@@ -85,6 +89,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<IRatingService, RatingService>();
         services.AddTransient<RatingService>();
 
+        services.AddTransient<TestResultCreatedMessaging>(sc => new TestResultCreatedMessaging($"{Hub}"));
     }
 
     public static void AddIdentity(this IServiceCollection services)
@@ -97,7 +102,7 @@ public static class AddIdentityDependencyInjection
         services.AddScoped(typeof(CookieHandler));
         services.AddHttpClient(
                 "Default",
-                opt => opt.BaseAddress = new Uri("http://localhost:5000/api/"))
+                opt => opt.BaseAddress = new Uri(BackendUrl))
             .AddHttpMessageHandler<CookieHandler>();
 
         services.AddScoped<HttpClient>(sp =>

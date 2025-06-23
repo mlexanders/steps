@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Steps.Domain.Entities;
 using Steps.Shared.Contracts.Accounts.ViewModels;
+using Steps.Shared.Contracts.Users.ViewModels;
 
 namespace Steps.Application.Mappers;
 
@@ -31,5 +32,25 @@ public class UserMapperConfiguration : Profile
             .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
             .ForMember(x => x.Role, o => o.MapFrom(m => m.Role))
             .ForMember(x => x.Id, o => o.MapFrom(m => m.Id));
+        
+        //CreateUserViewModel
+        CreateMap<CreateUserViewModel, User>()
+            .ForMember(x => x.Id, o => o.Ignore())
+            .ForMember(x => x.PasswordHash, o => o.Ignore())
+            .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
+            .ForMember(x => x.Role, o => o.Ignore());
+        
+        //UpdateUserViewModel
+        CreateMap<UpdateUserViewModel, User>()
+            .ForMember(x => x.Id, o => o.MapFrom(m => m.Id))
+            .ForMember(x => x.PasswordHash, o => o.Ignore())
+            .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
+            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role));
+
+        CreateMap<User, UpdateUserViewModel>()
+            .ForMember(x => x.Login, o => o.MapFrom(m => m.Login))
+            .ForMember(x => x.Role, o => o.MapFrom(m => m.Role))
+            .ForMember(x => x.Id, o => o.MapFrom(m => m.Id));
+
     }
 }

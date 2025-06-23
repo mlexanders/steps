@@ -1,5 +1,4 @@
 ﻿@using Steps.Client.Features.EntityFeature.UsersFeature.Services
-@using Steps.Shared.Contracts.Contests.ViewModels
 @using Steps.Shared.Contracts.Accounts.ViewModels
 @using Steps.Client.Features.EntityFeature.UsersFeature.Components
 @using Steps.Client.Features.Common
@@ -7,27 +6,26 @@
 @inherits BaseModal
 @inject UsersManager Manager
 
-<RadzenTemplateForm TItem="ContestViewModel" Submit="Create">
-
-    <RadzenText Text="Вы уверены, что хотите удалить этого пользователя?"/>
-
+<RadzenStack Gap="1.5rem">
+    <RadzenText Text="Вы уверены, что хотите удалить этого пользователя?" TextStyle="TextStyle.Subtitle1"/>
     <UserCard Model="@Model"/>
-
-    <RadzenButton Text="Да, удалить" Icon="save" Click="Create" ButtonStyle="ButtonStyle.Danger"/>
-    <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Primary"
-                  Style="margin-left: 10px;"/>
-</RadzenTemplateForm>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem" Class="rz-mt-4">
+        <RadzenButton Text="Да, удалить" Icon="delete" IsBusy="@_isLoading" Click="Delete" ButtonStyle="ButtonStyle.Danger"/>
+        <RadzenButton Text="Отмена" Icon="cancel" Click="() => Close()" ButtonStyle="ButtonStyle.Light"/>
+    </RadzenStack>
+</RadzenStack>
 
 @code {
+    private bool _isLoading;
     [Parameter] public UserViewModel Model { get; set; } = null!;
 
-    private async Task Create()
+    private async Task Delete()
     {
+        _isLoading = true;
         var result = await Manager.Delete(Model);
-
         ShowResultMessage(result);
 
+        _isLoading = false;
         if (result.IsSuccess) Close(true);
     }
-
 }

@@ -1,14 +1,8 @@
 ﻿@using Steps.Client.Features.Common
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
-@using Steps.Domain.Entities.GroupBlocks
-@using Steps.Shared.Contracts.Contests.ViewModels
-@using Steps.Shared.Contracts.GroupBlocks.ViewModels
-@using Steps.Shared.Contracts.ScheduleFile.ViewModel
 
-@inject PreSchedulerManager PreSchedulerManager
 @inject FinalSchedulerManager FinalSchedulerManager
-@inject IJSRuntime JSRuntime
 
 @inherits BaseNotificate
 
@@ -21,6 +15,11 @@
                   Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
                   Disabled="_isDownloading"
                   Click="CreateScheduleFile"/>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
             @foreach (var block in _blocks)

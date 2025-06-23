@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Application.Services;
 using Steps.Domain.Base;
 using Steps.Domain.Definitions;
 using Steps.Shared;
@@ -16,16 +17,16 @@ public record CreateFinalScheduleCommand(Guid GroupBlockId) : IRequest<Result>, 
 
 public class CreateFinalScheduleCommandHandler : IRequestHandler<CreateFinalScheduleCommand, Result>
 {
-    private readonly GroupBlockService _groupBlockService;
+    private readonly SchedulesService _schedulesService;
 
-    public CreateFinalScheduleCommandHandler(GroupBlockService groupBlockService)
+    public CreateFinalScheduleCommandHandler(SchedulesService schedulesService)
     {
-        _groupBlockService = groupBlockService;
+        _schedulesService = schedulesService;
     }
 
     public async Task<Result> Handle(CreateFinalScheduleCommand request, CancellationToken cancellationToken)
     {
-        await _groupBlockService.GenerateFinalScheduleByGroupBlock(request.GroupBlockId, cancellationToken);
+        await _schedulesService.GenerateFinalScheduleByGroupBlock(request.GroupBlockId, cancellationToken);
 
         return Result.Ok().SetMessage("Список создан");
     }

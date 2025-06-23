@@ -1,6 +1,8 @@
 ﻿using Steps.Shared.Contracts;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.Ratings;
+using Steps.Shared.Contracts.ScheduleFile.ViewModel;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 
 namespace Steps.Client.Services.Api.Routes;
@@ -29,7 +31,17 @@ public static class ApiRoutes
 
     public class TeamsRoute() : BaseApiRoutes("Teams");
 
-    public class AthletesRoute() : BaseApiRoutes("Athletes");
+    public class AthletesRoute() : BaseApiRoutes("Athletes"), IAthletesRoutes
+    {
+        public string GetRemovedAthletes() => $"{BasePath}/GetRemovedAthletes";
+    }
+
+    public class TestAthleteElementsRoute() : BaseApiRoutes("TestAthleteElements"), IAthleteElementsRoutes
+    {
+        public string GetAthleteElements(string degree, string ageCategory, string? type) =>
+            $"{BasePath}/GetAthleteElements?degree={Uri.EscapeDataString(degree)}&ageCategory={Uri.EscapeDataString(ageCategory)}" +
+            (string.IsNullOrEmpty(type) ? "" : $"&type={Uri.EscapeDataString(type)}");
+    }
 
     public class UsersRoute() : BaseApiRoutes("Users"), IUserRoutes
     {
@@ -76,6 +88,19 @@ public static class ApiRoutes
         public string GetPagedScheduled =>
             $"{BasePath}/{nameof(IPreSchedulesService.GetPagedScheduledCellsByGroupBlockIdQuery)}";
     }
+    
+    public class ScheduleFilesRoute() : IScheduleFileRoutes
+    {
+        public string CreatePreScheduleFile(CreatePreScheduleFileViewModel createPreScheduleFileViewModel) => $"ScheduleFile/CreatePreScheduleFile";
+        public string CreateFinalScheduleFile(CreateFinalScheduleFileViewModel createFinalScheduleFileViewModel) => $"ScheduleFile/CreateScheduleFile";
+    }
 
     public class TestResultsRoute() : BaseApiRoutes("TestResults");
+
+    public class RatingsRoute 
+    {
+        public string GetRatingByBlock (Guid id) => $"Ratings/{nameof(IRatingService.GetRatingsByBlock)}/{id}";
+
+        public string CreateDiplomas = $"Ratings/{nameof(IRatingService.Complete)}";
+    }
 }

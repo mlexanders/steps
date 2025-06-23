@@ -25,19 +25,30 @@
     
     private IEnumerable<ContestViewModel>? Contests { get; set; }
     [CascadingParameter] public IUser? User { get; set; }
+
+    private DateTime _currentStartDate;
+    private DateTime _currentEndDate;
     
 
     private async Task Load(SchedulerLoadDataEventArgs arg)
     {
-        var result = await ContestManager.GetByTimeInterval(arg.Start, arg.End);
-        Contests = result.Value;
+        _currentStartDate = arg.Start;
+        _currentEndDate = arg.End;
+        await RefreshContests();
     }
     
     private EventCallback<SchedulerSlotSelectEventArgs> GetSlotSelectHandle()
     {
         if (UserRole is Role.Organizer)
         {
-            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, e => ContestDialogManager.ShowCreateDialog());
+            return EventCallback.Factory.Create<SchedulerSlotSelectEventArgs>(this, async e =>
+            {
+                var result = await ContestDialogManager.ShowCreateDialog();
+                if (result)
+                {
+                    await RefreshContests();
+                }
+            });
         }
         else
         {
@@ -45,6 +56,16 @@
         }
     }
     
+    private async Task RefreshContests()
+    {
+        var result = await ContestManager.GetByTimeInterval(_currentStartDate, _currentEndDate);
+        if (result.IsSuccess)
+        {
+            Contests = result.Value;
+            StateHasChanged();
+        }
+    }
+
     private void NoAccessMessage()
     {
         Console.WriteLine("У вас нет прав для создания мероприятий.");

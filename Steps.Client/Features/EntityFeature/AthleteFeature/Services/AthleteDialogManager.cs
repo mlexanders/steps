@@ -1,6 +1,8 @@
 ﻿using Radzen;
 using Steps.Client.Features.Common;
+using Steps.Client.Features.EntityFeature.AthleteFeature.Components;
 using Steps.Client.Features.EntityFeature.AthleteFeature.Dialogs;
+using Steps.Client.Features.EntityFeature.TeamsFeature.Dialogs;
 using Steps.Shared.Contracts.Athletes.ViewModels;
 using Steps.Shared.Contracts.Teams.ViewModels;
 
@@ -15,9 +17,26 @@ public class AthleteDialogManager : IDialogManager<AthleteViewModel>
         _dialogService = dialogService;
     }
 
-    public Task<bool> ShowCardDialog(AthleteViewModel model)
+    public async Task<bool> ShowCardDialog(AthleteViewModel model)
     {
-        throw new NotImplementedException();
+        var options = new Dictionary<string, object> { { "Model", model } };
+
+        var dialogOptions = new DialogOptions
+        {
+            Width = "auto",
+            Height = "auto",
+            ShowTitle = true,
+            Resizable = false,
+            Draggable = true,
+            CloseDialogOnOverlayClick = false
+        };
+
+        var result = await _dialogService.OpenAsync<AthleteCard>(
+            "Спортсмен",
+            options,
+            dialogOptions);
+
+        return result ?? false;
     }
 
     public async Task<bool> ShowCreateDialog()

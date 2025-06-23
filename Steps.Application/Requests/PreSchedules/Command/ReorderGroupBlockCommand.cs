@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Steps.Application.Services;
 using Steps.Shared;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
@@ -8,16 +9,16 @@ public record ReorderGroupBlockCommand(ReorderGroupBlockViewModel Model) : IRequ
 
 public class ReorderGroupBlockCommandHandler : IRequestHandler<ReorderGroupBlockCommand, Result>
 {
-    private readonly GroupBlockService _groupBlockService;
+    private readonly SchedulesService _schedulesService;
 
-    public ReorderGroupBlockCommandHandler(GroupBlockService groupBlockService)
+    public ReorderGroupBlockCommandHandler(SchedulesService schedulesService)
     {
-        _groupBlockService = groupBlockService;
+        _schedulesService = schedulesService;
     }
 
     public async Task<Result> Handle(ReorderGroupBlockCommand request, CancellationToken cancellationToken)
     {
-        await _groupBlockService.ReorderGroupBlock(request.Model);
+        await _schedulesService.ReorderGroupBlock(request.Model);
         return Result.Ok().SetMessage("Список обновлен");
     }
 }

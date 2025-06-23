@@ -1,28 +1,46 @@
-﻿@using Radzen
+﻿@using System.Collections.ObjectModel
+@using Radzen
 @using Steps.Client.Features.EntityFeature.AthleteFeature.Services
 @using Steps.Client.Features.EntityFeature.TestResultFeature.Services
+@using Steps.Client.Services.Api
+@using Steps.Shared.Contracts.AthleteElements
 @using Steps.Shared.Contracts.TestResults.ViewModels
 
 @inherits Steps.Client.Features.Common.BaseModal
 @inject TestResultsManager TestResultsManager
+@inject IAthleteElementsService AthleteElementsService
 @inject AthleteManager AthleteManager
 
-<RadzenTemplateForm TItem="CreateTestResultViewModel" Model="_createTestResultViewModel">
+<RadzenTemplateForm TItem="CreateTestResultViewModel" Data="_createTestResultViewModel">
     <ChildContent>
         <RadzenFieldset Text="Оценки за элементы">
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[0]"/>
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[1]"/>
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[2]"/>
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[3]"/>
-            <RadzenNumeric @bind-Value="_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
-                           Style="width: 100%" Placeholder="@_elementNames[4]"/>
+
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(0)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[0]" Min="0" Max="10" Step="1"
+                           Style="width: 100%" />
+
+
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(1)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[1]" Min="0" Max="10" Step="1"
+                           Style="width: 100%" />
+
+
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(2)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[2]" Min="0" Max="10" Step="1"
+                           Style="width: 100%" />
+
+
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(3)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[3]" Min="0" Max="10" Step="1"
+                           Style="width: 100%" />
+
+
+            <RadzenLabel Text="@Elements.ElementAtOrDefault(4)" Style="display: block; margin-bottom: 5px;" />
+            <RadzenNumeric @bind-Value="@_createTestResultViewModel.Scores[4]" Min="0" Max="10" Step="1"
+                           Style="width: 100%" />
         </RadzenFieldset>
 
-        <RadzenButton Text="Сохранить" Icon="save" Click="@Create" Style="margin-top: 10px"/>
+        <RadzenButton Text="Сохранить" Icon="save" Click="@Create" Style="margin-top: 10px" />
     </ChildContent>
 </RadzenTemplateForm>
 
@@ -32,45 +50,49 @@
         Scores = new List<int> { 0, 0, 0, 0, 0 }
     };
 
-    private List<string> _elementNames = new();
+    private ObservableCollection<string> Elements = new(["1", "2", "3", "4", "5"]);
 
     [Parameter] public Guid ContestId { get; set; }
     [Parameter] public Guid AthleteId { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
         _createTestResultViewModel.ContestId = ContestId;
         _createTestResultViewModel.AthleteId = AthleteId;
-
-        await LoadAthleteElements();
-    }
-
-    private async Task LoadAthleteElements()
-    {
+        
         var athlete = await AthleteManager.Read(AthleteId);
-        if (athlete?.Value.AthleteElements == null) return;
-
-        _elementNames = new List<string>
+        if (!athlete.IsSuccess || athlete.Value == null)
         {
-            athlete.Value.AthleteElements.Element1,
-            athlete.Value.AthleteElements.Element2,
-            athlete.Value.AthleteElements.Element3,
-            athlete.Value.AthleteElements.Element4,
-            athlete.Value.AthleteElements.Element5
-        };
+            ShowResultMessage(athlete);
+            return;
+        }
+        
+        var athleteElements = await AthleteElementsService.GetAthleteElements(athlete.Value.Degree.ToString(),
+            athlete.Value.AgeCategory.ToString(), athlete.Value.AthleteType.ToString());
 
-        StateHasChanged();
+        if (!athleteElements.IsSuccess || athleteElements.Value == null)
+        {
+            ShowResultMessage(athleteElements);
+            return;
+        }
+
+        Elements.Clear();
+        Elements.Add(athleteElements.Value.Element1);
+        Elements.Add(athleteElements.Value.Element2);
+        Elements.Add(athleteElements.Value.Element3);
+        Elements.Add(athleteElements.Value.Element4);
+        Elements.Add(athleteElements.Value.Element5);
     }
 
     private async Task Create()
     {
-        var result = await TestResultsManager.Create(new()
+        var result = await TestResultsManager.Create(new CreateTestResultViewModel
         {
             ContestId = _createTestResultViewModel.ContestId,
             AthleteId = _createTestResultViewModel.AthleteId,
             Scores = _createTestResultViewModel.Scores
         });
-
+        
         ShowResultMessage(result);
 
         if (result.IsSuccess) Close(true);

@@ -1,7 +1,7 @@
 ﻿@using Steps.Shared.Contracts.Teams.ViewModels
 @using Steps.Client.Features.EntityFeature.AthleteFeature.Components
 
-<RadzenCard Style="width: 100%; max-width: 600px;">
+<RadzenCard>
     <ChildContent>
         <p><strong>Адрес:</strong> @Model.Address</p>
         <p><strong>Владелец:</strong> @(Model.Owner?.Login ?? "Не указан")</p>

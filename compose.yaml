@@ -28,7 +28,18 @@
       - "5000:5000"
     depends_on:
       - postgres
+      - redis
+      
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379" 
+    volumes:
+      - redis_data:/data 
 
         
 volumes:
   postgres_data:
+  redis_data:

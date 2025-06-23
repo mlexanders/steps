@@ -20,7 +20,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Contest> Contests { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
     
-  
+    public DbSet<ScheduleFile> ScheduleFiles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,9 +32,11 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ContestConfiguration());
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
+        modelBuilder.ApplyConfiguration(new TestResultConfiguration());
+        modelBuilder.ApplyConfiguration(new RatingConfiguration());
         
-        AthleteElementsSeed.SeedCheer(modelBuilder);
-        AthleteElementsSeed.SeedBaby(modelBuilder);
-        AthleteElementsSeed.SeedCheerFreestyle(modelBuilder);
+        TestAthleteElementsSeed.SeedCheer(modelBuilder);
+        TestAthleteElementsSeed.SeedBaby(modelBuilder);
+        TestAthleteElementsSeed.SeedCheerFreestyle(modelBuilder);
     }
 }

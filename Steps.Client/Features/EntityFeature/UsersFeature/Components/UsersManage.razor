@@ -9,6 +9,7 @@
     <RadzenDataGrid TItem="UserViewModel" Data="Manager.Data" AllowPaging="true"
                     PageSize="Manager.PageSize" EmptyText="Пользователи еще не созданы"
                     IsLoading="@Manager.IsLoading" Count="@Manager.TotalCount"
+                    RowClick="@ShowCard"
                     LoadData="@OnChangePage">
 
         <HeaderTemplate>

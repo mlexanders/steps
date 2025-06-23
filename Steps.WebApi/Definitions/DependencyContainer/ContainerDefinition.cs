@@ -1,4 +1,4 @@
-﻿using Steps.Application;
+﻿using Steps.Application.Events.Base;
 using Steps.Application.Interfaces;
 using Steps.Application.Interfaces.Base;
 using Steps.Domain.Entities;
@@ -18,5 +18,11 @@ public class ContainerDefinition : AppDefinition
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IUserManager<User>, UserManager>();
         services.AddTransient<ISignInManager, SignInManager>();
+        services.AddTransient<IApplicationEventPublisher, ApplicationEventPublisher>();
+        services.AddSingleton<ApplicationEventQueue>();
+        
+        services.AddTransient<INotificationService, NotificationService>();
+
+        services.AddHostedService<ApplicationEventBackgroundService>();
     }
 }

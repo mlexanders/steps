@@ -6,20 +6,55 @@
 
 @inherits BaseNotificate
 
-<RadzenCard Style="width: 100%; max-width: 600px;">
+<RadzenCard Style="width: 100%; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
     <ChildContent>
-        <p><strong>Номер:</strong> @Model.Number</p>
+        <div style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;">
+                <RadzenText Style="font-size: 1.5rem; font-weight: 500;">Заявка №@Model.Number</RadzenText>
+                <RadzenBadge Text="@(Model.IsSuccess ? "Принята" : "На рассмотрении")"
+                             Variant="@(Model.IsSuccess ? Variant.Filled : Variant.Outlined)" />
+            </div>
 
-        <p><strong>Мероприятие:</strong> @Model.ContestName</p>
-        
-        <AuthorizeView Roles="@Role.Organizer.ToString()">
-            <RadzenButton Text="Принять заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                          Click="() => OnAccept()" Style="margin-bottom: 10px;" />
-        </AuthorizeView>
+            <div style="margin-bottom: 20px;">
+                <RadzenText Style="display: block; margin-bottom: 10px; color: #666;">
+                    <strong>Мероприятие:</strong> @Model.ContestName
+                </RadzenText>
+                
+                <RadzenText Style="display: block; margin-bottom: 10px; color: #666;">
+                    <strong>Команда:</strong> @Model.Team?.Name
+                </RadzenText>
+            </div>
 
-        <AuthorizeView Roles="@Role.User.ToString()">
-            <RadzenButton Text="Изменить заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-                          Click="() => OnCreate()" Style="margin-bottom: 10px;" />
-        </AuthorizeView>
+            @if (Model.Athletes?.Any() == true)
+            {
+                <div style="margin-bottom: 25px;">
+                    <RadzenText Style="font-weight: 500; display: block; margin-bottom: 10px;">Участники:</RadzenText>
+                    <RadzenListBox Style="width: 100%; border: 1px solid #f0f0f0; border-radius: 4px;"
+                                   TValue="Athlete"
+                                   Data="@Model.Athletes"
+                                   TextProperty="FullName">
+                    </RadzenListBox>
+                </div>
+            }
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <AuthorizeView Roles="@Role.Organizer.ToString()">
+                    <RadzenButton Text="Принять заявку" 
+                                Icon="check_circle" 
+                                ButtonStyle="ButtonStyle.Success"
+                                Click="() => OnAccept()" 
+                                Disabled="@Model.IsSuccess"
+                                Style="flex: 1;" />
+                </AuthorizeView>
+
+                <AuthorizeView Roles="@Role.User.ToString()">
+                    <RadzenButton Text="Изменить заявку" 
+                                Icon="edit" 
+                                ButtonStyle="ButtonStyle.Primary"
+                                Click="() => OnCreate()" 
+                                Style="flex: 1;" />
+                </AuthorizeView>
+            </div>
+        </div>
     </ChildContent>
 </RadzenCard>

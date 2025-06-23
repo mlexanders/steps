@@ -16,6 +16,10 @@ public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, 
 
     [Parameter] public bool IsReadonly { get; set; }
 
+    private bool IsSuccess(EntryViewModel e) => e.IsSuccess == true;
+    private IEnumerable<EntryViewModel> AcceptedEntries => Manager.Data?.Where(e => e.IsSuccess) ?? [];
+    private IEnumerable<EntryViewModel> RejectedEntries => Manager.Data?.Where(e => !e.IsSuccess) ?? [];
+
     protected override void OnInitialized()
     {
         try

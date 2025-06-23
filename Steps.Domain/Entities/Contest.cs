@@ -5,7 +5,7 @@ namespace Steps.Domain.Entities;
 
 public class Contest : Entity
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
@@ -16,4 +16,10 @@ public class Contest : Entity
     public List<User>? Counters { get; set; } = [];
     
     public List<Entry>? Entries { get; set; } = [];
+    
+    public Guid? PreScheduleFileId { get; set; }
+    public ScheduleFile? PreScheduleFile { get; set; }
+    
+    public Guid? FinalScheduleFileId { get; set; }
+    public ScheduleFile? FinalScheduleFile { get; set; }
 }

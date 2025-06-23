@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Steps.Application.Services;
 using Steps.Shared;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature.ViewModels;
 
@@ -8,16 +9,16 @@ public record MarkAthleteCommand(MarkAthleteViewModel Model) : IRequest<Result>;
 
 public class MarkAthleteCommandHandler : IRequestHandler<MarkAthleteCommand, Result>
 {
-    private readonly GroupBlockService _groupBlockService;
+    private readonly SchedulesService _schedulesService;
 
-    public MarkAthleteCommandHandler(GroupBlockService groupBlockService)
+    public MarkAthleteCommandHandler(SchedulesService schedulesService)
     {
-        _groupBlockService = groupBlockService;
+        _schedulesService = schedulesService;
     }
 
     public async Task<Result> Handle(MarkAthleteCommand request, CancellationToken cancellationToken)
     {
-        await _groupBlockService.MarkAthlete(request.Model);
+        await _schedulesService.MarkAthlete(request.Model);
         return Result.Ok().SetMessage(request.Model.Confirmation ? "Участник отмечен" : "Явка участника была отозвана");
     }
 }

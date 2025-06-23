@@ -11,9 +11,6 @@ public class Athlete : Entity
     public Degree Degree { get; set; }
     public AthleteType AthleteType { get; set; }
     
-    public Guid AthleteElementsId { get; set; }
-    public AthleteElements AthleteElements { get; set; }
-    
     public Guid TeamId { get; set; }
     public Team Team { get; set; } = null!;
 }

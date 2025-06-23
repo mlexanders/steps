@@ -1,0 +1,23 @@
+﻿@using Steps.Shared.Contracts.TestResults.ViewModels
+
+@inherits Steps.Client.Features.Common.ManageBaseComponent<TestResult, TestResultViewModel, CreateTestResultViewModel, UpdateTestResultViewModel>
+
+<RadzenCard>
+    <RadzenDataGrid TItem="TestResultViewModel" Data="@_testResults" AllowPaging="true"
+                    PageSize="10" EmptyText="Результатов пока нет" Count="@_totalCount"
+                    LoadData="@OnChangePage" RowSelect="@OnRowSelect">
+
+        <HeaderTemplate>
+            <RadzenText Text="*Отображаются результаты по текущему мероприятию" />
+        </HeaderTemplate>
+
+        <Columns>
+            <RadzenDataGridColumn TItem="TestResultViewModel" Property="@nameof(TestResultViewModel.AthleteId)" Title="Спортсмен" />
+            <RadzenDataGridColumn TItem="TestResultViewModel" Property="@nameof(TestResultViewModel.Scores)" Title="Баллы">
+                <Template Context="item">
+                    @string.Join(", ", item.Scores)
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>

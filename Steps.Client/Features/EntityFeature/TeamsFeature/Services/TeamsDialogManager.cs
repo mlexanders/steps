@@ -18,7 +18,22 @@ public class TeamsDialogManager : IDialogManager<TeamViewModel>
     public async Task<bool> ShowCardDialog(TeamViewModel model)
     {
         var options = new Dictionary<string, object> { { "Model", model } };
-        var result = await _dialogService.OpenAsync<TeamCardDialog>("Команда", options);
+
+        var dialogOptions = new DialogOptions
+        {
+            Width = "80vw",
+            Height = "auto",
+            ShowTitle = true,
+            Resizable = false,
+            Draggable = true,
+            CloseDialogOnOverlayClick = false
+        };
+
+        var result = await _dialogService.OpenAsync<TeamCardDialog>(
+            "Команда",
+            options,
+            dialogOptions);
+
         return result ?? false;
     }
 

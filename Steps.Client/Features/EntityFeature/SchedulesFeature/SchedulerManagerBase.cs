@@ -46,4 +46,5 @@ public abstract class SchedulerManagerBase<TCell, TScheduledCellViewModel, TGetV
             });
         return Result<PaggedListViewModel<TScheduledCellViewModel>>.Fail("Групповой блок не выбран");
     }
+    
 }

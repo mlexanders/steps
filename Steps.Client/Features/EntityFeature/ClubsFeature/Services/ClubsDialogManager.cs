@@ -16,8 +16,26 @@ public class ClubsDialogManager : IDialogManager<ClubViewModel>
 
     public async Task<bool> ShowCardDialog(ClubViewModel model)
     {
-        var options = new Dictionary<string, object> { { "Model", model } };
-        var result = await _dialogService.OpenAsync<ClubCardDialog>("Клуб", options);
+        var options = new Dictionary<string, object> {
+            { "Model", model }
+        };
+
+        var dialogOptions = new DialogOptions
+        {
+            Width = "80vw",          
+            Height = "auto",         
+            ShowTitle = true,        
+            Resizable = false,        
+            Draggable = true,        
+            CloseDialogOnOverlayClick = false
+        };
+
+        var result = await _dialogService.OpenAsync<ClubCardDialog>(
+            title: "Клуб",          
+            parameters: options,    
+            options: dialogOptions  
+        );
+
         return result ?? false;
     }
 

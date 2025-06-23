@@ -1,7 +1,24 @@
 ﻿@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Utils
 
-<h3>@this</h3>
-@Model.Login
+<RadzenFieldset>
+    <HeaderTemplate>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+            <RadzenIcon Icon="person"/>
+            <RadzenText Text="Пользователь" TextStyle="TextStyle.Subtitle1" />
+        </RadzenStack>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenStack Gap="1.5rem">
+            <RadzenFormField Text="Логин" Variant="Variant.Outlined" Class="w-100">
+                <RadzenTextBox @bind-Value="Model.Login" ReadOnly="true"/>
+            </RadzenFormField>
+            <RadzenFormField Text="Роль" Variant="Variant.Outlined" Class="w-100">
+                <RadzenTextBox Value="@Model.Role.GetDisplayName()" ReadOnly="true"/>
+            </RadzenFormField>
+        </RadzenStack>
+    </ChildContent>
+</RadzenFieldset>
 
 @code {
     [Parameter] public UserViewModel Model { get; set; } = null!;

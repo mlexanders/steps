@@ -1,5 +1,6 @@
 ﻿@using Steps.Shared.Contracts.Clubs.ViewModels
 @using Steps.Client.Features.Common
+@using Steps.Domain.Definitions
 
 @inherits ManageBaseComponent<Club, ClubViewModel, CreateClubViewModel, UpdateClubViewModel>
 
@@ -11,11 +12,16 @@
                     LoadData="@OnChangePage"
                     SelectionMode="DataGridSelectionMode.Single" bind-Value="@_selectedClub"
                     RowSelect="@(e => DialogManager.ShowCardDialog(e))">
-
+        
+        
         <HeaderTemplate>
-            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать клуб"
-                          Click="@OnCreate"/>
+            @if (UserRole is Role.Organizer)
+            {
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="add_circle" Text="Создать клуб"
+                              Click="@OnCreate"/>
+            }
         </HeaderTemplate>
+        
 
         <Columns>
             <RadzenDataGridColumn TItem="ClubViewModel" Property="@nameof(ClubViewModel.Name)" Title="Название"/>

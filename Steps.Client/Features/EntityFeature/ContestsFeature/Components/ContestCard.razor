@@ -1,55 +1,202 @@
-﻿@using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Components
-@using Steps.Domain.Definitions
+﻿@using Steps.Domain.Definitions
 @using Steps.Shared.Utils
+
 @inherits Steps.Client.Features.Common.BaseNotificate
 
-<RadzenFieldset Text="Информация о мероприятии">
-    <RadzenRow>
-        <RadzenColumn Size="6">
-            <RadzenStack Gap="1rem">
-                <p><strong>Дата начала:</strong> @Model.StartDate.ToString("dd.MM.yyyy")</p>
-                <p><strong>Дата окончания:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
-                <p><strong>Статус:</strong> @Model.Status.GetDisplayName()</p>
-                <p><strong>Тип:</strong> @Model.Type.GetDisplayName()</p>
-            </RadzenStack>
-        </RadzenColumn>
+<RadzenCard Style="max-height: 75vh; overflow-y: auto;">
+    <RadzenStack Gap="1rem">
+        <RadzenFieldset Text="Основная информация">
+            <RadzenRow>
+                <RadzenColumn Size="6">
+                    <p><strong>Название:</strong> @Model.Name</p>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p><strong>Описание:</strong> @Model.Description</p>
+                    }
+                    @if (Model.PreScheduleFile?.Data != null && Model.PreScheduleFile.Data.Length > 0)
+                    {
+                        <p>
+                            <strong>Предварительное расписание:</strong>
+                            <RadzenIcon Icon="insert_drive_file" Style="vertical-align: middle; margin-right: 0.5rem;" />
+                            <RadzenButton Text="Скачать" Icon="download" ButtonStyle="ButtonStyle.Secondary"
+                                          Click="DownloadPreScheduleFileAsync"
+                                          Size="ButtonSize.Small" />
+                        </p>
+                    }
+                    @if (Model.FinalScheduleFile?.Data != null && Model.FinalScheduleFile.Data.Length > 0)
+                    {
+                        <p>
+                            <strong>Финальное расписание:</strong>
+                            <RadzenIcon Icon="insert_drive_file" Style="vertical-align: middle; margin-right: 0.5rem;" />
+                            <RadzenButton Text="Скачать" Icon="download" ButtonStyle="ButtonStyle.Secondary"
+                                          Click="DownloadFinalScheduleFileAsync"
+                                          Size="ButtonSize.Small" />
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Файл расписания:</strong>
+                            <RadzenText Text="ещё не сформировано" />
+                        </p>
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="6">
+                    <p><strong>Дата начала:</strong> @Model.StartDate</p>
+                    <p><strong>Дата окончания:</strong> @Model.EndDate</p>
+                    <p>
+                        <strong>Статус:</strong>
+                        <RadzenBadge BadgeStyle="@GetStatusStyle(Model.Status)" Text="@Model.Status.GetDisplayName()" />
+                    </p>
+                    <p>
+                        <strong>Тип:</strong>
+                        <RadzenBadge BadgeStyle="@GetTypeStyle(Model.Type)" Text="@Model.Type.GetDisplayName()" />
+                    </p>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
 
-        <RadzenColumn Size="6">
-            <RadzenStack Gap="2rem">
-                <div>
+        <RadzenFieldset Text="Участники">
+            <RadzenRow>
+                <RadzenColumn Size="6">
                     <h4>Судьи</h4>
-                    <RadzenListBox TValue="Guid" Data="@Judges"
-                                   TextProperty="Login"
-                                   ValueProperty="Id"
-                                   Style="width: 100%; height: 150px;"
-                                   AllowVirtualization="false"
-                                   Multiple="false" />
-                </div>
-
-                <div>
+                    @if (Judges.Any())
+                    {
+                        <RadzenListBox TValue="Guid" Data="@Judges" TextProperty="Login" ValueProperty="Id"
+                                       Style="width: 100%; height: 120px;" />
+                    }
+                    else
+                    {
+                        <RadzenText Text="Судьи не назначены" Style="color: var(--rz-text-muted-color);" />
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="6">
                     <h4>Счетчики</h4>
-                    <RadzenListBox TValue="Guid" Data="@Counters"
-                                   TextProperty="Login"
-                                   ValueProperty="Id"
-                                   Style="width: 100%; height: 150px;"
-                                   AllowVirtualization="false"
-                                   Multiple="false" />
-                </div>
+                    @if (Counters.Any())
+                    {
+                        <RadzenListBox TValue="Guid" Data="@Counters" TextProperty="Login" ValueProperty="Id"
+                                       Style="width: 100%; height: 120px;" />
+                    }
+                    else
+                    {
+                        <RadzenText Text="Счетчики не назначены" Style="color: var(--rz-text-muted-color);" />
+                    }
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenFieldset>
+
+        <RadzenFieldset Text="Действия">
+            <RadzenStack Gap="0.5rem">
+                @if (UserRole is Role.Organizer)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenCreateEntryDialog()"/>
+                        <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
+                                      Click="() => CloseCollectingEntries()"/>
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
+                                      Click="() => OpenJudgeDialog()"/>
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
+                }
+                @if (UserRole is Role.Counter)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenText Text="Ведется сбор заявок" Style="color: var(--rz-text-muted-color);" />
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
+                }
+                @if (UserRole is Role.Judge)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenText Text="Ведется сбор заявок" Style="color: var(--rz-text-muted-color);" />
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenButton Text="Судить" Icon="gavel" ButtonStyle="ButtonStyle.Info"
+                                      Click="() => OpenJudgeDialog()"/>
+                        <RadzenButton Text="Результаты" Icon="assessment" ButtonStyle="ButtonStyle.Success"
+                                      Click="() => OpenCounterDialog()"/>
+                        <RadzenButton Text="Дипломы" Icon="emoji_events" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenDiplomaDialog()"/>
+                    }
+                }
+                @if (UserRole is Role.User)
+                {
+                    @if (Model.Status is ContestStatus.Open)
+                    {
+                        <RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
+                                      Click="() => OpenCreateEntryDialog()"/>
+                    }
+                    @if (Model.Status is ContestStatus.Closed)
+                    {
+                        <RadzenText Text="Сбор заявок завершен" Style="color: var(--rz-text-muted-color);" />
+                    }
+                }
             </RadzenStack>
-        </RadzenColumn>
-    </RadzenRow>
-</RadzenFieldset>
+        </RadzenFieldset>
+    </RadzenStack>
+</RadzenCard>
 
-
-<RadzenButton Text="Создать заявку" Icon="add" ButtonStyle="ButtonStyle.Primary"
-              Click="() => OpenCreateEntryDialog()" Style="margin-bottom: 10px;" />
-
-@if (Model.Status is ContestStatus.Open)
+@if (Model.Status is ContestStatus.Closed)
 {
-    <RadzenButton Text="Завершить сбор заявок" Icon="close" ButtonStyle="ButtonStyle.Warning"
-                  Click="() => CloseCollectingEntries()" Style="margin-bottom: 10px;" />
+    <RadzenButton Text="Управление групповыми блоками"
+              Icon="open_in_new"
+              ButtonStyle="ButtonStyle.Secondary"
+              Click="() => OpenGroupBlocksDialog()" />    
 }
 
+<script>
+    function downloadFile(filename, base64String) {
+        const byteCharacters = atob(base64String);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
 
-<RadzenText Text="Групповые блоки:"></RadzenText>
-<GroupBlocksManage Contest="Model" />
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+
+@code {
+    private BadgeStyle GetStatusStyle(ContestStatus status) => status switch
+    {
+        ContestStatus.Open => BadgeStyle.Success,
+        ContestStatus.Closed => BadgeStyle.Warning,
+        ContestStatus.Finished => BadgeStyle.Info,
+        _ => BadgeStyle.Secondary
+    };
+
+    private BadgeStyle GetTypeStyle(ContestType type) => type switch
+    {
+        ContestType.Solo => BadgeStyle.Primary,
+        ContestType.Test => BadgeStyle.Info,
+        ContestType.Intensive => BadgeStyle.Warning,
+        _ => BadgeStyle.Secondary
+    };
+}

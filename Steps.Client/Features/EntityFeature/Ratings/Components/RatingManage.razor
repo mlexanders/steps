@@ -1,0 +1,60 @@
+﻿@using Steps.Shared.Utils
+
+<RadzenDataGrid @ref="_grid" AllowRowSelectOnRowClick="@AllowRowSelectOnRowClick" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+            AllowSorting="true" Data="@Ratings" ColumnWidth="200px"
+            SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@_selected >
+    <HeaderTemplate>
+        <RadzenButton Text="Печатать выбранное" Click="@OnPrint" Disabled="@(!(_selected != null && _selected.Count > 0))"/>
+    </HeaderTemplate>
+    <Columns>
+        <RadzenDataGridColumn Width="60px" Sortable="false" Filterable="false">
+            <Template Context="data">
+                <RadzenCheckBox TabIndex="-1" TriState="false" Value="@(_selected != null && _selected.Contains(data))" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "Select item" } })"
+                                TValue="bool" Change=@(args =>
+                                                     {
+                                                         if (!AllowRowSelectOnRowClick)
+                                                         {
+                                                             _grid.SelectRow(data);
+                                                         }
+                                                     })/>
+            </Template>
+        </RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn Property="@nameof(Rating.TotalScore)" Title="Баллы"/>
+        <RadzenDataGridColumn Property="@nameof(Rating.CertificateDegree)" Title="Степень">
+            <Template Context="data">
+                @data.CertificateDegree.GetDisplayName()
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private const bool AllowRowSelectOnRowClick = true;
+    private IList<Rating>? _selected;
+    private RadzenDataGrid<Rating> _grid = null!;
+    
+    [Parameter] public EventCallback<List<Rating>> OnPrintRatings { get; set; }
+    
+    [Parameter] public List<Rating>? Ratings { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnPrint()
+    {
+        var selected = _selected?.ToList() ?? [];
+        if (selected.Count == 0)
+        {
+            return;
+        }
+        if (OnPrintRatings.HasDelegate)
+        {
+            await OnPrintRatings.InvokeAsync(selected);
+        }
+    }
+
+}

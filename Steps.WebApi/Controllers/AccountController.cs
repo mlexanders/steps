@@ -23,7 +23,7 @@ public class AccountController : Controller, IAccountService
     [HttpPost]
     public async Task<Result> Registration([FromBody] RegistrationViewModel model)
     {
-        return await _mediator.Send(new CreateUserCommand(model));
+        return await _mediator.Send(new RegisterUserCommand(model));
     }
 
     [HttpPost]

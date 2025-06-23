@@ -6,20 +6,26 @@ using Steps.Client.Features.EntityFeature.EntriesFeature.Services;
 using Steps.Client.Features.EntityFeature.GroupBlocksFeature.Services;
 using Steps.Client.Features.EntityFeature.SchedulesFeature.Services;
 using Steps.Client.Features.EntityFeature.TeamsFeature.Services;
+using Steps.Client.Features.EntityFeature.TestResultFeature.Services;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Client.Services.Api;
 using Steps.Client.Services.Api.Base;
 using Steps.Client.Services.Api.Routes;
 using Steps.Client.Services.Api.Scheduled;
 using Steps.Client.Services.Authentication;
+using Steps.Client.Services.Messaging;
+using Steps.Shared.Contracts.AthleteElements;
 using Steps.Shared.Contracts.Athletes;
 using Steps.Shared.Contracts.Clubs;
 using Steps.Shared.Contracts.Contests;
 using Steps.Shared.Contracts.Entries;
 using Steps.Shared.Contracts.GroupBlocks;
+using Steps.Shared.Contracts.Ratings;
+using Steps.Shared.Contracts.ScheduleFile;
 using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature;
 using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
+using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.Users;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;
 using PreSchedulesService = Steps.Client.Services.Api.Scheduled.PreSchedulesService;
@@ -28,6 +34,9 @@ namespace Steps.Client;
 
 public static class AddIdentityDependencyInjection
 {
+    private const string BackendUrl = "http://localhost:5000/api/";
+    private const string Hub = $"http://localhost:5000/MessagingHub";
+
     public static void AddDependencyContainer(this IServiceCollection services)
     {
         services.AddTransient<AthleteDialogManager>();
@@ -56,15 +65,31 @@ public static class AddIdentityDependencyInjection
 
         services.AddSingleton<IUserRoutes, UsersRoute>();
         services.AddSingleton<IEntryRoutes, EntriesRoute>();
+        services.AddSingleton<IAthletesRoutes, AthletesRoute>();
         
         services.AddTransient<GroupBlocksDialogManager>();
         services.AddTransient<IGroupBlocksService, GroupBlocksService>();
+        
+        services.AddTransient<IScheduleFileService, ScheduleFileService>();
                 
         services.AddTransient<PreSchedulerManager>();
         services.AddTransient<IPreSchedulesService, PreSchedulesService>();
         
         services.AddTransient<FinalSchedulerManager>();
+        services.AddTransient<FinalSchedulerDialogManager>();
         services.AddTransient<IFinalSchedulesService, FinalSchedulesService>();
+
+        services.AddTransient<TestResultsDialogManager>();
+        services.AddTransient<TestResultsManager>();
+        services.AddTransient<ITestResultsService, TestResultsService>();
+        
+        services.AddSingleton<IAthleteElementsRoutes, TestAthleteElementsRoute>();
+        services.AddTransient<IAthleteElementsService, TestAthleteElementsService>();
+        
+        services.AddTransient<IRatingService, RatingService>();
+        services.AddTransient<RatingService>();
+
+        services.AddTransient<TestResultCreatedMessaging>(sc => new TestResultCreatedMessaging($"{Hub}"));
     }
 
     public static void AddIdentity(this IServiceCollection services)
@@ -77,7 +102,7 @@ public static class AddIdentityDependencyInjection
         services.AddScoped(typeof(CookieHandler));
         services.AddHttpClient(
                 "Default",
-                opt => opt.BaseAddress = new Uri("http://localhost:5000/api/"))
+                opt => opt.BaseAddress = new Uri(BackendUrl))
             .AddHttpMessageHandler<CookieHandler>();
 
         services.AddScoped<HttpClient>(sp =>

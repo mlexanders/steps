@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Radzen;
 using Steps.Client.Features.Common;
 using Steps.Client.Features.EntityFeature.UsersFeature.Services;
 using Steps.Domain.Entities;
@@ -25,5 +26,11 @@ public partial class UsersManage : ManageBaseComponent<User, UserViewModel, Crea
     protected override async Task<Specification<User>?> GetSpecification()
     {
         return null;
+    }
+
+    private async Task ShowCard(DataGridRowMouseEventArgs<UserViewModel> arg)
+    {
+        var user = arg.Data;
+        await UsersDialogManager.ShowCardDialog(user);
     }
 }

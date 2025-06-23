@@ -1,0 +1,40 @@
+﻿@using Steps.Shared.Contracts.GroupBlocks.ViewModels
+@inject DialogService DialogService
+
+<RadzenStack>
+    <RadzenDropDown TItem="GroupBlockViewModel" 
+                   @bind-Value="SelectedGroupBlockId"
+                   Data="@GroupBlocks" 
+                   TextProperty="StartTime" 
+                   ValueProperty="Id"
+                   Placeholder="Выберите групповой блок"
+                   Style="width: 100%; margin-bottom: 10px;" />
+
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+        <RadzenButton Text="Отмена" 
+                     Click="Cancel" 
+                     Style="margin-right: 10px;" />
+        <RadzenButton Text="ОК" 
+                     Click="SelectGroupBlock" 
+                     Disabled="@(!CanSelect)" />
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    [Parameter] public List<GroupBlockViewModel> GroupBlocks { get; set; } = [];
+    [Parameter] public string Title { get; set; } = "Выбор группового блока";
+    
+    private Guid? SelectedGroupBlockId { get; set; }
+    private bool CanSelect => SelectedGroupBlockId.HasValue;
+
+    private void SelectGroupBlock()
+    {
+        var selectedGroupBlock = GroupBlocks.FirstOrDefault(g => g.Id == SelectedGroupBlockId);
+        DialogService.Close(selectedGroupBlock);
+    }
+
+    private void Cancel()
+    {
+        DialogService.Close();
+    }
+}

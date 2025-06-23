@@ -15,7 +15,10 @@ public class DbContextDefinition : AppDefinition
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(
+            builder.Configuration.GetConnectionString("DefaultConnection")
+        ));
+
 
         builder.Services.AddUnitOfWork<ApplicationDbContext>();
     }

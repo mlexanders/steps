@@ -38,7 +38,7 @@ public class UsersDialogManager : IDialogManager<UserViewModel>
     {
         var options = new Dictionary<string, object> { { "Model", model } };
         var result = await _dialogService
-            .OpenAsync<DeleteUserDialog>("Вы уверены, что хотите удалить этого Пользователя?", options);
+            .OpenAsync<DeleteUserDialog>("Удаление пользователя", options);
         return result ?? false;
     }
 }

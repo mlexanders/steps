@@ -1,4 +1,4 @@
-﻿using Steps.Shared.Contracts.TestResults;
+﻿using Steps.Services.WebApi.Hubs;
 using Steps.Utils.AppDefinition;
 
 namespace Steps.Services.WebApi.Definitions.SignalR
@@ -12,7 +12,8 @@ namespace Steps.Services.WebApi.Definitions.SignalR
 
         public override void Use(WebApplication app)
         {
-            app.MapHub<TestResultHub>("/testResultsHub");
+            app.UseRouting();
+            app.MapHub<MessagingHub>($"/MessagingHub");
         }
     }
 }

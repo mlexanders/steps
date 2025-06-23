@@ -34,7 +34,8 @@ public class ScheduledCellMapperConfiguration : Profile
 
         //FinalScheduled
         CreateMap<FinalScheduledCell, FinalScheduledCellViewModel>()
-            .IncludeBase<ScheduledCellBase, ScheduledCellViewModelBase>();
+            .IncludeBase<ScheduledCellBase, ScheduledCellViewModelBase>()
+            .ForMember(x => x.HasScore, o => o.MapFrom(x => x.HasScore));
         
         CreateMap<FinalScheduledCellViewModel, FinalScheduledCell>()
             .IncludeBase<ScheduledCellViewModelBase, ScheduledCellBase>();

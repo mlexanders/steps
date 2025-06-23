@@ -33,13 +33,13 @@
 }
 else
 {
-    <RadzenText> блоков нет</RadzenText>
+    <RadzenText TextStyle="TextStyle.H4">Список с предварительными блоками не создан</RadzenText>
     
-    <RadzenText> Выберите очередность выступления команд</RadzenText>
+    <RadzenText TextStyle="TextStyle.Subtitle2">Выберите очередность выступления команд и создайте предварительные блоки</RadzenText>
 
     if (_teams is null)
     {
-        <RadzenButton Text="Показать команды" Click="GetTeams"/>
+        <RadzenButton Text="Показать команды" Click="GetTeamsForCreateGroupBlocks"/>
     }
     else
     {
@@ -47,7 +47,7 @@ else
         {
             <OrderingTeams @bind-IsComplete="@_isComplete" @bind-Teams="@_teams"/>
         }
-       else
+        else
         {
             <RadzenButton Text="Создать блоки" Click="@CreateBlocks"/>
         }

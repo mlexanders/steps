@@ -1,2 +1,224 @@
 ﻿@page "/Profile"
-<h3>Profile</h3>
+@using Steps.Shared.Contracts.Accounts.ViewModels
+@using Steps.Shared.Contracts.Accounts
+@using Steps.Client.Services.Api
+@using Steps.Domain.Definitions
+@using Steps.Shared
+@using Radzen
+@inject AccountService AccountService
+@inject NavigationManager Navigation
+@inject DialogService DialogService
+
+<PageTitle>Личный кабинет</PageTitle>
+
+<RadzenRow JustifyContent="JustifyContent.Center" Class="rz-mt-4">
+    <RadzenColumn Size="12" SizeMD="10" SizeLG="8">
+        <RadzenCard Class="rz-shadow-3">
+            <RadzenStack Gap="2rem">
+                <!-- Заголовок -->
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenIcon Icon="account_circle" Style="font-size: 2rem; color: var(--rz-primary);"/>
+                    <RadzenText Text="Личный кабинет" TextStyle="TextStyle.H4" />
+                </RadzenStack>
+
+                @if (isLoading)
+                {
+                    <RadzenStack AlignItems="AlignItems.Center" Class="rz-p-4">
+                        <RadzenProgressBarCircular ShowValue="false" Style="width: 3rem; height: 3rem;"/>
+                        <RadzenText Text="Загрузка..." Class="rz-mt-2" />
+                    </RadzenStack>
+                }
+                else if (currentUser != null)
+                {
+                    <RadzenRow Gap="2rem">
+                        <!-- Информация о профиле -->
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                        <RadzenIcon Icon="info" Style="font-size: 2rem; color: var(--rz-primary);" />
+                                        <span style="font-size: 1.25rem; font-weight: 500;">Информация о профиле</span>
+                                    </RadzenStack>
+                                </HeaderTemplate>
+                                <ChildContent>
+                                    <RadzenStack Gap="1.5rem">
+                                        <RadzenStack>
+                                            <RadzenLabel Text="Логин:" Class="rz-font-weight-bold"/>
+                                            <RadzenTextBox Value="@currentUser.Login" ReadOnly="true" Style="background-color: var(--rz-surface-card);"/>
+                                        </RadzenStack>
+                                        
+                                        <RadzenStack>
+                                            <RadzenLabel Text="Роль:" Class="rz-font-weight-bold"/>
+                                            <RadzenTextBox Value="@GetRoleDisplayName(currentUser.Role)" ReadOnly="true" Style="background-color: var(--rz-surface-card);"/>
+                                        </RadzenStack>
+                                        
+                                        <RadzenStack>
+                                            <RadzenLabel Text="ID пользователя:" Class="rz-font-weight-bold"/>
+                                            <RadzenTextBox Value="@currentUser.Id.ToString()" ReadOnly="true" Style="background-color: var(--rz-surface-card);"/>
+                                        </RadzenStack>
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenFieldset>
+                        </RadzenColumn>
+
+                        <!-- Действия -->
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                        <RadzenIcon Icon="settings" Style="font-size: 2rem; color: var(--rz-primary);" />
+                                        <span style="font-size: 1.25rem; font-weight: 500;">Действия</span>
+                                    </RadzenStack>
+                                </HeaderTemplate>
+                                <ChildContent>
+                                    <RadzenStack Gap="1rem">
+                                        <!-- Смена пароля -->
+                                        <RadzenButton Text="Сменить пароль" 
+                                                     Icon="lock" 
+                                                     ButtonStyle="ButtonStyle.Secondary" 
+                                                     Variant="Variant.Outlined"
+                                                     Click="@ShowChangePasswordDialog"
+                                                     Class="rz-w-100"/>
+                                        
+                                        <!-- Подтверждение email -->
+                                        <RadzenButton Text="Отправить подтверждение email" 
+                                                     Icon="email" 
+                                                     ButtonStyle="ButtonStyle.Success" 
+                                                     Variant="Variant.Outlined"
+                                                     Click="@ResendEmailConfirmation"
+                                                     Class="rz-w-100"/>
+                                        
+                                    </RadzenStack>
+                                </ChildContent>
+                            </RadzenFieldset>
+                        </RadzenColumn>
+                    </RadzenRow>
+                }
+                else
+                {
+                    <RadzenAlert AlertStyle="AlertStyle.Warning" 
+                                 Icon="warning" 
+                                 Text="Не удалось загрузить информацию о пользователе" />
+                }
+            </RadzenStack>
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+
+
+
+@code {
+    private UserViewModel? currentUser;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+    }
+
+    private async Task ShowChangePasswordDialog()
+    {
+        var result = await DialogService.OpenAsync<ChangePasswordDialog>("Смена пароля", 
+            new Dictionary<string, object> { { "AccountService", AccountService } });
+        
+        if (result != null && result is bool success)
+        {
+            await ShowSuccess("Успешно", "Пароль успешно изменен");
+        }
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            isLoading = true;
+            var result = await AccountService.GetCurrentUser();
+            
+            if (result.IsSuccess)
+            {
+                currentUser = result.Value;
+            }
+            else
+            {
+                await ShowError("Ошибка загрузки профиля", result.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowError("Ошибка загрузки профиля", ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+
+
+    private async Task ResendEmailConfirmation()
+    {
+        try
+        {
+            var result = await AccountService.ResendEmailConfirmation();
+            
+            if (result.IsSuccess)
+            {
+                await ShowSuccess("Успешно", "Письмо с подтверждением отправлено на ваш email");
+            }
+            else
+            {
+                await ShowError("Ошибка", result.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowError("Ошибка отправки подтверждения", ex.Message);
+        }
+    }
+
+    private async Task Logout()
+    {
+        try
+        {
+            var result = await AccountService.Logout();
+            
+            if (result.IsSuccess)
+            {
+                Navigation.NavigateTo("/Login", true);
+            }
+            else
+            {
+                await ShowError("Ошибка выхода", result.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowError("Ошибка выхода", ex.Message);
+        }
+    }
+
+    private string GetRoleDisplayName(Role role)
+    {
+        return role switch
+        {
+            Role.Organizer => "Организатор",
+            Role.Judge => "Судья",
+            Role.Counter => "Счетчик",
+            Role.User => "Пользователь",
+            _ => "Неопределенная роль"
+        };
+    }
+
+    private async Task ShowSuccess(string title, string message)
+    {
+        await DialogService.Alert($"{title}: {message}", "Успешно");
+    }
+
+    private async Task ShowError(string title, string message)
+    {
+        await DialogService.Alert($"{title}: {message}", "Ошибка");
+    }
+}
+
+

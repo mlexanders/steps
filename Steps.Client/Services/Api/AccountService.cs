@@ -35,8 +35,18 @@ public class AccountService : IAccountService
         return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.Logout);
     }
 
-    public async Task<Result> ConfirmAction(string token)
+    public async Task<Result> ChangePassword(ChangePasswordViewModel model)
     {
-        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.ConfirmAction);
+        return await _httpClient.PostAsync<Result, ChangePasswordViewModel>(ApiRoutes.Auth.ChangePassword, model);
+    }
+
+    public async Task<Result> ConfirmEmail(string token)
+    {
+        return await _httpClient.PostAsync<Result, object>($"{ApiRoutes.Auth.ConfirmEmail}?token={Uri.EscapeDataString(token)}");
+    }
+
+    public async Task<Result> ResendEmailConfirmation()
+    {
+        return await _httpClient.PostAsync<Result, object>(ApiRoutes.Auth.ResendEmailConfirmation);
     }
 }

@@ -48,14 +48,22 @@ public class AccountController : Controller, IAccountService
     }
 
     [HttpPost]
-    public async Task<Result<string>> ChangePassword(ChangePasswordViewModel model)
+    [Authorize]
+    public async Task<Result> ChangePassword([FromBody] ChangePasswordViewModel model)
     {
-        throw new NotImplementedException();
+        return await _mediator.Send(new ChangePasswordCommand(model));
     }
 
     [HttpPost]
-    public async Task<Result> ConfirmAction(string token)
+    public async Task<Result> ConfirmEmail([FromQuery] string token)
     {
-        throw new NotImplementedException();
+        return await _mediator.Send(new ConfirmEmailCommand(token));
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<Result> ResendEmailConfirmation()
+    {
+        return await _mediator.Send(new ResendEmailConfirmationCommand());
     }
 }

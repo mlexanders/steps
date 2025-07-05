@@ -23,10 +23,13 @@
     
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
-            @foreach (var block in _blocks)
+            @for (var i = 0; i < _blocks.Count; i++)
             {
-                <RadzenTabsItem  Text="@GetTittle(block)">
-                    <ScheduleByGroupBlock GroupBlock="block"/>
+                var index = i;
+                var block = _blocks[index];
+                
+                <RadzenTabsItem Text="@GetTittle(block)">
+                    <ScheduleByGroupBlock GroupBlockChanged="@((e) => OnChangedBlock(e, index))" GroupBlock="block"/>
                 </RadzenTabsItem>
             }
         </Tabs>

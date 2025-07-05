@@ -138,4 +138,10 @@ public partial class GroupBlocksManage : BaseNotificate
             _isDownloading = false;
         }
     }
+
+    private async Task OnChangedBlock(GroupBlockViewModel? arg, int index)
+    {
+        await Init();
+        StateHasChanged();
+    }
 }

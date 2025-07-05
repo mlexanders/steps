@@ -19,35 +19,12 @@ using Steps.Application.Interfaces.Base;
 using Steps.Domain.Definitions;
 using Steps.Shared;
 using Steps.Shared.Exceptions;
+using FluentValidation;
 
 namespace Steps.Application.Tests.Requests.Clubs.Commands;
 
-public class CreateClubCommandTest
+public class CreateClubCommandTest : TestBase
 {
-    private readonly IServiceScope _scope;
-    public CreateClubCommandTest() 
-    {
-        var builder = WebApplication.CreateBuilder();
-        builder.AddApplication();
-        
-        builder.Services.AddTransient<ISecurityService, SecurityServiceMock>();
-        builder.Services.AddTransient<IUserManager<User>, UserManagerMock>();
-        builder.Services.AddTransient<ISignInManager, SignInManagerMock>();
-
-        var services = builder.Services;
-
-        // Добавляем InMemory базу данных
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseInMemoryDatabase("TestDb"));
-
-        services.AddUnitOfWork<ApplicationDbContext>();
-        
-        var app = builder.Build();
-        app.UseApplication();
-
-        _scope = app.Services.CreateScope();
-    }
-    
     [Fact]
     //Подаем корректные данные и проверяем ошибки при работе с бд
     public async Task SqlFail()
@@ -98,15 +75,10 @@ public class CreateClubCommandTest
         var createClubModel = new CreateClubViewModel { Name = "Test Club", OwnerId = Guid.NewGuid() };
         var command = new CreateClubCommand(createClubModel);
         
-        //Act
-        try
-        {
-            var result = await mediator.Send(command);
-        }
-        catch (AppHandledException ex)
-        {
-            Assert.IsType<AppAccessDeniedException>(ex.InnerException);
-        }
+        //Act & Assert
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<AppAccessDeniedException>(exception.InnerException);
+        Assert.Contains("Доступ запрещен", exception.Message);
     }
 
     [Fact]
@@ -118,15 +90,10 @@ public class CreateClubCommandTest
         var createClubModel = new CreateClubViewModel { Name = "Test Club", OwnerId = Guid.NewGuid() };
         var command = new CreateClubCommand(createClubModel);
         
-        //Act
-        try
-        {
-            var result = await mediator.Send(command);
-        }
-        catch (AppHandledException ex)
-        {
-            Assert.IsType<StepsBusinessException>(ex.InnerException);
-        }
+        //Act & Assert
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<StepsBusinessException>(exception.InnerException);
+        Assert.Contains("Клуб с таким названием уже существует", exception.Message);
     }
 
     [Fact]
@@ -135,17 +102,12 @@ public class CreateClubCommandTest
     {
         //Arrange
         var mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
-        var createClubModel = new CreateClubViewModel { Name = "Test Club", OwnerId = Guid.NewGuid() };
+        var createClubModel = new CreateClubViewModel { Name = "", OwnerId = Guid.Empty };
         var command = new CreateClubCommand(createClubModel);
         
-        //Act
-        try
-        {
-            var result = await mediator.Send(command);
-        }
-        catch (AppHandledException ex)
-        {
-            Assert.IsType<FluentValidation.ValidationException>(ex.InnerException);
-        }
+        //Act & Assert
+        var exception = await Assert.ThrowsAsync<AppHandledException>(() => mediator.Send(command));
+        Assert.IsType<FluentValidation.ValidationException>(exception.InnerException);
+        Assert.Contains("Заполните форму", exception.Message);
     }
  }

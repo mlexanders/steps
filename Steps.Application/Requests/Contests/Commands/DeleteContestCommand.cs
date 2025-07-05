@@ -2,13 +2,21 @@
 using Calabonga.UnitOfWork;
 using MediatR;
 using Steps.Application.Interfaces;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record DeleteContestCommand(Guid ModelId) : IRequest<Result>;
+public record DeleteContestCommand(Guid ModelId) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class DeleteEventCommandHandler : IRequestHandler<DeleteContestCommand, Result>
 {

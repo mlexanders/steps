@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Interfaces;
+using Steps.Domain.Base;
 using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
@@ -8,7 +10,14 @@ using Steps.Shared.Contracts.Contests.ViewModels;
 
 namespace Steps.Application.Requests.Contests.Commands;
 
-public record CreateContestCommand(CreateContestViewModel Model) : IRequest<Result<ContestViewModel>>;
+public record CreateContestCommand(CreateContestViewModel Model)
+    : IRequest<Result<ContestViewModel>>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, Result<ContestViewModel>>
 {
@@ -35,21 +44,21 @@ public class CreateEventCommandHandler : IRequestHandler<CreateContestCommand, R
             var addedJudje = await userRepository.GetAllAsync(
                 predicate: u => model.Judjes.Contains(u.Id) && u.Role == Role.Judge,
                 trackingType: TrackingType.Tracking);
-            
+
             contest.Judges = addedJudje.ToList();
         }
-        
+
         if (model.Counters is not null && model.Counters.Count > 0)
         {
             var addedCounters = await userRepository.GetAllAsync(
                 predicate: u => model.Counters.Contains(u.Id) && u.Role == Role.Counter,
                 trackingType: TrackingType.Tracking);
-            
+
             contest.Counters = addedCounters.ToList();
         }
 
         var entry = await repository.InsertAsync(contest, cancellationToken);
-        
+
         await _unitOfWork.SaveChangesAsync();
 
         var viewModel = _mapper.Map<ContestViewModel>(entry.Entity);

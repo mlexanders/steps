@@ -9,17 +9,18 @@
 
 @if (_blocks is { Count: > 0 })
 {
-    <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
-    <RadzenButton ButtonStyle="ButtonStyle.Primary"
-                  Icon="edit"
-                  Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
-                  Disabled="_isDownloading"
-                  Click="CreateScheduleFile"/>
-    <RadzenRow>
-        <RadzenColumn>
-            <RadzenButton Text="Удалить блоки" Click="@OnDeleteBlocks"/>
-        </RadzenColumn>
-    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Class="rz-mb-3">
+        <RadzenButton 
+            Text="Удалить блоки" 
+            Click="@OnDeleteBlocks" />
+        <RadzenButton 
+            ButtonStyle="ButtonStyle.Primary"
+            Icon="edit"
+            Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
+            Disabled="_isDownloading"
+            Click="CreateScheduleFile" />
+    </RadzenStack>
+    
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
             @foreach (var block in _blocks)

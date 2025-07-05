@@ -1,0 +1,45 @@
+﻿@using Steps.Client.Features.Common
+@using Steps.Client.Features.EntityFeature.EntriesFeature.Components
+@using Steps.Client.Features.EntityFeature.EntriesFeature.Services
+@using Steps.Domain.Definitions
+@using Steps.Shared.Contracts.Entries.ViewModels
+
+@inherits BaseModal
+
+<EntryCard Model="@Model">
+    <ChildContent>
+        <AuthorizeView Roles="@Role.Organizer.ToString()">
+            <RadzenButton Text="Принять заявку"
+                          Icon="check_circle"
+                          ButtonStyle="ButtonStyle.Success"
+                          Click="@OnAccept"
+                          Disabled="@Model!.IsSuccess"
+                          Style="flex: 1;"/>
+        </AuthorizeView>
+    </ChildContent>
+
+    @* <AuthorizeView Roles="@Role.User.ToString()"> *@
+    @*     <RadzenButton Text="Изменить заявку" *@
+    @*                   Icon="edit" *@
+    @*                   ButtonStyle="ButtonStyle.Primary" *@
+    @*                   Click="() => OnEdit()" *@
+    @*                   Style="flex: 1;" /> *@
+    @* </AuthorizeView> *@
+</EntryCard>
+
+
+
+@code {
+    [Parameter] public EntryViewModel? Model { get; set; }
+    [Inject] protected EntriesManager EntriesManager { get; set; } = null!;
+
+    private async Task OnAccept()
+    {
+        if (Model is null)
+            return;
+        
+        var result = await EntriesManager.AcceptEntry(Model.Id);
+        ShowResultMessage(result);
+        Close(result.IsSuccess);
+    }
+}

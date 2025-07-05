@@ -16,7 +16,6 @@ public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, 
 
     [Parameter] public bool IsReadonly { get; set; }
 
-    private bool IsSuccess(EntryViewModel e) => e.IsSuccess == true;
     private IEnumerable<EntryViewModel> AcceptedEntries => Manager.Data?.Where(e => e.IsSuccess) ?? [];
     private IEnumerable<EntryViewModel> RejectedEntries => Manager.Data?.Where(e => !e.IsSuccess) ?? [];
 
@@ -29,11 +28,25 @@ public partial class EntriesManage : ManageBaseComponent<Entry, EntryViewModel, 
             
             base.OnInitialized();
         }
-        catch (Exception ex) { }
+        catch (Exception ex)
+        {
+            // ignored
+        }
     }
 
     protected override async Task<Specification<Entry>?> GetSpecification()
     {
         return null;
+    }
+
+    private async Task OnEntrySelected(EntryViewModel entryViewModel)
+    {
+        var result = await DialogManager.ShowCardDialog(entryViewModel);
+
+        if (result)
+        {
+            await EntriesManagement.LoadPage();
+            StateHasChanged();
+        }
     }
 }

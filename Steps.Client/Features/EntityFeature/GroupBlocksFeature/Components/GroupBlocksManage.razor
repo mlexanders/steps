@@ -11,25 +11,34 @@
 {
     <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Class="rz-mb-3">
         <RadzenButton 
-            Text="Удалить блоки" 
+            Text="Удалить блоки"
+            IsBusy="_isDownloading"
             Click="@OnDeleteBlocks" />
         <RadzenButton 
             ButtonStyle="ButtonStyle.Primary"
             Icon="edit"
             Text="@(_isDownloading ? "Формирование файла..." : "Создать файл")"
-            Disabled="_isDownloading"
+            IsBusy="_isDownloading"
             Click="CreateScheduleFile" />
     </RadzenStack>
     
     <RadzenTabs RenderMode="TabRenderMode.Client" >
         <Tabs>
+           
             @for (var i = 0; i < _blocks.Count; i++)
             {
                 var index = i;
                 var block = _blocks[index];
-                
+
                 <RadzenTabsItem Text="@GetTittle(block)">
-                    <ScheduleByGroupBlock GroupBlockChanged="@((e) => OnChangedBlock(e, index))" GroupBlock="block"/>
+                    @if (!_isDownloading)
+                    {
+                        <ScheduleByGroupBlock GroupBlockChanged="@OnChangedBlock" GroupBlock="block"/>
+                    }
+                    else
+                    {
+                        <ProgressBar/>
+                    }
                 </RadzenTabsItem>
             }
         </Tabs>

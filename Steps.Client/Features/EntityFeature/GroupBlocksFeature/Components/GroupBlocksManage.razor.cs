@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using Radzen;
 using Steps.Client.Features.Common;
@@ -20,7 +21,7 @@ public partial class GroupBlocksManage : BaseNotificate
     [Inject] protected IGroupBlocksService GroupBlocksService { get; set; } = null!;
     [Inject] protected PreSchedulerManager PreSchedulerManager { get; set; } = null!;
     [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
-    
+
     [Parameter] [Required] public ContestViewModel? Contest { get; set; }
 
     private List<TeamViewModel>? _teams;
@@ -64,7 +65,7 @@ public partial class GroupBlocksManage : BaseNotificate
             AthletesPerGroup = 5,
             TeamsIds = _teams?.Select(t => t.Id).ToList() ?? [],
         };
-        
+
         var result = await GroupBlocksService.CreateByTeams(createGroupBlockViewModel);
         ShowResultMessage(result);
         await Init();
@@ -73,16 +74,24 @@ public partial class GroupBlocksManage : BaseNotificate
 
     private async Task OnDeleteBlocks()
     {
-        if (Contest != null)
+        _isDownloading = true;
+        try
         {
-            var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
-            ShowResultMessage(result);
-        }
+            if (Contest != null)
+            {
+                var result = await GroupBlocksService.DeleteByContestId(Contest.Id);
+                ShowResultMessage(result);
+            }
 
-        await Init();
-        StateHasChanged();
+            await Init();
+            StateHasChanged();
+        }
+        finally
+        {
+            _isDownloading = false;
+        }
     }
-    
+
     private async Task CreateScheduleFile()
     {
         _isDownloading = true;
@@ -96,23 +105,24 @@ public partial class GroupBlocksManage : BaseNotificate
                     GroupBlockIds = _blocks.Where(g => g.IsHaveFinalBlock == true)
                         .Select(t => t.Id).ToList()
                 };
-                
+
                 var _result = await FinalSchedulerManager.GenerateScheduleFile(createFinalScheduleFileViewModel);
-    
+
                 if (_result.IsSuccess && _result.Value.Data != null)
                 {
                     await JSRuntime.InvokeVoidAsync(
-                        "downloadFile", 
-                        _result.Value.FileName ?? "schedule.xlsx", 
+                        "downloadFile",
+                        _result.Value.FileName ?? "schedule.xlsx",
                         _result.Value.Data
                     );
                 }
                 else
                 {
-                    NotificationService.Notify(NotificationSeverity.Error, "Ошибка", "Не удалось сгенерировать файл с финальным расписанием");
+                    NotificationService.Notify(NotificationSeverity.Error, "Ошибка",
+                        "Не удалось сгенерировать файл с финальным расписанием");
                 }
             }
-            
+
             var createPreScheduleFileViewModel = new CreatePreScheduleFileViewModel
             {
                 GroupBlockIds = _blocks.Select(g => g.Id).ToList()
@@ -123,8 +133,8 @@ public partial class GroupBlocksManage : BaseNotificate
             if (result.IsSuccess && result.Value?.Data != null)
             {
                 await JSRuntime.InvokeVoidAsync(
-                    "downloadFile", 
-                    result.Value.FileName ?? "schedule.xlsx", 
+                    "downloadFile",
+                    result.Value.FileName ?? "schedule.xlsx",
                     result.Value.Data
                 );
             }
@@ -139,9 +149,17 @@ public partial class GroupBlocksManage : BaseNotificate
         }
     }
 
-    private async Task OnChangedBlock(GroupBlockViewModel? arg, int index)
+    private async Task OnChangedBlock()
     {
-        await Init();
-        StateHasChanged();
+        _isDownloading = true;
+        try
+        {
+            await Init();
+            StateHasChanged();
+        }
+        finally
+        {
+            _isDownloading = false;
+        }
     }
 }

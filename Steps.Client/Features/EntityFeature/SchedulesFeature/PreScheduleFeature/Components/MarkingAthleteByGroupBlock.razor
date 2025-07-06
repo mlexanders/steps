@@ -16,7 +16,7 @@
                 FilterMode="FilterMode.Simple"  AllowPaging="true" AllowSorting="true" Data="@PreSchedulerManager.Data"  ColumnWidth="300px"
                 FilterCaseSensitivity="@FilterCaseSensitivity.CaseInsensitive" LogicalFilterOperator="@LogicalFilterOperator.And">
     <HeaderTemplate>
-        <RadzenButton Click="@CreateFinalScheduleByGroupBlock" Text="Сохранить финальное расписание"/>
+        <RadzenButton Click="@CreateFinalScheduleByGroupBlock" IsBusy="_isBusy" Text="Сохранить финальное расписание"/>
     </HeaderTemplate>
     <Columns> 
         <RadzenDataGridColumn Width="55px"  Filterable="@(false)" TItem="PreScheduledCellViewModel"  Property="@nameof(PreScheduledCellViewModel.IsConfirmed)" Title="Явка">
@@ -39,6 +39,7 @@
 
 
 @code {
+    private bool _isBusy;
     [Parameter] public GroupBlockViewModel? GroupBlock { get; set; }
     [Parameter] public EventCallback<GroupBlockViewModel?>  GroupBlockChanged { get; set; }
 
@@ -72,7 +73,7 @@
     {
         var newState = !cell.IsConfirmed;
         cell.IsConfirmed = newState;
-        
+
         var result = await PreSchedulerManager.MarkAthlete(new MarkAthleteViewModel
         {
             GroupBlockId = cell.GroupBlockId,
@@ -84,27 +85,36 @@
 
     private async Task CreateFinalScheduleByGroupBlock()
     {
-        if (GroupBlock == null)
+        _isBusy = true;
+
+        try
         {
-            ShowNotification("Блок не найден");
-            return;
+            if (GroupBlock == null)
+            {
+                ShowNotification("Блок не найден");
+                return;
+            }
+
+            var result = await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
+            ShowResultMessage(result);
+            var updatedGroupBlockResult = await GroupBlocksService.GetById(GroupBlock.Id);
+
+            if (!updatedGroupBlockResult.IsSuccess)
+            {
+                ShowResultMessage(updatedGroupBlockResult);
+                return;
+            }
+
+            GroupBlock = updatedGroupBlockResult.Value;
+
+            if (GroupBlockChanged.HasDelegate)
+            {
+                await GroupBlockChanged.InvokeAsync(GroupBlock);
+            }
         }
-        
-        var result = await GroupBlocksService.CreateFinalScheduleByGroupBlock(GroupBlock.Id);
-        ShowResultMessage(result);
-        var updatedGroupBlockResult = await GroupBlocksService.GetById(GroupBlock.Id);
-        
-        if (!updatedGroupBlockResult.IsSuccess)
+        finally
         {
-            ShowResultMessage(updatedGroupBlockResult);
-            return;
-        }
-        
-        GroupBlock = updatedGroupBlockResult.Value;
-        
-        if (GroupBlockChanged.HasDelegate)
-        {
-            await GroupBlockChanged.InvokeAsync(GroupBlock);
+            _isBusy = false;
         }
     }
 }

@@ -1,0 +1,104 @@
+@page "/ConfirmEmail"
+@using Steps.Shared.Contracts.Accounts
+@using Steps.Client.Services.Api
+@using Steps.Shared
+@inject IAccountService AccountService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Подтверждение Email</PageTitle>
+
+<RadzenRow JustifyContent="JustifyContent.Center" Class="rz-mt-5">
+    <RadzenColumn Size="12" SizeMD="8" SizeLG="6">
+        <RadzenCard Class="rz-shadow-3">
+            <RadzenStack Gap="2rem" AlignItems="AlignItems.Center">
+                <!-- Заголовок -->
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenIcon Icon="email" Style="font-size: 2rem; color: var(--rz-primary);"/>
+                    <RadzenText Text="Подтверждение Email" TextStyle="TextStyle.H4" />
+                </RadzenStack>
+
+                @if (isLoading)
+                {
+                    <RadzenStack AlignItems="AlignItems.Center" Class="rz-p-4">
+                        <RadzenProgressBarCircular ShowValue="false" Style="width: 3rem; height: 3rem;"/>
+                        <RadzenText Text="Подтверждаем ваш email..." Class="rz-mt-2" />
+                    </RadzenStack>
+                }
+                else if (isConfirmed)
+                {
+                    <RadzenStack AlignItems="AlignItems.Center" Class="rz-p-4">
+                        <RadzenIcon Icon="check_circle" Style="font-size: 4rem; color: var(--rz-success);"/>
+                        <RadzenText Text="Email подтвержден!" TextStyle="TextStyle.H5" Class="rz-mt-2" Style="color: var(--rz-success);"/>
+                        <RadzenText Text="Ваш email адрес успешно подтвержден." TextStyle="TextStyle.Body2" Class="rz-mt-1" Style="color: var(--rz-text-color-secondary);"/>
+                        <RadzenButton Text="Перейти на главную" 
+                                     Icon="home" 
+                                     ButtonStyle="ButtonStyle.Primary" 
+                                     Click="@(() => Navigation.NavigateTo("/"))"
+                                     Class="rz-mt-3"/>
+                    </RadzenStack>
+                }
+                else
+                {
+                    <RadzenStack AlignItems="AlignItems.Center" Class="rz-p-4">
+                        <RadzenIcon Icon="warning" Style="font-size: 4rem; color: var(--rz-warning);"/>
+                        <RadzenText Text="Ошибка подтверждения" TextStyle="TextStyle.H5" Class="rz-mt-2" Style="color: var(--rz-warning);"/>
+                        <RadzenText Text="@errorMessage" TextStyle="TextStyle.Body2" Class="rz-mt-1" Style="color: var(--rz-text-color-secondary);"/>
+                        <RadzenButton Text="Перейти в профиль" 
+                                     Icon="account_circle" 
+                                     ButtonStyle="ButtonStyle.Secondary" 
+                                     Click="@(() => Navigation.NavigateTo("/Profile"))"
+                                     Class="rz-mt-3"/>
+                    </RadzenStack>
+                }
+            </RadzenStack>
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Token { get; set; }
+    private bool isLoading = true;
+    private bool isConfirmed = false;
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Token))
+        {
+            errorMessage = "Токен подтверждения не найден";
+            isLoading = false;
+            return;
+        }
+
+        await OnConfirmEmail(Token);
+    }
+
+    private async Task OnConfirmEmail(string token)
+    {
+        try
+        {
+            var result = await AccountService.ConfirmEmail(token);
+            
+            if (result.IsSuccess)
+            {
+                isConfirmed = true;
+            }
+            else
+            {
+                errorMessage = result.Message ?? "Неизвестная ошибка при подтверждении email";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ошибка при подтверждении email: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+} 

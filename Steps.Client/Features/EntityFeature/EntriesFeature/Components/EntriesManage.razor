@@ -39,7 +39,7 @@
                                 PageSize="Manager.PageSize"
                                 EmptyText="Нет непринятых заявок"
                                 IsLoading="@Manager.IsLoading"
-                                RowSelect="@(e => DialogManager.ShowCardDialog(e))">
+                                RowSelect="@(e => OnEntrySelected(e))">
                     <Columns>
                         <RadzenDataGridColumn TItem="EntryViewModel" Property="Number" Title="Номер" />
                         <RadzenDataGridColumn TItem="EntryViewModel" Property="ContestName" Title="Мероприятие" />

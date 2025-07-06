@@ -19,7 +19,7 @@ public class EntriesDialogManager : IDialogManager<EntryViewModel>
     
     public async Task<bool> ShowCardDialog(EntryViewModel model)
     {
-        var result = await _dialogService.OpenAsync<EntryCard>("Детали заявки",
+        var result = await _dialogService.OpenAsync<EntryCardDialog>("Детали заявки",
             new Dictionary<string, object> { { "Model", model } },
             new DialogOptions { Width = "600px", CloseDialogOnOverlayClick = true });
         

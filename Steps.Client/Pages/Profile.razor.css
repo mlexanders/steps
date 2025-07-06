@@ -1,0 +1,239 @@
+.profile-section, .actions-section {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.profile-section h5, .actions-section h5 {
+    color: #495057;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-control-plaintext {
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    padding: 1.5rem;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .profile-section, .actions-section {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Стили для Radzen компонентов в личном кабинете */
+
+/* Карточка профиля */
+.rz-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* Заголовок с иконкой */
+.rz-stack .rz-icon {
+    transition: transform 0.3s ease;
+}
+
+.rz-stack:hover .rz-icon {
+    transform: scale(1.1);
+}
+
+/* Поля ввода только для чтения */
+.rz-textbox[readonly] {
+    background-color: var(--rz-surface-hover) !important;
+    border-color: var(--rz-border-color) !important;
+    color: var(--rz-text-color) !important;
+}
+
+/* Кнопки действий */
+.rz-button {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.rz-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Fieldset заголовки */
+.rz-fieldset {
+    border-radius: 8px;
+    border: 1px solid var(--rz-border-color);
+}
+
+.rz-fieldset-legend {
+    font-weight: 600;
+    color: var(--rz-primary);
+}
+
+/* Диалог смены пароля */
+.rz-dialog {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.rz-dialog-titlebar {
+    background: linear-gradient(135deg, var(--rz-primary), var(--rz-primary-dark));
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Поля пароля */
+.rz-password {
+    border-radius: 6px;
+}
+
+.rz-password:focus {
+    border-color: var(--rz-primary);
+    box-shadow: 0 0 0 2px rgba(var(--rz-primary-rgb), 0.2);
+}
+
+/* Валидация */
+.rz-validator {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Прогресс бар */
+.rz-progressbar-circular {
+    color: var(--rz-primary);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .rz-column {
+        margin-bottom: 1rem;
+    }
+    
+    .rz-button {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .rz-dialog {
+        margin: 1rem;
+        min-width: auto !important;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rz-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Стили для иконок в кнопках */
+.rz-button .rz-icon {
+    margin-right: 0.5rem;
+}
+
+/* Стили для алертов */
+.rz-alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.rz-alert-warning {
+    background-color: var(--rz-warning-lighter);
+    color: var(--rz-warning-darker);
+}
+
+/* Стили для лейблов */
+.rz-label {
+    font-weight: 600;
+    color: var(--rz-text-color-secondary);
+    margin-bottom: 0.5rem;
+}
+
+/* Стили для стеков */
+.rz-stack {
+    gap: 1rem;
+}
+
+/* Стили для колонок */
+.rz-column {
+    padding: 0.5rem;
+} 

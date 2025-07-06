@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Interfaces;
 using Steps.Application.Services;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities;
 using Steps.Shared;
 using Steps.Shared.Contracts.GroupBlocks.ViewModels;
@@ -9,7 +12,13 @@ using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.GroupBlocks.Commands;
 
-public record CreateGroupBlocksByTeamsCommand(CreateGroupBlockViewModel Model) : IRequest<Result>;
+public record CreateGroupBlocksByTeamsCommand(CreateGroupBlockViewModel Model) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class CreateGroupBlocksByTeamsCommandHandler : IRequestHandler<CreateGroupBlocksByTeamsCommand, Result>
 {

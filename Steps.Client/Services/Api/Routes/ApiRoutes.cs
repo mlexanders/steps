@@ -15,7 +15,9 @@ public static class ApiRoutes
         public const string Login = "Account/login";
         public const string Logout = "Account/logout";
         public const string GetCurrentUser = "Account/GetCurrentUser";
-        public const string ConfirmAction = "Account/confirm-action";
+        public const string ChangePassword = "Account/ChangePassword";
+        public const string ConfirmEmail = "Account/ConfirmEmail";
+        public const string ResendEmailConfirmation = "Account/ResendEmailConfirmation";
     }
 
     public class ContestsRoute() : BaseApiRoutes("Contests")

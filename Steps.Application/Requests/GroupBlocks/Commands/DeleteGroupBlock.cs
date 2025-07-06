@@ -1,12 +1,21 @@
 ﻿using Calabonga.UnitOfWork;
 using MediatR;
+using Steps.Application.Interfaces;
+using Steps.Domain.Base;
+using Steps.Domain.Definitions;
 using Steps.Domain.Entities.GroupBlocks;
 using Steps.Shared;
 using Steps.Shared.Exceptions;
 
 namespace Steps.Application.Requests.GroupBlocks.Commands;
 
-public record DeleteByContestId(Guid ContestId) : IRequest<Result>;
+public record DeleteByContestId(Guid ContestId) : IRequest<Result>, IRequireAuthorization
+{
+    public Task<bool> CanAccess(IUser user)
+    {
+        return Task.FromResult(user.Role is Role.Organizer);
+    }
+}
 
 public class DeleteByContestIdHandler : IRequestHandler<DeleteByContestId, Result>
 {

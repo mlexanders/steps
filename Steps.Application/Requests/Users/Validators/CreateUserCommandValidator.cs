@@ -9,7 +9,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {
         RuleFor(x => x.Model).NotNull().DependentRules(() =>
         {
-            RuleFor(x => x.Model.Login).NotNull().WithMessage("Заполните логин");
+            RuleFor(x => x.Model.Login).NotNull().NotEmpty().WithMessage("Заполните логин");
             
         }).WithMessage("Все поля должны быть заполнены");
     }

@@ -34,6 +34,8 @@ public static class ApiRoutes
     public class AthletesRoute() : BaseApiRoutes("Athletes"), IAthletesRoutes
     {
         public string GetRemovedAthletes() => $"{BasePath}/GetRemovedAthletes";
+        public string GenerateAthleteLabel(string athleteName, string teamName) 
+            => $"{BasePath}/GenerateAthleteLabel?athleteName={Uri.EscapeDataString(athleteName)}&teamName={Uri.EscapeDataString(teamName)}";
     }
 
     public class TestAthleteElementsRoute() : BaseApiRoutes("TestAthleteElements"), IAthleteElementsRoutes

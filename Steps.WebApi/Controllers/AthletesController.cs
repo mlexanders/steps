@@ -50,5 +50,17 @@ namespace Steps.Services.WebApi.Controllers
         {
             throw new NotImplementedException();
         }
+        
+        [HttpGet("[action]")]
+        public Task<Result<List<Guid>>> GetRemovedAthletes()
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet("[action]")]
+        public async Task<Result<byte[]>> GenerateAthleteLabel(string athleteName, string teamName)
+        {
+            return await _mediator.Send(new GenerateAthleteLabel(athleteName, teamName));
+        }
     }
 }

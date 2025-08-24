@@ -20,4 +20,9 @@ public class AthletesService : CrudService<Athlete, AthleteViewModel, CreateAthl
     {
         return await HttpClient.GetAsync<Result<List<Guid>>>(_athletesRoutes.GetRemovedAthletes());
     }
+
+    public async Task<Result<byte[]>> GenerateAthleteLabel(string athleteName, string teamName)
+    {
+        return await HttpClient.GetAsync<Result<byte[]>>(_athletesRoutes.GenerateAthleteLabel(athleteName, teamName));
+    }
 }

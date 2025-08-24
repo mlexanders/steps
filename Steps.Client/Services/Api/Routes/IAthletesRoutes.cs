@@ -3,4 +3,5 @@
 public interface IAthletesRoutes
 {
     string GetRemovedAthletes();
+    string GenerateAthleteLabel(string athleteName, string teamName);
 }

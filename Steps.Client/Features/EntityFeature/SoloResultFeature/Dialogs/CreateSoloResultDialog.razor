@@ -1,0 +1,121 @@
+@using System.Collections.ObjectModel
+@using Radzen
+@using Steps.Client.Features.EntityFeature.AthleteFeature.Services
+@using Steps.Client.Features.EntityFeature.SoloResultFeature.Services
+@using Steps.Client.Services.Api
+@using Steps.Shared.Contracts.AthleteElements
+@using Steps.Shared.Contracts.TestResults.ViewModels
+
+@inherits Steps.Client.Features.Common.BaseModal
+@inject SoloResultsManager SoloResultsManager
+@inject IAthleteElementsService AthleteElementsService
+@inject AthleteManager AthleteManager
+
+<RadzenTemplateForm TItem="CreateSoloResultViewModel" Data="_createSoloResultViewModel">
+    <ChildContent>
+        <RadzenFieldset Text="Оценки за элементы">
+            @for (int i = 0; i < 5; i++)
+            {
+                var index = i;
+                <div style="margin-bottom: 20px;">
+                    <RadzenLabel Text="@Elements.ElementAtOrDefault(index)" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenNumeric @bind-Value="@_createSoloResultViewModel.Scores[index]" Min="0" Max="10" Step="1"
+                                   Style="width: 100%" />
+                </div>
+            }
+        </RadzenFieldset>
+
+        <RadzenFieldset Text="Комментарии по критериям">
+            <RadzenStack Gap="1rem">
+                <div>
+                    <RadzenLabel Text="Техника танца:" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenTextArea @bind-Value="@_createSoloResultViewModel.DanceTechniqueComment" 
+                                   Style="width: 100%; min-height: 80px;"
+                                   Placeholder="Введите комментарий по технике танца..." />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Техника выполнения элементов:" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenTextArea @bind-Value="@_createSoloResultViewModel.ElementsTechniqueComment" 
+                                   Style="width: 100%; min-height: 80px;"
+                                   Placeholder="Введите комментарий по технике выполнения элементов..." />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Хореография:" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenTextArea @bind-Value="@_createSoloResultViewModel.ChoreographyComment" 
+                                   Style="width: 100%; min-height: 80px;"
+                                   Placeholder="Введите комментарий по хореографии..." />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Коммуникация:" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenTextArea @bind-Value="@_createSoloResultViewModel.CommunicationComment" 
+                                   Style="width: 100%; min-height: 80px;"
+                                   Placeholder="Введите комментарий по коммуникации..." />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Общее впечатление:" Style="display: block; margin-bottom: 5px;" />
+                    <RadzenTextArea @bind-Value="@_createSoloResultViewModel.GeneralImpressionComment" 
+                                   Style="width: 100%; min-height: 80px;"
+                                   Placeholder="Введите общее впечатление..." />
+                </div>
+            </RadzenStack>
+        </RadzenFieldset>
+
+        <RadzenButton Text="Сохранить" Icon="save" Click="@Create" Style="margin-top: 10px" />
+    </ChildContent>
+</RadzenTemplateForm>
+
+@code {
+    private readonly CreateSoloResultViewModel _createSoloResultViewModel = new()
+    {
+        Scores = new List<int> { 0, 0, 0, 0, 0 }
+    };
+
+    private ObservableCollection<string> Elements = new(["1", "2", "3", "4", "5"]);
+
+    [Parameter] public Guid ContestId { get; set; }
+    [Parameter] public Guid AthleteId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _createSoloResultViewModel.ContestId = ContestId;
+        _createSoloResultViewModel.AthleteId = AthleteId;
+        
+        var athlete = await AthleteManager.Read(AthleteId);
+        if (!athlete.IsSuccess || athlete.Value == null)
+        {
+            ShowResultMessage(athlete);
+            return;
+        }
+        
+        var athleteElements = await AthleteElementsService.GetAthleteElements(athlete.Value.Degree.ToString(),
+            athlete.Value.AgeCategory.ToString(), athlete.Value.AthleteType.ToString());
+
+        if (!athleteElements.IsSuccess || athleteElements.Value == null)
+        {
+            ShowResultMessage(athleteElements);
+            return;
+        }
+
+        Elements.Clear();
+        Elements.Add(athleteElements.Value.Element1);
+        Elements.Add(athleteElements.Value.Element2);
+        Elements.Add(athleteElements.Value.Element3);
+        Elements.Add(athleteElements.Value.Element4);
+        Elements.Add(athleteElements.Value.Element5);
+    }
+
+    private async Task Create()
+    {
+        var result = await SoloResultsManager.Create(_createSoloResultViewModel);
+        ShowResultMessage(result);
+        
+        if (result.IsSuccess)
+        {
+            Close(true);
+        }
+    }
+}

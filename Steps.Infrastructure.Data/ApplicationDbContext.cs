@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Entry> Entries { get; set; }
     
     public DbSet<TestResult> TestResults { get; set; }
+    public DbSet<SoloResult> SoloResults { get; set; }
     public DbSet<Contest> Contests { get; set; }
     public DbSet<GroupBlock> GroupBlocks { get; set; }
     
@@ -33,6 +34,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ContestConfiguration());
         modelBuilder.ApplyConfiguration(new EntryConfiguration());
         modelBuilder.ApplyConfiguration(new TestResultConfiguration());
+        modelBuilder.ApplyConfiguration(new SoloResultConfiguration());
         modelBuilder.ApplyConfiguration(new RatingConfiguration());
         
         TestAthleteElementsSeed.SeedCheer(modelBuilder);

@@ -27,6 +27,8 @@ using Steps.Shared.Contracts.Schedules.PreSchedulesFeature;
 using Steps.Shared.Contracts.Teams;
 using Steps.Shared.Contracts.TestResults;
 using Steps.Shared.Contracts.Users;
+using Steps.Client.Features.EntityFeature.SoloResultFeature.Services;
+using Steps.Client.Services.Messaging;
 using static Steps.Client.Services.Api.Routes.ApiRoutes;
 using PreSchedulesService = Steps.Client.Services.Api.Scheduled.PreSchedulesService;
 
@@ -83,6 +85,10 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<TestResultsManager>();
         services.AddTransient<ITestResultsService, TestResultsService>();
         
+        services.AddTransient<SoloResultsDialogManager>();
+        services.AddTransient<SoloResultsManager>();
+        services.AddTransient<ISoloResultsService, SoloResultsService>();
+        
         services.AddSingleton<IAthleteElementsRoutes, TestAthleteElementsRoute>();
         services.AddTransient<IAthleteElementsService, TestAthleteElementsService>();
         
@@ -90,6 +96,7 @@ public static class AddIdentityDependencyInjection
         services.AddTransient<RatingService>();
 
         services.AddTransient<TestResultCreatedMessaging>(sc => new TestResultCreatedMessaging($"{Hub}"));
+        services.AddTransient<SoloResultCreatedMessaging>(sc => new SoloResultCreatedMessaging($"{Hub}"));
     }
 
     public static void AddIdentity(this IServiceCollection services)

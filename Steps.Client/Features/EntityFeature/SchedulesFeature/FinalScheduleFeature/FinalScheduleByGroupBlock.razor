@@ -1,11 +1,16 @@
 ﻿@using Steps.Client.Features.EntityFeature.SchedulesFeature.Services
 @using Steps.Shared.Contracts.GroupBlocks.ViewModels
 @using Steps.Client.Features.EntityFeature.SchedulesFeature.PreScheduleFeature.Components
+@using Steps.Domain.Entities.GroupBlocks
+@using Steps.Shared
 @using Steps.Shared.Contracts.Schedules.FinalSchedulesFeature.ViewModels
 
 @implements IDisposable
 
-<RadzenText Text="Участники в Финальном расписании:"/>
+<RadzenTextBox @bind-Value="fioSearch"
+               Placeholder="Поиск по ФИО"
+               Style="margin-bottom: 10px; width: 300px;"
+               Change="OnFioSearchChanged" />
 <RadzenCard>
     <RadzenDataGrid TItem="FinalScheduledCellViewModel" Data="FinalSchedulerManager.Data" AllowPaging="true"
                     SelectionMode="DataGridSelectionMode.Single" Style="min-width: 700px"
@@ -26,6 +31,10 @@
     [Parameter] public bool AllowRowSelectOnRowClick { get; set; }
 
     private FinalScheduledCellViewModel? _selectedAthlete;
+    
+    private string fioSearch = "";
+
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,10 +51,36 @@
     {
         FinalSchedulerManager.ChangedList -= StateHasChanged;
     }
-
-    private async Task OnChangePage(LoadDataArgs arg)
+    
+    private async Task OnFioSearchChanged(object value)
     {
-        await FinalSchedulerManager.ChangePage(arg.Skip, arg.Top);
+        fioSearch = value?.ToString() ?? "";
+        
+        var spec = new Specification<FinalScheduledCell>();
+
+        if (!string.IsNullOrWhiteSpace(fioSearch))
+        {
+            var searchTerm = fioSearch.Trim();
+            spec.Where(x => x.Athlete.FullName.ToLower().Contains(searchTerm.ToLower()));
+        }
+
+        FinalSchedulerManager.UseSpecification(spec);
+        await FinalSchedulerManager.ChangePage(0, FinalSchedulerManager.PageSize);
+    }
+    
+    
+    private async Task OnChangePage(LoadDataArgs args)
+    {
+        var spec = new Specification<FinalScheduledCell>();
+
+        if (!string.IsNullOrWhiteSpace(fioSearch))
+        {
+            var searchTerm = fioSearch.Trim();
+            spec.Where(x => x.Athlete.FullName.ToLower().Contains(searchTerm.ToLower()));
+        }
+
+        FinalSchedulerManager.UseSpecification(spec);
+        await FinalSchedulerManager.ChangePage(args.Skip, args.Top);
     }
 
     protected virtual Task OnRowSelect(FinalScheduledCellViewModel? athlete)

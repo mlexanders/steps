@@ -323,6 +323,63 @@ namespace Steps.Infrastructure.Data.Migrations
                     b.ToTable("ScheduleFiles");
                 });
 
+            modelBuilder.Entity("Steps.Domain.Entities.SoloResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AthleteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ChoreographyComment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CommunicationComment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ContestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DanceTechniqueComment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ElementsTechniqueComment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("GeneralImpressionComment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("JudgeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RatingId")
+                        .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<List<int>>("Scores")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("JudgeId");
+
+                    b.HasIndex("RatingId")
+                        .IsUnique();
+
+                    b.HasIndex("AthleteId", "ContestId")
+                        .IsUnique();
+
+                    b.ToTable("SoloResults");
+                });
+
             modelBuilder.Entity("Steps.Domain.Entities.Team", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1183,6 +1240,41 @@ namespace Steps.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Athlete");
+                });
+
+            modelBuilder.Entity("Steps.Domain.Entities.SoloResult", b =>
+                {
+                    b.HasOne("Steps.Domain.Entities.Athlete", "Athlete")
+                        .WithMany()
+                        .HasForeignKey("AthleteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.Contest", "Contest")
+                        .WithMany()
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.User", "Judge")
+                        .WithMany()
+                        .HasForeignKey("JudgeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Steps.Domain.Entities.Rating", "Rating")
+                        .WithOne()
+                        .HasForeignKey("Steps.Domain.Entities.SoloResult", "RatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Athlete");
+
+                    b.Navigation("Contest");
+
+                    b.Navigation("Judge");
+
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("Steps.Domain.Entities.Team", b =>

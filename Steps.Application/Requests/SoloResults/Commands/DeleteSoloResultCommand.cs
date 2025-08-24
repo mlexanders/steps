@@ -21,14 +21,13 @@ public class DeleteSoloResultCommandHandler : IRequestHandler<DeleteSoloResultCo
         var soloResult = await _unitOfWork.GetRepository<SoloResult>()
             .GetFirstOrDefaultAsync(
                 predicate: x => x.Id == request.Id,
-                trackingType: TrackingType.Tracking,
-                cancellationToken: cancellationToken);
+                trackingType: TrackingType.Tracking);
 
         if (soloResult == null)
             return Result.Fail("Результат не найден");
 
         _unitOfWork.GetRepository<SoloResult>().Delete(soloResult);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         return Result.Ok().SetMessage("Результат удален");
     }

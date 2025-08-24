@@ -95,4 +95,9 @@
 
 @code {
     [Parameter] public SoloResultViewModel Model { get; set; } = null!;
+    protected override Task<Specification<SoloResult>?> GetSpecification()
+    {
+        throw new NotImplementedException();
+    }
+
 }

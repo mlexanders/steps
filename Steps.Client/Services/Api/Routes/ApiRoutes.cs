@@ -96,7 +96,6 @@ public static class ApiRoutes
     }
 
     public class TestResultsRoute() : BaseApiRoutes("TestResults");
-
     public class SoloResultsRoute() : BaseApiRoutes("SoloResults");
 
     public class RatingsRoute 

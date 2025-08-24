@@ -25,15 +25,14 @@ public class UpdateSoloResultCommandHandler : IRequestHandler<UpdateSoloResultCo
         var soloResult = await _unitOfWork.GetRepository<SoloResult>()
             .GetFirstOrDefaultAsync(
                 predicate: x => x.Id == request.Model.Id,
-                trackingType: TrackingType.Tracking,
-                cancellationToken: cancellationToken);
+                trackingType: TrackingType.Tracking);
 
         if (soloResult == null)
             return Result<Guid>.Fail("Результат не найден");
 
         _mapper.Map(request.Model, soloResult);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync();
 
         return Result<Guid>.Ok(soloResult.Id).SetMessage("Результат обновлен");
     }

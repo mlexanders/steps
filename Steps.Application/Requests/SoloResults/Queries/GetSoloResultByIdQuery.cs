@@ -28,8 +28,7 @@ public class GetSoloResultByIdQueryHandler : IRequestHandler<GetSoloResultByIdQu
             .GetFirstOrDefaultAsync(
                 predicate: x => x.Id == request.Id,
                 include: x => x.Include(s => s.Athlete),
-                trackingType: TrackingType.NoTracking,
-                cancellationToken: cancellationToken);
+                trackingType: TrackingType.NoTracking);
 
         if (soloResult == null)
             return Result<SoloResultViewModel>.Fail("Результат не найден");

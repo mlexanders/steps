@@ -102,12 +102,16 @@ public partial class ContestCard : BaseNotificate
         var selectedGroupBlock = await GroupBlocksDialogManager.ShowSelectGroupBlockDialog(
             groupBlocks.Value);
 
-        if (selectedGroupBlock != null)
+        if (selectedGroupBlock != null && Model.Type == ContestType.Test)
         {
             await DialogService.OpenAsync<TestResultCreating>(
                 "Финальное расписание",
                 new Dictionary<string, object> { { "GroupBlock", selectedGroupBlock } },
                 new DialogOptions { Width = "800px", Height = "600px" });
+        }
+
+        if (Model.Type == ContestType.Solo)
+        {
         }
     }
 

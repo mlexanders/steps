@@ -4,7 +4,7 @@ using Steps.Shared.Contracts.Messaging;
 
 namespace Steps.Client.Services.Messaging;
 
-public class SoloResultCreatedMessaging : BaseMessaging<SoloResultCreatedMessage>
+public class SoloResultCreatedMessaging : MessagingService<SoloResultCreatedMessage>
 {
     public SoloResultCreatedMessaging(string hubUrl) : base(hubUrl)
     {
